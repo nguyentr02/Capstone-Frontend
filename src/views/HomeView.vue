@@ -1,9 +1,10 @@
 <script setup>
-import TheWelcome from '../components/TheWelcome.vue'
+import RegisterBox from '@/components/RegisterBox.vue';
+import TheWelcome from '../components/TheWelcome.vue';
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <RegisterBox />
   </main>
 </template>

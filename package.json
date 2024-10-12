@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "event-registration": "file:",
     "vue": "^3.4.29",
     "vue-router": "^4.3.3"
   },

@@ -5,7 +5,7 @@
         <div class="footer-sections">
           <section class="footer-branding">
             <div class="logo-container">
-              <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/2ad4c18707bec2e3c65656ae67c3b18d4cf767fd96e85d4443dfb306d3dc3205?placeholderIfAbsent=true&apiKey=d15d64ea902e41f8849cd1404c808385" class="logo-image" alt="Site Logo" />
+              <img loading="lazy" src="../assets/Icon.png" class="logo-image" alt="Site Logo" />
               <h2 class="site-name">Site Name</h2>
             </div>
             <p class="site-description">
@@ -54,7 +54,7 @@
 
 <style scoped>
 .footer {
-  position: fixed;
+  position: flex;
   bottom: 0;
   width: 100%;
   border-radius: 0;

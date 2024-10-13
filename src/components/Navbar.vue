@@ -2,7 +2,7 @@
   <header class="navbar">
     <div class="navbar-content">
       <div class="logo-container">
-        <img loading="lazy" src="https://cdn.builder.io/api/v1/image/assets/TEMP/c4027fc65c55fffb9f43cceb3406695d584651c46e7bde313c0dce25056ccacd?placeholderIfAbsent=true&apiKey=d15d64ea902e41f8849cd1404c808385" class="logo-image" alt="Site Logo" />
+        <img loading="lazy" src="../assets/Icon.png" class="logo-image" alt="Site Logo" />
         <h1 class="site-title">Site Name</h1>
       </div>
       <nav class="navigation">
@@ -52,7 +52,7 @@
 
 .site-title {
   align-self: start;
-  margin-top: 10px;
+  margin-top: px;
   color: #fff;
 }
 

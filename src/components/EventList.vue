@@ -1,4 +1,4 @@
-<template> 
+<template>  
   <div class="event-page">
     <!-- 搜索栏 -->
     <div class="search-bar">
@@ -81,13 +81,37 @@ export default {
         { id: 6, name: "Event 2", description: "Description of Event 2", activity: "Music", price: 90 },
         { id: 7, name: "Event 3", description: "Description of Event 3", activity: "Art", price: 130 },
         { id: 8, name: "Event 4", description: "Description of Event 4", activity: "Food", price: 60 },
-        { id: 9, name: "Event 5", description: "Description of Event 5", activity: "Sport", price: 140 },
-        { id: 10, name: "Event 6", description: "Description of Event 6", activity: "Music", price: 80 },
-        { id: 11, name: "Event 7", description: "Description of Event 7", activity: "Art", price: 110 },
-        { id: 12, name: "Event 8", description: "Description of Event 8", activity: "Food", price: 70 },
+        { id: 9, name: "Event 5", description: "Description of Event 5", activity: "Sport", price: 150 },
+        { id: 10, name: "Event 6", description: "Description of Event 6", activity: "Music", price: 200 },
+        { id: 11, name: "Event 7", description: "Description of Event 7", activity: "Art", price: 80 },
+        { id: 12, name: "Event 8", description: "Description of Event 8", activity: "Food", price: 100 },
+        { id: 13, name: "Event 9", description: "Description of Event 9", activity: "Sport", price: 120 },
+        { id: 14, name: "Event 10", description: "Description of Event 10", activity: "Music", price: 180 },
+        { id: 15, name: "Event 11", description: "Description of Event 11", activity: "Art", price: 250 },
+        { id: 16, name: "Event 12", description: "Description of Event 12", activity: "Food", price: 30 },
+        { id: 17, name: "Event 13", description: "Description of Event 13", activity: "Sport", price: 45 },
+        { id: 18, name: "Event 14", description: "Description of Event 14", activity: "Music", price: 25 },
+        { id: 19, name: "Event 15", description: "Description of Event 15", activity: "Art", price: 70 },
+        { id: 20, name: "Event 16", description: "Description of Event 16", activity: "Food", price: 90 },
+        { id: 21, name: "Event 17", description: "Description of Event 17", activity: "Sport", price: 50 },
+        { id: 22, name: "Event 18", description: "Description of Event 18", activity: "Music", price: 110 },
+        { id: 23, name: "Event 19", description: "Description of Event 19", activity: "Art", price: 40 },
+        { id: 24, name: "Event 20", description: "Description of Event 20", activity: "Food", price: 60 },
+        { id: 25, name: "Event 21", description: "Description of Event 21", activity: "Sport", price: 75 },
+        { id: 26, name: "Event 22", description: "Description of Event 22", activity: "Music", price: 55 },
+        { id: 27, name: "Event 23", description: "Description of Event 23", activity: "Art", price: 85 },
+        { id: 28, name: "Event 24", description: "Description of Event 24", activity: "Food", price: 95 },
+        { id: 29, name: "Event 25", description: "Description of Event 25", activity: "Sport", price: 130 },
+        { id: 30, name: "Event 26", description: "Description of Event 26", activity: "Music", price: 100 },
+        { id: 31, name: "Event 27", description: "Description of Event 27", activity: "Art", price: 60 },
+        { id: 32, name: "Event 28", description: "Description of Event 28", activity: "Food", price: 80 },
+        { id: 33, name: "Event 29", description: "Description of Event 29", activity: "Sport", price: 150 },
+        { id: 34, name: "Event 30", description: "Description of Event 30", activity: "Music", price: 90 },
+        { id: 35, name: "Event 31", description: "Description of Event 31", activity: "Art", price: 110 },
+        { id: 36, name: "Event 32", description: "Description of Event 32", activity: "Food", price: 70 }
       ],
       currentPage: 1,
-      itemsPerPage: 8,
+      itemsPerPage: 16,
       filterCriteria: {
         activity: "",
         location: "",
@@ -96,13 +120,23 @@ export default {
       },
     };
   },
+  watch: {
+    // 当过滤条件或者搜索条件变化时，重置为第一页
+    filteredEvents() {
+      this.currentPage = 1;
+    },
+    searchQuery() {
+      this.currentPage = 1;
+    }
+  },
   computed: {
     totalPages() {
       return Math.ceil(this.filteredEvents.length / this.itemsPerPage);
     },
     paginatedEvents() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
-      return this.filteredEvents.slice(start, start + this.itemsPerPage);
+      const end = start + this.itemsPerPage;
+      return this.filteredEvents.slice(start, end);
     },
     filteredEvents() {
       return this.events.filter(event => {
@@ -152,6 +186,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* 样式保持不变 */
+</style>
+
 
 <style scoped>
 .event-page {

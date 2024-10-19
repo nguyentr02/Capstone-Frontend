@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div class="ticket-selection">
     <!-- 返回按钮 -->
     <button class="back-button" @click="$router.go(-1)">←</button>
@@ -101,23 +101,26 @@ export default {
 </script>
 
 <style scoped>
-.ticket-selection-page {
+.ticket-selection {
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+  width: 100%; /* 让页面宽度占满整个屏幕 */
+  margin: 0; /* 取消左右空白 */
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .back-button {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  background-color: transparent;
+  position: fixed;
+  left: 30px;
+  top: 100px;
+  background-color: #f5f5f5;
   border: none;
   font-size: 24px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .event-header {
@@ -126,15 +129,19 @@ export default {
 }
 
 .event-icon {
-  background-color: #ccc;
-  width: 100px;
-  height: 100px;
-  margin: 0 auto;
+  width: 120px; /* 去掉背景颜色，放大图标 */
+  height: 120px;
+  border-radius: 50%; /* 保持圆形效果 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px; /* 图标文字大小 */
 }
 
 h1 {
-  font-size: 24px;
-  margin-top: 10px;
+  font-size: 36px; /* 放大标题字体 */
+  font-weight: bold; /* 加粗字体 */
+  margin-top: 20px;
 }
 
 .progress-bar {
@@ -232,7 +239,7 @@ h1 {
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 28px;
   }
 
   .progress-bar {

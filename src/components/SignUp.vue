@@ -1,19 +1,17 @@
-<template> 
-  <div class="login-page">
-    <!-- 返回上一页的标志 -->
-    <div class="back-arrow" @click="goBack">
-      <i class="back-icon">←</i> Back
-    </div>
+<template>  
+  <div class="signup-page">
+    <!-- 返回按钮 -->
+    <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <div class="login-container">
+    <div class="signup-container">
       <!-- Logo -->
       <div class="logo">LOGO</div>
 
-      <!-- Login 标题 -->
-      <h2 class="login-title">Sign up</h2>
+      <!-- Sign up 标题 -->
+      <h2 class="signup-title">Sign up</h2>
 
       <!-- 表单 -->
-      <form @submit.prevent="submitLogin">
+      <form @submit.prevent="submitSignup">
         <!-- Email 输入框 -->
         <div class="form-group">
           <label for="email">Enter your email address</label>
@@ -26,16 +24,16 @@
           <input type="password" v-model="password" id="password" required />
         </div>
 
-        <!-- 登录按钮 -->
+        <!-- 注册按钮 -->
         <button type="submit" class="submit-btn">Create Account</button>
       </form>
 
       <!-- 分隔线 -->
       <div class="form-divider"></div>
 
-      <!-- 注册链接 -->
-      <p class="signup-link">Don't have an account? 
-        <a href="#" @click.prevent="goToSignUp">Sign Up here!</a>
+      <!-- 登录链接 -->
+      <p class="login-link">Already have an account? 
+        <a href="#" @click.prevent="goToLogin">Login here!</a>
       </p>
     </div>
   </div>
@@ -43,7 +41,7 @@
 
 <script>
 export default {
-  name: "UserLogin", // 组件名称
+  name: "SignUp", // 组件名称
   data() {
     return {
       email: "",
@@ -51,12 +49,12 @@ export default {
     };
   },
   methods: {
-    submitLogin() {
-      alert(`Welcome back, ${this.email}!`);
-      this.$router.push("/"); // 登录成功后跳转到主页
+    submitSignUp() {
+      alert(`Welcome, ${this.email}! You have signed up.`);
+      this.$router.push("/"); // 注册成功后跳转到主页
     },
-    goToSignUp() {
-      this.$router.push("/signup"); // 跳转到注册页面的路由
+    goToLogin() {
+      this.$router.push("/login"); // 跳转到登录页面
     },
     goBack() {
       this.$router.go(-1); // 返回上一页
@@ -82,7 +80,7 @@ body, html {
   background-color: #f0f0f0;
 }
 
-.login-page {
+.signup-page {
   position: relative;
   display: flex;
   justify-content: center;
@@ -91,15 +89,17 @@ body, html {
 }
 
 /* 返回箭头标志 */
-.back-arrow {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+.back-button {
+  position: fixed;
+  left: 30px;
+  top: 100px;
+  background-color: #f5f5f5;
+  border: none;
+  font-size: 24px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: #333;
-  font-size: 16px;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .back-arrow:hover {
@@ -112,7 +112,7 @@ body, html {
 }
 
 /* 登录框容器 */
-.login-container {
+.signup-container {
   width: 582px;
   height: 554px;
   background: rgba(12, 73, 191, 0.47);
@@ -137,7 +137,7 @@ body, html {
 }
 
 /* 标题 */
-.login-title {
+.signup-title {
   text-align: center;
   font-weight: 700;
   font-size: 32px;
@@ -167,7 +167,7 @@ input[type="email"], input[type="password"] {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 登录按钮 */
+/* 注册按钮 */
 .submit-btn {
   width: 178.14px;
   height: 35.56px;
@@ -195,7 +195,7 @@ input[type="email"], input[type="password"] {
   margin: 30px 0;
 }
 
-/* 注册链接 */
+/* 登录链接 */
 .signup-link {
   text-align: center;
   font-size: 14px;

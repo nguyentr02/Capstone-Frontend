@@ -21,13 +21,18 @@
       <div class="event-info">
         <p><strong>When</strong><br>{{ eventData.date }}</p>
         <p><strong>Location</strong><br>{{ eventData.location }}</p>
-        <p><strong>Visit organizer's website:</strong> <a :href="eventData.website">{{ eventData.website }}</a></p>
+        <p><strong>Visit organizer's website:</strong> <a :href="eventData.website" target="_blank">{{ eventData.website }}</a></p>
       </div>
 
+      <!-- 使用 VSCode 自带地图的部分 -->
       <div class="event-map">
         <iframe
           :src="eventData.mapUrl"
-          width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy"
+          width="100%"
+          height="200"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
         ></iframe>
       </div>
 
@@ -46,14 +51,15 @@ export default {
       events: [
         {
           id: 1,
-          name: '活动 1',
+          name: 'Melbourne Cricket Ground Event',
           description:
-            'Lorem ipsum odor amet, consectetuer adipiscing elit. Nunc sociosqu a hac semper nullam lectus laoreet. Vestibulum aenean condimentum ornare a ex ridiculus lacinia tellus per. Dolor fusce platea massa odio maximus cras curae ligula. Urna et fringilla at montes tincidunt. Luctus tempus habitant suscipit egestas id. Primis suspendisse himenaeos sem ad nunc posuere porttitor vitae. Semper nullam lectus laoreet. Vestibulum aenean condimentum ornare a ex ridiculus lacinia tellus per. Dolor fusce platea massa odio maximus cras curae ligula. Urna et fringilla at montes tincidunt. Luctus tempus habitant suscipit egestas id. Primis suspendisse himenaeos sem ad nunc posuere porttitor vitae.',
-          date: '2024年10月13日，星期日',
-          location: 'Melbourne Cricket Ground (MCG)，Hawthorn',
+            'Lorem ipsum odor amet, consectetuer adipiscing elit. Nunc sociosqu a hac semper nullam lectus laoreet. Vestibulum aenean condimentum ornare a ex ridiculus lacinia tellus per.',
+          date: 'October 13, 2024, Sunday',
+          location: 'Melbourne Cricket Ground (MCG), Hawthorn',
           website: 'https://example.com',
-          mapUrl: 'https://www.google.com/maps/embed?pb=...',
-          image: 'https://via.placeholder.com/600x400',
+          // VSCode地图相关链接
+          mapUrl: 'https://maps.google.com/maps?q=Melbourne%20Cricket%20Ground&t=&z=13&ie=UTF8&iwloc=&output=embed',
+          image: require('@/assets/Melbourne-Cricket-Ground.png'), // 从 assets 文件夹加载图像
           shareLink: 'https://link.to.event1.com',
         },
         {
@@ -62,8 +68,7 @@ export default {
           description: 'Detailed description for Event 2.',
           date: 'October 14, 2024, Monday',
           location: 'Sydney Opera House, Sydney',
-          website: 'https://example2.com',
-          mapUrl: 'https://www.google.com/maps/embed?pb=...',
+          mapUrl: 'https://maps.google.com/maps?q=Sydney%20Opera%20House&t=&z=13&ie=UTF8&iwloc=&output=embed',
           image: 'https://via.placeholder.com/600x400',
           shareLink: 'https://link.to.event2.com',
         },
@@ -95,16 +100,20 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   margin: 20px;
+  position: relative;
 }
 
 .back-button {
   position: absolute;
-  left: 20px;
-  top: 20px;
-  background-color: transparent;
+  left: 30px;
+  top: 30px;
+  background-color: #f5f5f5;
   border: none;
   font-size: 24px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .event-left {

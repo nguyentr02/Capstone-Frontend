@@ -1,10 +1,11 @@
-<template> 
+<template>
   <transition name="fade">
     <div v-if="showFilter" class="filter-overlay">
       <div class="filter-popup">
+        <button class="close-button" @click="closeFilter" aria-label="Close Filter Popup">&times;</button>
         <h2>Filter Options</h2>
 
-        <!-- 活动类型部分 -->
+        <!-- Activity Type Section -->
         <div class="filter-section">
           <h3>Choose Activity</h3>
           <div class="activity-grid">
@@ -19,9 +20,12 @@
               <span>{{ activity.name }}</span>
             </div>
           </div>
+          <div v-if="errors.selectedActivity" class="error-message">
+            {{ errors.selectedActivity }}
+          </div>
         </div>
 
-        <!-- 地点选择 -->
+        <!-- Location Selection Section -->
         <div class="filter-section">
           <h3>Location</h3>
           <div class="location-container">
@@ -29,23 +33,43 @@
               type="text"
               class="location-input"
               v-model="location"
-              placeholder="Enter your location or select from map"
+              @blur="handleManualInput"
+              placeholder="Enter location or select from map"
+              :disabled="isGeocoding"
             />
-            <button class="map-button" @click="openMap">Map</button>
+            <button class="map-button" @click="toggleMap" :disabled="isGeocoding">Map</button>
           </div>
-          <div ref="map" class="map-popup" v-if="showMap"></div>
+          <div v-if="errors.location" class="error-message">
+            {{ errors.location }}
+          </div>
+          <div v-if="isGeocoding" class="loading-spinner">
+            <!-- Simple text-based loader; replace with a spinner if desired -->
+            Loading...
+          </div>
+          <!-- Leaflet Map for Selecting Location -->
+          <div v-if="showMap" ref="map" class="map-popup"></div>
         </div>
 
-        <!-- 价格区间 -->
+        <!-- Price Range Section -->
         <div class="filter-section">
           <h3>Price Range</h3>
           <div class="price-inputs">
-            <input type="number" v-model="minPrice" placeholder="Min Price" />
-            <input type="number" v-model="maxPrice" placeholder="Max Price" />
+            <div class="price-input-wrapper">
+              <input type="number" v-model="minPrice" placeholder="Min Price" />
+              <div v-if="errors.minPrice" class="error-message">
+                {{ errors.minPrice }}
+              </div>
+            </div>
+            <div class="price-input-wrapper">
+              <input type="number" v-model="maxPrice" placeholder="Max Price" />
+              <div v-if="errors.maxPrice" class="error-message">
+                {{ errors.maxPrice }}
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- 操作按钮 -->
+        <!-- Action Buttons Section -->
         <div class="filter-actions">
           <button class="clear-button" @click="clearFilter">Clear</button>
           <button class="apply-button" @click="applyFilter">Apply</button>
@@ -76,45 +100,77 @@ export default {
       showMap: false,
       map: null,
       marker: null,
+      errors: {
+        selectedActivity: "",
+        location: "",
+        minPrice: "",
+        maxPrice: "",
+      },
+      isGeocoding: false, // Indicates if a geocoding request is in progress
     };
   },
   methods: {
     selectActivity(activityName) {
       this.selectedActivity = activityName;
+      this.errors.selectedActivity = ""; // Clear error
     },
     clearFilter() {
       this.selectedActivity = "";
       this.location = "";
       this.minPrice = "";
       this.maxPrice = "";
+      this.errors = {
+        selectedActivity: "",
+        location: "",
+        minPrice: "",
+        maxPrice: "",
+      };
+      if (this.marker) {
+        this.map.removeLayer(this.marker);
+        this.marker = null;
+      }
     },
-    applyFilter() {
-      this.$emit("applyFilter", {
-        selectedActivity: this.selectedActivity,
-        location: this.location,
-        minPrice: this.minPrice,
-        maxPrice: this.maxPrice,
-      });
+    async applyFilter() {
+      if (this.validateInputs()) {
+        this.$emit("applyFilter", {
+          selectedActivity: this.selectedActivity,
+          location: this.location,
+          minPrice: this.minPrice,
+          maxPrice: this.maxPrice,
+        });
+        this.closeFilter(); // Close the filter popup after applying
+      }
+    },
+    closeFilter() {
       this.$emit("closeFilter");
     },
-    openMap() {
-      this.showMap = true;
-      this.$nextTick(() => {
-        this.initMap();
-      });
+    toggleMap() {
+      this.showMap = !this.showMap;
+      if (this.showMap) {
+        this.$nextTick(() => {
+          this.initMap();
+        });
+      }
     },
     initMap() {
       if (!this.map) {
+        // Initialize the map
         this.map = L.map(this.$refs.map).setView([51.505, -0.09], 13);
 
+        // Add OpenStreetMap tiles
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
         }).addTo(this.map);
 
+        // Add click event listener
         this.map.on("click", this.onMapClick);
+      } else {
+        // If the map is already initialized, refresh its size
+        this.map.invalidateSize();
       }
     },
-    onMapClick(e) {
+    async onMapClick(e) {
       const { lat, lng } = e.latlng;
 
       if (this.marker) {
@@ -123,23 +179,156 @@ export default {
         this.marker = L.marker(e.latlng).addTo(this.map);
       }
 
-      this.location = `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+      try {
+        const address = await this.reverseGeocode(lat, lng);
+        this.location = address;
+        this.errors.location = ""; // Clear location error
+      } catch (error) {
+        console.error("Reverse Geocoding Error:", error);
+        this.errors.location = "Unable to retrieve the address for the selected location.";
+      }
+
       this.showMap = false;
     },
+    async reverseGeocode(lat, lng) {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      return data.display_name;
+    },
+    async geocodeAddress(address) {
+      const encodedAddress = encodeURIComponent(address);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodedAddress}`
+      );
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      if (data.length === 0) {
+        throw new Error("No results found for the entered address.");
+      }
+      // Return the first result's display_name and coordinates
+      return {
+        address: data[0].display_name,
+        lat: parseFloat(data[0].lat),
+        lng: parseFloat(data[0].lon),
+      };
+    },
+    async handleManualInput() {
+      if (!this.location.trim()) {
+        this.errors.location = "Please enter or select a location.";
+        return;
+      }
+
+      this.isGeocoding = true;
+      try {
+        const result = await this.geocodeAddress(this.location);
+        this.location = result.address;
+        this.errors.location = "";
+
+        // Update the map view and marker
+        if (this.map) {
+          this.map.setView([result.lat, result.lng], 13);
+          if (this.marker) {
+            this.marker.setLatLng([result.lat, result.lng]);
+          } else {
+            this.marker = L.marker([result.lat, result.lng]).addTo(this.map);
+          }
+        } else {
+          // Initialize the map centered at the geocoded location
+          this.showMap = true;
+          this.$nextTick(() => {
+            this.initMap();
+            this.map.setView([result.lat, result.lng], 13);
+            if (this.marker) {
+              this.marker.setLatLng([result.lat, result.lng]);
+            } else {
+              this.marker = L.marker([result.lat, result.lng]).addTo(this.map);
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Geocoding Error:", error);
+        this.errors.location = "Unable to find the entered address. Please try again.";
+      } finally {
+        this.isGeocoding = false;
+      }
+    },
+    validateInputs() {
+      let isValid = true;
+
+      // Validate Activity Type
+      if (!this.selectedActivity) {
+        this.errors.selectedActivity = "Please select at least one activity type.";
+        isValid = false;
+      } else {
+        this.errors.selectedActivity = "";
+      }
+
+      // Validate Location
+      if (!this.location.trim()) {
+        this.errors.location = "Please enter or select a location.";
+        isValid = false;
+      }
+
+      // Validate Price Range
+      if (this.minPrice === "" || this.maxPrice === "") {
+        this.errors.minPrice = "Please enter a price range.";
+        this.errors.maxPrice = "Please enter a price range.";
+        isValid = false;
+      } else {
+        if (isNaN(this.minPrice) || this.minPrice < 0) {
+          this.errors.minPrice = "Min price must be a non-negative number.";
+          isValid = false;
+        } else {
+          this.errors.minPrice = "";
+        }
+
+        if (isNaN(this.maxPrice) || this.maxPrice < 0) {
+          this.errors.maxPrice = "Max price must be a non-negative number.";
+          isValid = false;
+        } else {
+          this.errors.maxPrice = "";
+        }
+
+        if (Number(this.minPrice) > Number(this.maxPrice)) {
+          this.errors.minPrice = "Min price cannot be greater than max price.";
+          this.errors.maxPrice = "Max price cannot be less than min price.";
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    },
+  },
+  beforeUnmount() {
+    if (this.map) {
+      this.map.remove();
+    }
   },
 };
 </script>
 
 <style scoped>
-/* 动画效果 */
-.fade-enter-active, .fade-leave-active {
+/* Animation Effects */
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.3s;
 }
-.fade-enter, .fade-leave-to {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
-/* 弹出框覆盖层 */
+/* Overlay Styles */
 .filter-overlay {
   position: fixed;
   top: 0;
@@ -153,52 +342,68 @@ export default {
   z-index: 1000;
 }
 
-/* 弹出框样式 */
+/* Popup Styles */
 .filter-popup {
   background-color: white;
   width: 90%;
-  max-width: 800px;  /* 放大整体尺寸 */
-  padding: 40px;     /* 放大内容的内边距 */
+  max-width: 800px;
+  padding: 40px;
   border-radius: 20px;
   box-shadow: 0 15px 45px rgba(0, 0, 0, 0.2);
   overflow-y: auto;
   max-height: 80vh;
   text-align: center;
-  transform: scale(1.1);  /* 放大整个弹出框 */
+  position: relative;
 }
 
-/* 活动类型部分 */
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.3s;
+}
+
+.close-button:hover {
+  color: #333;
+}
+
+/* Activity Type Section */
 .activity-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 放大每个图标 */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 20px;
   margin-bottom: 30px;
 }
 
-/* 活动图标 */
 .activity-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s, border 0.2s;
 }
 
 .activity-icon.selected {
-  transform: scale(1.15); /* 增加放大效果 */
+  transform: scale(1.15);
   border: 3px solid #42b983;
   border-radius: 50%;
 }
 
 .activity-icon img {
   width: 100%;
-  max-width: 100px; /* 放大图标 */
+  max-width: 100px;
   height: auto;
   border-radius: 50%;
   margin-bottom: 10px;
 }
 
-/* 地点选择部分 */
+/* Location Selection Section */
 .location-container {
   display: flex;
   gap: 15px;
@@ -207,13 +412,13 @@ export default {
 
 .location-input {
   flex-grow: 1;
-  padding: 15px; /* 放大输入框的内边距 */
-  font-size: 18px; /* 增加字体大小 */
+  padding: 15px;
+  font-size: 18px;
   border: 2px solid #ccc;
   border-radius: 10px;
 }
 
-/* 地图按钮 */
+/* Map Button */
 .map-button {
   padding: 15px;
   font-size: 18px;
@@ -229,14 +434,21 @@ export default {
   background-color: #369e6f;
 }
 
-/* 地图弹出框 */
+/* Loading Spinner (Simple Text-based) */
+.loading-spinner {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Map Popup */
 .map-popup {
   width: 100%;
   height: 400px;
   margin-top: 20px;
 }
 
-/* 价格输入框 */
+/* Price Range Section */
 .price-inputs {
   display: flex;
   gap: 15px;
@@ -246,12 +458,32 @@ export default {
 .price-inputs input {
   flex: 1;
   padding: 15px;
-  font-size: 18px; /* 增加字体大小 */
+  font-size: 18px;
   border: 2px solid #ccc;
   border-radius: 10px;
 }
 
-/* 操作按钮 */
+/* Error Message Styles */
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  text-align: left;
+}
+
+/* Price Input Wrapper for Alignment */
+.price-input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+/* Ensure Proper Spacing Between Input and Error Message */
+.price-input-wrapper input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Action Buttons Section */
 .filter-actions {
   display: flex;
   justify-content: space-evenly;
@@ -288,21 +520,20 @@ export default {
   background-color: #369e6f;
 }
 
-/* 响应式布局 */
+/* Responsive Design */
 @media (max-width: 768px) {
   .filter-popup {
     width: 95%;
     max-width: 100%;
     padding: 30px;
-    transform: scale(1);  /* 在小屏幕上保持较小的放大倍数 */
   }
 
   .activity-grid {
-    grid-template-columns: repeat(2, 1fr); /* 在中小屏幕上显示两列 */
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .location-input {
-    font-size: 16px; /* 减小小屏幕的字体大小 */
+    font-size: 16px;
   }
 
   .map-button {
@@ -312,11 +543,11 @@ export default {
 
 @media (max-width: 480px) {
   .activity-grid {
-    grid-template-columns: 1fr; /* 在小屏幕上显示一列 */
+    grid-template-columns: 1fr;
   }
 
   .map-button {
-    width: 100%; /* 在小屏幕上按钮也全宽 */
+    width: 100%;
   }
 }
 </style>

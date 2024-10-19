@@ -1,5 +1,5 @@
 <template>
-  <header class="navbar">
+  <header class="user navbar">
     <div class="logo" role="banner" aria-label="公司标志">
       <div class="logo-icon">LOGO</div>
     </div>
@@ -12,8 +12,6 @@
       </button>
     </div>
     <div class="header-auth">
-      <button class="auth-button login" @click="goToLogin">Sign in</button>
-      <button class="auth-button signup" @click="goToSignUp">Register</button>
       <button class="link-button" @click="goToProfile">
         <i class="fas fa-user"></i>
       </button>
@@ -27,12 +25,6 @@ import '@fortawesome/fontawesome-free/css/all.css';
 export default {
   name: "AppNavbar",
   methods: {
-    goToLogin() {
-      this.$router.push("/login"); // 跳转到登录页面
-    },
-    goToSignUp() {
-      this.$router.push("/signup"); // 跳转到注册页面
-    },
     goToHome() {
       this.$router.push("/"); // 跳转到主页
     },
@@ -109,11 +101,6 @@ export default {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
-}
-
-.auth-button.signup {
-  background-color: #2C2C2C;
-  color: white;
 }
 
 .auth-button:hover {

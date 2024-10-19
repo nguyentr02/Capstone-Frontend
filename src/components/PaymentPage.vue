@@ -149,13 +149,16 @@ h1 {
 }
 
 .back-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: none;
+  position: fixed;
+  left: 30px;
+  top: 100px;
+  background-color: #f5f5f5;
   border: none;
   font-size: 24px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .payment-container {

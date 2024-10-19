@@ -1,12 +1,10 @@
 <template>
-  <div class="signup-page">
-    <!-- 返回上一页的标志 -->
-    <div class="back-home" @click="goBack">
-      <i class="back-icon">←</i> Back
-    </div>
+  <div class="login-page">
+    <!-- 返回按钮 -->
+    <button class="back-button" @click="$router.go(-1)">←</button>
 
     <!-- 表单容器 -->
-    <div class="signup-container">
+    <div class="login-container">
       <!-- Logo -->
       <div class="logo">LOGO</div>
 
@@ -35,7 +33,7 @@
 
       <!-- 忘记密码链接 -->
       <p class="forgot-password">
-        <a href="#">Forgot password?</a>
+        <router-link to="/reset-password">Forgot password?</router-link>
       </p>
     </div>
   </div>
@@ -43,7 +41,7 @@
 
 <script>
 export default {
-  name: "SignUp",
+  name: "UserLogin",
   data() {
     return {
       email: "",
@@ -68,7 +66,7 @@ export default {
 
 <style scoped>
 /* 页面居中布局 */
-.signup-page {
+.login-page {
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -80,16 +78,17 @@ export default {
 }
 
 /* 返回上一页标志 */
-.back-home {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 16px;
+.back-button {
+  position: fixed;
+  left: 30px;
+  top: 100px;
+  background-color: #f5f5f5;
+  border: none;
+  font-size: 24px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  color: #333;
-  text-decoration: none;
+  border-radius: 50%;
+  padding: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .back-home:hover {
@@ -102,7 +101,7 @@ export default {
 }
 
 /* 表单容器 */
-.signup-container {
+.login-container {
   width: 400px;
   padding: 40px;
   background-color: #ffffff;

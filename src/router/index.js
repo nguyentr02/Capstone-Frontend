@@ -7,6 +7,8 @@ import TicketSelectionPage from "@/components/TicketSelectionPage.vue"; // 导�
 import CompleteFormPage from '@/components/CompleteFormPage.vue'; // 这里引入表单页面
 import PaymentPage from '@/components/PaymentPage.vue'; // 引入支付页面
 import BookingConfirmationPage from '@/components/BookingConfirmationPage.vue'; // 确认页面
+import ResetPassword from "@/components/ResetPassword.vue";
+import TicketsPage from '../components/TicketsPage.vue';
 
 const routes = [
   { path: "/", component: EventList },
@@ -17,6 +19,8 @@ const routes = [
   { path: '/complete-form', component: CompleteFormPage }, // 表单页面的路由
   { path: '/payment', component: PaymentPage }, // 支付页面的路由
   { path: '/booking-confirmation', component: BookingConfirmationPage }, // 确认页面路由
+  { path: "/reset-password", component: ResetPassword },
+  { path: '/tickets',name: 'Tickets', component: TicketsPage },
 ];
 
 const router = createRouter({

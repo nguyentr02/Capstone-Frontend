@@ -3,6 +3,7 @@
 ## Project setup
 ```
 npm install
+npm install leaflet @fortawesome/fontawesome-free
 ```
 
 ### Compiles and hot-reloads for development

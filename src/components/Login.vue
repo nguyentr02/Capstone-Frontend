@@ -1,18 +1,24 @@
 <template>
   <div class="login-page">
-
+    
     <button class="back-button" @click="$router.go(-1)">←</button>
 
     <div class="login-container">
-
+      <!-- Logo -->
       <div class="logo">LOGO</div>
 
+      <!-- Sign in title -->
+      <h2 class="signin-title">Sign in</h2>
+
+      <!-- form -->
       <form @submit.prevent="submitForm">
+        <!-- Email input box -->
         <div class="form-group">
           <label for="email">Email:</label>
           <input type="email" v-model="email" id="email" required />
         </div>
 
+        <!-- Password input box -->
         <div class="form-group password-group">
           <label for="password">Password:</label>
           <div class="password-input">
@@ -20,9 +26,11 @@
           </div>
         </div>
 
+        <!-- log in button -->
         <button type="submit" class="submit-btn">Sign In</button>
       </form>
 
+      <!-- Forgot Password Link -->
       <p class="forgot-password">
         <router-link to="/reset-password">Forgot password?</router-link>
       </p>
@@ -37,13 +45,13 @@ export default {
     return {
       email: "",
       password: "",
-      showPassword: false, 
+      showPassword: false, // Controls whether passwords are displayed
     };
   },
   methods: {
     submitForm() {
       alert(`Welcome, ${this.email}! You have signed in.`);
-      this.$router.push("/"); 
+      this.$router.push("/"); // Jump to homepage after successful login
     },
     togglePassword() {
       this.showPassword = !this.showPassword; 
@@ -56,6 +64,7 @@ export default {
 </script>
 
 <style scoped>
+
 .login-page {
   width: 100vw;
   height: 100vh;
@@ -89,50 +98,60 @@ export default {
   font-size: 20px;
 }
 
-.login-container {
-  width: 400px;
-  padding: 40px;
-  background-color: #ffffff;
-  border-radius: 15px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
 .logo {
-  width: 80px;
-  height: 80px;
-  background-color: #e0e0e0;
-  border-radius: 10px;
+  width: 96px;
+  height: 54px;
+  background: #D9D9D9;
+  border-radius: 5px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 14px;
-  margin-bottom: 30px;
+  font-size: 12px;
+  color: #000;
+  margin: 0 auto 30px auto;
 }
 
+/* title */
+.signin-title {
+  text-align: center;
+  font-weight: 700;
+  font-size: 32px;
+  color: #000;
+  margin-bottom: 20px;
+}
+
+/* Form Styles */
 .form-group {
-  width: 100%;
-  margin-bottom: 25px;
+  margin-bottom: 20px
 }
 
 label {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 8px;
   display: block;
-  text-align: left;
+  font-size: 14px;
+  color: #000;
+  margin-bottom: 5px;
 }
 
+/* form container */
+.login-container {
+  width: 582px;
+  height: 554px;
+  padding: 30px; 
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+/* Form Styles */
 input {
-  width: 100%;
-  padding: 12px;
+  width: 100%; 
+  padding: 10px;
   border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 15px;
+  border-radius: 15px;
+  font-size: 16px;
   outline: none;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: border-color 0.3s;
 }
 
@@ -148,22 +167,24 @@ input:focus {
   position: relative;
 }
 
+
 .eye-icon {
   font-size: 18px;
   color: #555;
 }
 
 .submit-btn {
-  width: 100%;
-  padding: 12px;
+  width: 178.14px;
+  height: 35.56px;
   background-color: #42b983;
-  color: white;
+  border-radius: 20px;
   border: none;
-  border-radius: 8px;
-  cursor: pointer;
+  color: #fff;
+  font-weight: 700;
   font-size: 16px;
-  font-weight: 600;
-  margin-top: 20px;
+  margin: 20px auto;
+  display: block;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 

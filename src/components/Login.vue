@@ -17,9 +17,6 @@
           <label for="password">Password:</label>
           <div class="password-input">
             <input :type="showPassword ? 'text' : 'password'" v-model="password" id="password" required />
-            <span class="toggle-password" @click="togglePassword">
-              <i class="eye-icon">{{ showPassword ? '🙈' : '👁️' }}</i> 
-            </span>
           </div>
         </div>
 
@@ -116,7 +113,6 @@ export default {
   margin-bottom: 30px;
 }
 
-
 .form-group {
   width: 100%;
   margin-bottom: 25px;
@@ -150,14 +146,6 @@ input:focus {
 
 .password-input {
   position: relative;
-}
-
-.toggle-password {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
 }
 
 .eye-icon {

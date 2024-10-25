@@ -45,13 +45,13 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.go(-1); // 返回上一页
+      this.$router.go(-1); // Back to previous page
     },
     goToEvents() {
-      this.$router.push("/"); // 跳转到主页
+      this.$router.push("/"); // Skip to main page
     },
     goToTickets() {
-      this.$router.push("/tickets"); // 跳转到票务页面
+      this.$router.push("/tickets"); // Jump to Tickets
     },
   },
 };
@@ -114,7 +114,7 @@ export default {
   margin-top: 20px;
 }
 
-/* 返回上一页标志 */
+/* Return Button */
 .back-button {
   position: fixed;
   left: 30px;

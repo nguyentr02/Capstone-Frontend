@@ -1,9 +1,8 @@
 <template>
   <div class="event-page">
-    <!-- 返回按钮 -->
+
     <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <!-- 左侧事件详情 -->
     <div class="event-left">
       <img class="event-image" :src="eventData.image" alt="Event Image" />
 
@@ -13,7 +12,6 @@
       </div>
     </div>
 
-    <!-- 右侧事件信息 -->
     <div class="event-right">
       <h1>{{ eventData.name }}</h1>
       <button class="register-button" @click="goToTicketSelection">Register Now</button>
@@ -24,7 +22,7 @@
         <p><strong>Visit organizer's website:</strong> <a :href="eventData.website" target="_blank">{{ eventData.website }}</a></p>
       </div>
 
-      <!-- 使用 VSCode 自带地图的部分 -->
+      <!-- Using the part of the map that comes with VSCode -->
       <div class="event-map">
         <iframe
           :src="eventData.mapUrl"
@@ -57,9 +55,9 @@ export default {
           date: 'October 13, 2024, Sunday',
           location: 'Melbourne Cricket Ground (MCG), Hawthorn',
           website: 'https://example.com',
-          // VSCode地图相关链接
+          // VSCode Maps Related Links
           mapUrl: 'https://maps.google.com/maps?q=Melbourne%20Cricket%20Ground&t=&z=13&ie=UTF8&iwloc=&output=embed',
-          image: require('@/assets/Melbourne-Cricket-Ground.png'), // 从 assets 文件夹加载图像
+          image: require('@/assets/Melbourne-Cricket-Ground.png'), 
           shareLink: 'https://link.to.event1.com',
         },
         {
@@ -72,7 +70,7 @@ export default {
           image: 'https://via.placeholder.com/600x400',
           shareLink: 'https://link.to.event2.com',
         },
-        // 更多事件...
+        // More events...
       ],
       eventData: null,
     };
@@ -83,11 +81,11 @@ export default {
   },
   methods: {
     loadEventDetails(id) {
-      // 查找匹配的事件数据
+      // Find matching event data
       this.eventData = this.events.find(event => event.id === parseInt(id, 10));
     },
     goToTicketSelection() {
-      // 跳转到票种选择页面
+      // Skip to ticket selection page
       this.$router.push(`/ticket-selection`);
     }
   }

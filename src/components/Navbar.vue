@@ -28,19 +28,19 @@ export default {
   name: "AppNavbar",
   methods: {
     goToLogin() {
-      this.$router.push("/login"); // 跳转到登录页面
+      this.$router.push("/login"); 
     },
     goToSignUp() {
-      this.$router.push("/signup"); // 跳转到注册页面
+      this.$router.push("/signup"); 
     },
     goToHome() {
-      this.$router.push("/"); // 跳转到主页
+      this.$router.push("/"); 
     },
     goToTickets() {
-      this.$router.push("/tickets"); // 跳转到票务页面
+      this.$router.push("/tickets"); 
     },
     goToProfile() {
-      this.$router.push("/profile"); // 跳转到个人资料页面
+      this.$router.push("/profile"); 
     },
   },
 };

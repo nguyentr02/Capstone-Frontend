@@ -1,14 +1,13 @@
 <template>
   <div class="confirmation-page">
-    <!-- 返回按钮 -->
+
     <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <!-- 确认信息 -->
     <h1>Booking Confirmed</h1>
     <p>Congratulations! Your ticket is now in the ticket section!</p>
 
     <div class="content-container">
-      <!-- 保留副本表单 -->
+      <!-- Retention copy form -->
       <div class="receipt-form">
         <h2>Keep a copy with you maybe?</h2>
         <div class="form-group">
@@ -33,7 +32,7 @@
         <button class="send-receipt-button" @click="sendReceipt">Send receipt</button>
       </div>
 
-      <!-- 订单信息 -->
+      <!-- Order Information -->
       <div class="order-summary">
         <div class="ticket-info">
           <div class="ticket-color"></div>
@@ -70,7 +69,7 @@ export default {
     };
   },
   methods: {
-    // 模拟发送收据
+    // Simulate sending receipts
     sendReceipt() {
       if (this.formData.email || this.formData.phone) {
         alert('Receipt sent!');
@@ -220,7 +219,6 @@ p {
   font-size: 18px;
 }
 
-/* 响应式设计 */
 @media (max-width: 768px) {
   .content-container {
     flex-direction: column;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- 搜索和筛选栏 -->
+    <!-- Search and filter bar -->
     <div class="search-filter-bar">
       <input 
         type="text" 
@@ -11,7 +11,7 @@
       <button class="filter-button" @click="toggleFilter">Filter</button>
     </div>
 
-    <!-- 活动展示部分 -->
+    <!-- Activity Showcase Section -->
     <div class="events-section" v-if="!showFilter">
       <h2>Trending Events</h2>
       <div class="event-cards">
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <!-- 筛选弹出框 -->
+    <!-- Filter pop-up box -->
     <FilterPopup :showFilter="showFilter" @closeFilter="toggleFilter" />
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
 </script>
 
 <style scoped>
-/* 搜索和筛选栏 */
+
 .search-filter-bar {
   display: flex;
   justify-content: space-between;
@@ -61,7 +61,6 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 搜索输入框 */
 .search-input {
   flex-grow: 1;
   padding: 10px 15px;
@@ -71,7 +70,6 @@ export default {
   font-size: 16px;
 }
 
-/* 筛选按钮 */
 .filter-button {
   padding: 10px 20px;
   background-color: #42b983;
@@ -87,12 +85,10 @@ export default {
   background-color: #369e6f;
 }
 
-/* 活动展示部分 */
 .events-section {
   margin: 20px;
 }
 
-/* 活动卡片部分 */
 .event-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);

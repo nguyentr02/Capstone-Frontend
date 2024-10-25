@@ -1,13 +1,12 @@
 <template>
   <div class="payment-page">
-    <!-- 返回按钮 -->
+
     <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <!-- 页面标题 -->
     <h1>Payment for Booking #123</h1>
 
     <div class="payment-container">
-      <!-- 支付表单 -->
+
       <div class="payment-form">
         <h2>Credit card/ Debit card</h2>
 
@@ -47,7 +46,6 @@
         </form>
       </div>
 
-      <!-- 订单信息概述 -->
       <div class="order-summary">
         <div class="ticket-info">
           <div class="ticket-color"></div>
@@ -67,16 +65,13 @@
       </div>
     </div>
 
-    <!-- 同意条款说明 -->
     <p class="terms">
       By proceeding with your purchase you agree to our Terms and Conditions and Privacy
       Policy
     </p>
 
-    <!-- 提交按钮 -->
     <button class="place-order-button" @click="submitPayment">Place order</button>
 
-    <!-- 警告模态框 -->
     <div v-if="showErrorModal" class="modal-overlay">
       <div class="modal">
         <button class="close-button" @click="closeModal">×</button>
@@ -100,25 +95,25 @@ export default {
       subtotal: 22,
       tax: 2,
       total: 24,
-      showErrorModal: false // 控制错误模态框的显示
+      showErrorModal: false // Control the display of the error modal box
     };
   },
   methods: {
-    // 支付验证和提交
+    // Payment validation and submission
     submitPayment() {
       if (this.isPaymentValid()) {
-        // 支付成功后跳转到确认页面
+
         this.$router.push('/booking-confirmation');
       } else {
-        this.showErrorModal = true; // 显示错误模态框
+        this.showErrorModal = true; 
       }
     },
-    // 模拟支付信息验证
+    // Simulated Payment Information Verification
     isPaymentValid() {
       const { cardNumber, expDate, cvc } = this.paymentData;
       return cardNumber.length === 16 && expDate && cvc.length === 3;
     },
-    // 关闭模态框
+
     closeModal() {
       this.showErrorModal = false;
     }
@@ -279,7 +274,6 @@ h1 {
   background-color: #333;
 }
 
-/* 模态框样式 */
 .modal-overlay {
   position: fixed;
   top: 0;

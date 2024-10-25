@@ -1,37 +1,31 @@
 <template>
   <div class="login-page">
-    <!-- 返回按钮 -->
+
     <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <!-- 表单容器 -->
     <div class="login-container">
-      <!-- Logo -->
+
       <div class="logo">LOGO</div>
 
-      <!-- 表单 -->
       <form @submit.prevent="submitForm">
-        <!-- Email 输入框 -->
         <div class="form-group">
           <label for="email">Email:</label>
           <input type="email" v-model="email" id="email" required />
         </div>
 
-        <!-- Password 输入框 -->
         <div class="form-group password-group">
           <label for="password">Password:</label>
           <div class="password-input">
             <input :type="showPassword ? 'text' : 'password'" v-model="password" id="password" required />
             <span class="toggle-password" @click="togglePassword">
-              <i class="eye-icon">{{ showPassword ? '🙈' : '👁️' }}</i> <!-- 眼睛图标，用于显示/隐藏密码 -->
+              <i class="eye-icon">{{ showPassword ? '🙈' : '👁️' }}</i> 
             </span>
           </div>
         </div>
 
-        <!-- 登录按钮 -->
         <button type="submit" class="submit-btn">Sign In</button>
       </form>
 
-      <!-- 忘记密码链接 -->
       <p class="forgot-password">
         <router-link to="/reset-password">Forgot password?</router-link>
       </p>
@@ -46,26 +40,25 @@ export default {
     return {
       email: "",
       password: "",
-      showPassword: false, // 控制密码是否显示
+      showPassword: false, 
     };
   },
   methods: {
     submitForm() {
       alert(`Welcome, ${this.email}! You have signed in.`);
-      this.$router.push("/"); // 登录成功后跳转到主页
+      this.$router.push("/"); 
     },
     togglePassword() {
-      this.showPassword = !this.showPassword; // 切换密码可见性
+      this.showPassword = !this.showPassword; 
     },
     goBack() {
-      this.$router.go(-1); // 返回上一页
+      this.$router.go(-1); 
     },
   },
 };
 </script>
 
 <style scoped>
-/* 页面居中布局 */
 .login-page {
   width: 100vw;
   height: 100vh;
@@ -77,7 +70,6 @@ export default {
   position: relative;
 }
 
-/* 返回上一页标志 */
 .back-button {
   position: fixed;
   left: 30px;
@@ -100,7 +92,6 @@ export default {
   font-size: 20px;
 }
 
-/* 表单容器 */
 .login-container {
   width: 400px;
   padding: 40px;
@@ -113,7 +104,6 @@ export default {
   text-align: center;
 }
 
-/* Logo 样式 */
 .logo {
   width: 80px;
   height: 80px;
@@ -126,7 +116,7 @@ export default {
   margin-bottom: 30px;
 }
 
-/* 表单样式 */
+
 .form-group {
   width: 100%;
   margin-bottom: 25px;
@@ -154,7 +144,6 @@ input:focus {
   border-color: #42b983;
 }
 
-/* 密码输入框的包裹样式 */
 .password-group {
   position: relative;
 }
@@ -176,7 +165,6 @@ input:focus {
   color: #555;
 }
 
-/* 按钮样式 */
 .submit-btn {
   width: 100%;
   padding: 12px;
@@ -195,7 +183,6 @@ input:focus {
   background-color: #369e6f;
 }
 
-/* 忘记密码样式 */
 .forgot-password {
   margin-top: 20px;
   font-size: 14px;

@@ -1,25 +1,25 @@
 <template> 
   <div class="ticket-selection">
-    <!-- 返回按钮 -->
+    <!-- back-button -->
     <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <!-- 事件图标和标题 -->
+    <!-- Event icons and titles -->
     <div class="event-header">
       <div class="event-icon">Event icon goes here</div>
       <h1>{{ eventName }}</h1>
     </div>
 
-    <!-- 步骤进度条 -->
+    <!-- step by step progress bar -->
     <div class="progress-bar">
       <span class="step completed">Ticket selection</span>
       <span class="step">Complete form</span>
       <span class="step">Payment</span>
     </div>
 
-    <!-- 选择票种 -->
+    <!-- Select Ticket Type -->
     <h2 class="section-title">SELECT YOUR TICKETS</h2>
 
-    <!-- 票种分类 1 -->
+    <!-- Classification of tickets 1 -->
     <div class="ticket-category">
       <h3>TICKET CATEGORY 1</h3>
       <div class="ticket">
@@ -42,7 +42,7 @@
       </div>
     </div>
 
-    <!-- 票种分类 2 -->
+    <!-- Classification of tickets 2 -->
     <div class="ticket-category">
       <h3>TICKET CATEGORY 2</h3>
       <div class="ticket">
@@ -65,7 +65,7 @@
       </div>
     </div>
 
-    <!-- 继续按钮 -->
+    <!-- continue-button -->
     <button class="continue-button" @click="goToNextStep">Continue</button>
   </div>
 </template>
@@ -74,7 +74,7 @@
 export default {
   data() {
     return {
-      eventName: 'Event Name', // 可动态设置事件名称
+      eventName: 'Event Name', // Event name can be set dynamically
       ticketQuantities: {
         1: 0,
         2: 0,
@@ -93,7 +93,7 @@ export default {
       }
     },
     goToNextStep() {
-      // 跳转到下一步，比如表单页面
+      // Skip to next step
       this.$router.push('/complete-form');
     }
   }
@@ -103,8 +103,8 @@ export default {
 <style scoped>
 .ticket-selection {
   padding: 20px;
-  width: 100%; /* 让页面宽度占满整个屏幕 */
-  margin: 0; /* 取消左右空白 */
+  width: 100%; 
+  margin: 0; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -129,18 +129,18 @@ export default {
 }
 
 .event-icon {
-  width: 120px; /* 去掉背景颜色，放大图标 */
+  width: 120px; 
   height: 120px;
-  border-radius: 50%; /* 保持圆形效果 */
+  border-radius: 50%; 
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 20px; /* 图标文字大小 */
+  font-size: 20px; 
 }
 
 h1 {
-  font-size: 36px; /* 放大标题字体 */
-  font-weight: bold; /* 加粗字体 */
+  font-size: 36px; 
+  font-weight: bold;
   margin-top: 20px;
 }
 
@@ -262,7 +262,6 @@ h1 {
   }
 }
 
-/* 适用于超小屏幕（例如窄手机） */
 @media (max-width: 480px) {
   .ticket-quantity {
     justify-content: space-between;

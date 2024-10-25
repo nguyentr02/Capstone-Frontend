@@ -1,15 +1,13 @@
 <template>
   <div class="form-page">
-    <!-- 返回按钮 -->
+
     <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <!-- 事件图标和标题 -->
     <div class="event-header">
       <div class="event-icon">Event icon goes here</div>
       <h1>{{ eventName }}</h1>
     </div>
 
-    <!-- 步骤进度条 -->
     <div class="progress-bar">
       <span class="step completed">Ticket selection</span>
       <div class="progress-line"></div>
@@ -17,14 +15,12 @@
       <span class="step">Payment</span>
     </div>
 
-    <!-- 注册表单 -->
     <h2 class="form-title">REGISTRATION</h2>
 
-    <!-- 信息表单 -->
     <div class="form-section">
       <h3>Your information</h3>
       <form @submit.prevent="goToNextStep">
-        <!-- 表单输入字段 -->
+ 
         <div class="form-group">
           <label for="firstName">First name:</label>
           <input type="text" id="firstName" v-model="formData.firstName" />
@@ -62,7 +58,7 @@
           <input type="text" id="zip" v-model="formData.zip" />
         </div>
 
-        <!-- 自定义问题 -->
+        <!-- Custom questions -->
         <h3>Custom questions</h3>
         <div class="form-group">
           <label for="question1">What is your favorite pet?</label>
@@ -81,7 +77,6 @@
           <input type="text" id="question4" v-model="formData.question4" />
         </div>
 
-        <!-- 继续按钮 -->
         <button class="continue-button" type="submit">CONTINUE</button>
       </form>
     </div>
@@ -92,7 +87,7 @@
 export default {
   data() {
     return {
-      eventName: 'Event Name', // 动态事件名称
+      eventName: 'Event Name', // Dynamic Event Name
       formData: {
         firstName: '',
         lastName: '',
@@ -112,7 +107,7 @@ export default {
   },
   methods: {
     goToNextStep() {
-      // 跳转到付款步骤页面
+      // Skip to payment steps page
       this.$router.push('/payment');
     }
   }
@@ -130,9 +125,9 @@ html, body {
 .form-page {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* 中心对齐 */
+  justify-content: center; 
   align-items: center;
-  min-height: 100vh; /* 占满整个浏览器高度 */
+  min-height: 100vh;
   padding: 40px 20px;
   width: 100%;
   background-color: #f5f5f5;
@@ -254,7 +249,7 @@ h1 {
   background-color: #e65c00;
 }
 
-/* 响应式设计 */
+
 @media (max-width: 768px) {
   .event-icon {
     width: 80px;

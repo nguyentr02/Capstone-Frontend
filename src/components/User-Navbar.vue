@@ -26,13 +26,13 @@ export default {
   name: "AppNavbar",
   methods: {
     goToHome() {
-      this.$router.push("/"); // 跳转到主页
+      this.$router.push("/"); // Skip to main page
     },
     goToTickets() {
-      this.$router.push("/tickets"); // 跳转到票务页面
+      this.$router.push("/tickets"); // Jump to Tickets
     },
     goToProfile() {
-      this.$router.push("/profile"); // 跳转到个人资料页面
+      this.$router.push("/profile"); // Jump to profile page
     },
   },
 };

@@ -1,13 +1,12 @@
 <template>
   <div class="reset-password-page">
-    <!-- 返回按钮 -->
+
     <button class="back-button" @click="$router.go(-1)">←</button>
 
-    <!-- 表单容器 -->
     <div class="reset-container">
       <h1>Reset Password</h1>
       <form @submit.prevent="resetPassword">
-        <!-- 新密码输入框 -->
+   
         <div class="form-group">
           <label for="newPassword">New Password:</label>
           <input
@@ -18,7 +17,7 @@
           />
         </div>
 
-        <!-- 确认密码输入框 -->
+ 
         <div class="form-group">
           <label for="confirmPassword">Confirm Password:</label>
           <input
@@ -29,7 +28,6 @@
           />
         </div>
 
-        <!-- 重设密码按钮 -->
         <button type="submit" class="reset-btn">Reset Password</button>
       </form>
     </div>
@@ -48,7 +46,7 @@ export default {
     resetPassword() {
       if (this.newPassword === this.confirmPassword) {
         alert("Your password has been successfully reset!");
-        this.$router.push("/login"); // 重置成功后跳转到登录页面
+        this.$router.push("/login"); 
       } else {
         alert("Passwords do not match. Please try again.");
       }
@@ -69,7 +67,7 @@ export default {
   position: relative;
 }
 
-/* 返回按钮 */
+
 .back-button {
   position: fixed;
   left: 30px;
@@ -83,7 +81,7 @@ export default {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* 表单容器样式 */
+
 .reset-container {
   width: 400px;
   padding: 40px;
@@ -119,7 +117,6 @@ input {
   outline: none;
 }
 
-/* 重设密码按钮 */
 .reset-btn {
   width: 100%;
   padding: 12px;

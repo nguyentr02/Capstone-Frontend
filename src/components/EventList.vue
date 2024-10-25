@@ -1,6 +1,6 @@
 <template>  
   <div class="event-page">
-    <!-- 搜索栏 -->
+
     <div class="search-bar">
       <input 
         type="text" 
@@ -10,15 +10,12 @@
       />
     </div>
 
-    <!-- 筛选弹出框 -->
     <FilterPopup :showFilter="showFilter" @closeFilter="closeFilter" @applyFilter="applyFilter" />
 
-    <!-- 搜索过滤按钮 -->
     <div class="filter-bar">
       <button class="open-filter-button" @click="showFilter = true">Open Filter</button>
     </div>
 
-    <!-- 事件列表 -->
     <div class="event-list">
       <h2>Trending Events</h2>
       <div class="trending-cards">
@@ -69,7 +66,7 @@ export default {
   data() {
     return {
       showFilter: false,
-      searchQuery: '',  // 搜索栏输入的内容
+      searchQuery: '',  
       trendingEvents: [
         { id: 1, name: "Trending Event 1", description: "Description of Trending Event 1", activity: "Sport", price: 100 },
         { id: 2, name: "Trending Event 2", description: "Description of Trending Event 2", activity: "Music", price: 150 },
@@ -121,7 +118,7 @@ export default {
     };
   },
   watch: {
-    // 当过滤条件或者搜索条件变化时，重置为第一页
+    // Reset to first page when filter or search criteria change
     filteredEvents() {
       this.currentPage = 1;
     },
@@ -169,7 +166,7 @@ export default {
       }
     },
     goToEventDetails(eventId) {
-      this.$router.push(`/events/${eventId}`); // 跳转到事件详情页面
+      this.$router.push(`/events/${eventId}`); // Jump to event details page
     },
     closeFilter() {
       this.showFilter = false;
@@ -188,16 +185,14 @@ export default {
 </script>
 
 <style scoped>
-/* 样式保持不变 */
-</style>
 
+</style>
 
 <style scoped>
 .event-page {
   margin: 20px;
 }
 
-/* 搜索栏样式 */
 .search-bar {
   margin-bottom: 20px;
 }
@@ -210,7 +205,6 @@ export default {
   border-radius: 5px;
 }
 
-/* 过滤栏样式 */
 .filter-bar {
   display: flex;
   justify-content: flex-end;
@@ -231,7 +225,7 @@ export default {
   background-color: #369e6f;
 }
 
-/* Trending Events 样式 */
+/* Trending Events style */
 .trending-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -239,7 +233,7 @@ export default {
   margin-bottom: 30px;
 }
 
-/* All Events 样式 */
+/* All Events style */
 .event-cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -247,7 +241,6 @@ export default {
   margin-bottom: 20px;
 }
 
-/* 事件卡片样式 */
 .event-card {
   background-color: #f5f5f5;
   padding: 20px;
@@ -262,7 +255,6 @@ export default {
   transform: scale(1.05);
 }
 
-/* 分页部分样式 */
 .pagination {
   display: flex;
   justify-content: center;
@@ -290,7 +282,6 @@ export default {
   background-color: #1a1a7f;
 }
 
-/* 响应式布局：适配不同屏幕 */
 @media (max-width: 1200px) {
   .trending-cards,
   .event-cards {

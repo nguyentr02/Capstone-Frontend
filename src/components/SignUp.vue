@@ -1,37 +1,36 @@
 <template>  
   <div class="signup-page">
-    <!-- 返回按钮 -->
+    <!-- back-butto -->
     <button class="back-button" @click="$router.go(-1)">←</button>
 
     <div class="signup-container">
-      <!-- Logo -->
+
       <div class="logo">LOGO</div>
 
-      <!-- Sign up 标题 -->
+      <!-- Sign up Title -->
       <h2 class="signup-title">Sign up</h2>
 
-      <!-- 表单 -->
+      <!-- form (document) -->
       <form @submit.prevent="submitSignup">
-        <!-- Email 输入框 -->
+        <!-- Email Input Box -->
         <div class="form-group">
           <label for="email">Enter your email address</label>
           <input type="email" v-model="email" id="email" required />
         </div>
 
-        <!-- Password 输入框 -->
+        <!-- Password box -->
         <div class="form-group">
           <label for="password">Choose a secure password</label>
           <input type="password" v-model="password" id="password" required />
         </div>
 
-        <!-- 注册按钮 -->
+        <!-- Register button -->
         <button type="submit" class="submit-btn">Create Account</button>
       </form>
 
-      <!-- 分隔线 -->
       <div class="form-divider"></div>
 
-      <!-- 登录链接 -->
+      <!-- Login link -->
       <p class="login-link">Already have an account? 
         <a href="#" @click.prevent="goToLogin">Login here!</a>
       </p>
@@ -41,7 +40,7 @@
 
 <script>
 export default {
-  name: "SignUp", // 组件名称
+  name: "SignUp", 
   data() {
     return {
       email: "",
@@ -51,20 +50,20 @@ export default {
   methods: {
     submitSignUp() {
       alert(`Welcome, ${this.email}! You have signed up.`);
-      this.$router.push("/"); // 注册成功后跳转到主页
+      this.$router.push("/"); // Jump to homepage after successful registration
     },
     goToLogin() {
-      this.$router.push("/login"); // 跳转到登录页面
+      this.$router.push("/login"); // Jump to login page
     },
     goBack() {
-      this.$router.go(-1); // 返回上一页
+      this.$router.go(-1);
     }
   },
 };
 </script>
 
 <style scoped>
-/* 全局重置 */
+
 * {
   margin: 0;
   padding: 0;
@@ -88,7 +87,7 @@ body, html {
   height: 100vh;
 }
 
-/* 返回箭头标志 */
+
 .back-button {
   position: fixed;
   left: 30px;
@@ -111,7 +110,7 @@ body, html {
   font-size: 20px;
 }
 
-/* 登录框容器 */
+
 .signup-container {
   width: 582px;
   height: 554px;
@@ -122,7 +121,7 @@ body, html {
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
-/* Logo */
+
 .logo {
   width: 96px;
   height: 54px;
@@ -136,7 +135,7 @@ body, html {
   margin: 0 auto 30px auto;
 }
 
-/* 标题 */
+
 .signup-title {
   text-align: center;
   font-weight: 700;
@@ -145,7 +144,7 @@ body, html {
   margin-bottom: 20px;
 }
 
-/* 表单样式 */
+
 .form-group {
   margin-bottom: 20px;
 }
@@ -167,7 +166,7 @@ input[type="email"], input[type="password"] {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* 注册按钮 */
+
 .submit-btn {
   width: 178.14px;
   height: 35.56px;
@@ -187,7 +186,7 @@ input[type="email"], input[type="password"] {
   background-color: #A88FD0;
 }
 
-/* 分隔线 */
+
 .form-divider {
   width: 100%;
   height: 2px;
@@ -195,7 +194,7 @@ input[type="email"], input[type="password"] {
   margin: 30px 0;
 }
 
-/* 登录链接 */
+
 .signup-link {
   text-align: center;
   font-size: 14px;

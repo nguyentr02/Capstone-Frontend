@@ -19,7 +19,7 @@
       <main class="homepage-body">
         <div class="report-selection-export-container">
           <button class="report-export-btn">
-                <span>Add event</span>
+                <span>Export Report</span>
               </button>
           <div class = "report-selection">
             <h1>Report Type Selection</h1>

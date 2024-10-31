@@ -1,6 +1,5 @@
 <template>
     <div class="admin_report_generation">
-      <Navbar />
       <main>
           <AdminSideBar />
           <AdminReportGeneration />

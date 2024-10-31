@@ -58,7 +58,7 @@
 .homepage {
   /* Shift homepage to next to sideNav */
   width: 87%;
-  margin-left: 13%;
+  padding-left: 13%;
 }
 
 header {

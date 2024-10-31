@@ -1,9 +1,8 @@
 <template>
   <div class="admin_homepage">
-    <Navbar />
     <main>
-        <AdminSideBar />
-        <AdminHomePage />
+      <AdminSideBar />
+      <AdminHomePage />
     </main>
   </div>
 </template>
@@ -21,3 +20,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+AdminSideBar {
+  background-color: blue;
+}
+</style>

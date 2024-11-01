@@ -60,7 +60,7 @@
     font-size: 40px;
     font-weight: 700;
   }
-
+  
   header hr{
     margin-top: 10px;
     height: 1px;
@@ -115,10 +115,10 @@
   
 
   .homepage-body {
-    width: 100%;
+    width: 90%;
     display: flex;
     flex-direction: column;
-    margin-left: 5%;
+    padding-left: 5%;
   }
   
   
@@ -153,7 +153,7 @@
     color: rgb(0, 0, 0);
     background-color: #dcd5d5;
     border: none;
-    width: 9%;
+    width: 11%;
     border-radius: 30px;
     font-size: 15px;
     height: 40px;
@@ -175,7 +175,7 @@
     color: rgb(255, 255, 255);
     background-color: #E83C3C;
     border: none;
-    width: 9%;
+    width:11%;
     border-radius: 30px;
     font-size: 15px;
     height: 40px;

@@ -155,7 +155,7 @@
   
 
     .homepage-body {
-        width: 100%;
+        width: 90%;
         display: flex;
         flex-direction: column;
         margin-left: 5%;
@@ -174,6 +174,7 @@
         margin-right: 10%;
         box-shadow: 0 0 11px rgba(33,33,33,.3);
         margin-top: 15px;
+        width: 100%;
     }
     
     th{
@@ -213,7 +214,7 @@
         color: rgb(255, 255, 255);
         background-color: #E83C3C;
         border: none;
-        width: 9%;
+        width: 10%;
         border-radius: 30px;
         font-size: 15px;
         height: 40px;
@@ -223,7 +224,6 @@
         margin: 0.5%;
         cursor: pointer;
         transition: box-shadow 0.5s ease;
-        margin-right: 10%;
     }
 
     .report-export-btn:hover {

@@ -204,7 +204,7 @@
   
 
     .homepage-body {
-        width: 100%;
+        width: 90%;
         display: flex;
         flex-direction: column;
         margin-left: 5%;
@@ -214,7 +214,7 @@
     .reportCard {
         border: 1px solid black;
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset;
-        width: 20%;
+        width: 30%;
         margin-top: 1%;
         padding: 4%;
         padding-right: .5%;
@@ -255,7 +255,7 @@
         color: rgb(255, 255, 255);
         background-color: #E83C3C;
         border: none;
-        width: 9%;
+        width: 10%;
         border-radius: 30px;
         font-size: 15px;
         height: 40px;
@@ -265,7 +265,6 @@
         margin: 0.5%;
         cursor: pointer;
         transition: box-shadow 0.5s ease;
-        margin-right: 10%;
     }
 
     .report-export-btn:hover {

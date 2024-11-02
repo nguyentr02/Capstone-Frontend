@@ -9,10 +9,10 @@ import AdminRegistrationManagementView from "@/views/AdminRegistrationManagement
 const routes = [
   { path: "/", component: Homepage },
   { path: "/admin", component : AdminHomeView},
-  { path: "/adminreport", component : AdminReportView},
-  { path: "/adminquestionaire", component : AdminQuestionaireManagementView},
-  { path: "/adminpayment", component : AdminPaymentManagementView},
-  { path: "/adminregistrationmngt", component : AdminRegistrationManagementView},
+  { path: "/admin/report", component : AdminReportView},
+  { path: "/admin/questionaire", component : AdminQuestionaireManagementView},
+  { path: "/admin/payment", component : AdminPaymentManagementView},
+  { path: "/admin/registration", component : AdminRegistrationManagementView},
 ];
 
 const router = createRouter({

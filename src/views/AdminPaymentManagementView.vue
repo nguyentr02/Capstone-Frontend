@@ -1,11 +1,9 @@
 <template>
     <div class="admin_report_generation">
-      <Navbar />
       <main>
           <AdminSideBar />
           <AdminPaymentManagement />
       </main>
-      <Footer></Footer>
     </div>
   </template>
   

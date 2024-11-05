@@ -15,11 +15,11 @@
       <div class="menu_item">
         <i class="fa-solid fa-gauge-high fa-xl"></i>
         <!-- Link to route -->
-        <router-link to="/"> <span>Dashboard</span></router-link>
+        <router-link to="/admin"> <span>Dashboard</span></router-link>
       </div>
       <div class="menu_item">
         <i class="fa-regular fa-newspaper fa-xl"></i>
-        <router-link to="/"> <span>Registration</span></router-link>
+        <router-link to="/admin/registration"> <span>Registration</span></router-link>
       </div>
       <div class="menu_item">
         <i class="fa-solid fa-calendar-days fa-xl"></i>
@@ -27,11 +27,11 @@
       </div>
       <div class="menu_item">
         <i class="fa-regular fa-credit-card fa-xl"></i>
-        <router-link to="/"> <span>Payment</span></router-link>
+        <router-link to="/admin/payment"> <span>Payment</span></router-link>
       </div>
       <div class="menu_item">
         <i class="fa-regular fa-comment-dots fa-xl"></i>
-        <router-link to="/"> <span>Questionare</span></router-link>
+        <router-link to="/admin/questionaire"> <span>Questionare</span></router-link>
       </div>
     </div>
   </main>

@@ -4,7 +4,6 @@
           <AdminSideBar />
           <AdminReportGeneration />
       </main>
-      <Footer></Footer>
     </div>
   </template>
   

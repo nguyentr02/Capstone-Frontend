@@ -1,11 +1,10 @@
 <template>
     <div class="admin_report_generation">
-      <Navbar />
+
       <main>
           <AdminSideBar />
           <AdminQuestionaireManagement />
       </main>
-      <Footer></Footer>
     </div>
   </template>
   

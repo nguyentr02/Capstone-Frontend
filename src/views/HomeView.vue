@@ -2,7 +2,7 @@
 import BaseLayout from '../components/layout/BaseLayout.vue'
 
 export default {
-  name: 'Home',
+  name: 'HomeView',
   components: {
     BaseLayout
   }
@@ -12,7 +12,7 @@ export default {
 <template>
     <BaseLayout>
       <div class="home">
-        <h1>Welcome to EventMaster</h1>
+        <h1>Welcome to RegiMaster</h1>
         <p>Find and register for amazing events!</p>
         <!-- Home page content goes here -->
       </div>

@@ -2,10 +2,18 @@
     import {ref} from 'vue';
     import {useRouter} from 'vue-router';
 
+    import InputText from 'primevue/inputtext';
+    import Button from 'primevue/button';
+    import Password from 'primevue/password';
+    import Card from 'primevue/card';
+    import Checkbox from 'primevue/checkbox';
+    import Divider from 'primevue/divider';
+
     const router = useRouter();
+
+    // States 
     const username = ref('');
     const password = ref('');
-
     const rememberMe = ref(false);
 
     const handleLogin = async () => {
@@ -14,88 +22,120 @@
     }
 </script>
 
-
 <template>
-    <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div class="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 class="text-center text-3xl font-bold text-gray-900">
-          LOGIN
-        </h2>
-        <h3 class="mt-2 text-center text-sm text-gray-600">
-          Welcome to the Event System
-        </h3>
-      </div>
-  
-      <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form class="space-y-6" @submit.prevent="handleLogin">
-            <div>
-              <label for="username" class="block text-sm font-medium text-gray-700">
-                Username
-              </label>
-              <div class="mt-1">
-                <input 
-                  id="username" 
-                  v-model="username"
-                  type="text" 
-                  required
-                  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-              </div>
-            </div>
-  
-            <div>
-              <label for="password" class="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <div class="mt-1 relative">
-                <input 
-                  id="password" 
-                  v-model="password"
-                  type="password" 
-                  required
-                  class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                />
-                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                  <a href="#" class="text-sm text-indigo-600 hover:text-indigo-500">
-                    Forgot Password?
-                  </a>
+    <div class="tw-min-h-screen tw-bg-gray-50 tw-flex tw-items-center tw-justify-center">
+        <Card class="tw-w-full tw-max-w-md tw-shadow-lg tw-p-6">
+            <template #title>
+                <div class="tw-text-center tw-mb-4">
+                    <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800">Login</h2>
+                    <p class="tw-text-gray-600 tw-mt-2">Welcome to RegiMaster</p>
                 </div>
-              </div>
-            </div>
-  
-            <div class="flex items-center justify-between">
-              <div class="flex items-center">
-                <input 
-                  id="remember-me" 
-                  v-model="rememberMe"
-                  type="checkbox"
-                  class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                />
-                <label for="remember-me" class="ml-2 block text-sm text-gray-900">
-                  Remember me?
-                </label>
-              </div>
-            </div>
-  
-            <div>
-              <button 
-                type="submit"
-                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                LOGIN
-              </button>
-            </div>
-          </form>
-  
-          <div class="mt-6 text-center text-sm text-gray-500">
-            <p>copyright example@email.com</p>
-          </div>
-        </div>
-      </div>
+            </template>
+
+            <template #content>
+                <form @submit.prevent="handleLogin" class="tw-space-y-6">
+                    
+                    <!-- Username input box -->
+                    <div class="tw-space-y-2"> 
+                        <label for="username" class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">Username</label>
+                        <span class="p-input-icon-left tw-w-full">
+                            <i class="pi pi-user" />
+                            <InputText  v-model="username" placeholder="Enter your username" :class="{'p-invalid': false}" class="tw-w-full" />
+                        </span>
+                    </div>
+
+                    <!-- Password input box -->
+                    <div class="tw-space-y-2"> 
+                        <label for="password" class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">Password</label>
+                        <Password v-model="password" placeholder="Enter your password" :feedback="false" toggleMask class="tw-w-full" inputClass = "tw-w-full"/>
+                        <div class="tw-flex tw-justify-end">
+                          <a href="#" class="tw-text-sm tw-text-blue-600 hover:tw-text-blue-800">
+                            Forgot password?
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Remember me checkbox -->
+                    <div class="tw-flex tw-items-center">
+                        <Checkbox v-model="rememberMe" :binary="true"  inputId="rememberMe" />
+                        <label for="rememberMe" class="tw-ml-2 tw-text-sm tw-text-gray-600">Remember me?</label>
+                    </div>
+
+                    <Divider />
+
+                    <!-- Login button -->
+                    <Button type="submit" class="tw-w-full" label="LOGIN" />
+
+                    <!-- Register link -->
+                    <div class="tw-text-center tw-mt-4">
+                        <span class="tw-text-gray tw-text-sm">
+                            Don't have an account?
+                            <router-link to="/register"  class="tw-text-blue-600 hover:tw-text-blue-800 tw-ml-1">
+                                Register now!
+                            </router-link>
+                        </span>
+                    </div> 
+                </form>
+            </template>
+
+            <!-- Footer section of the login card -->
+            <template #footer>
+                <p class="tw-text-center tw-text-gray-500 tw-text-sm">
+                copyright example@email.com
+                </p>
+            </template>
+        </Card>
     </div>
 </template>
 
 <style scoped>
+:deep(.p-card) {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 
+:deep(.p-inputtext) {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+}
+
+:deep(.p-inputtext:enabled:focus) {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+:deep(.p-password-input) {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+}
+
+:deep(.p-password i) {
+  color: #64748b;
+}
+
+:deep(.p-button) {
+  background: #3b82f6;
+  border: none;
+  padding: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+:deep(.p-button:enabled:hover) {
+  background: #2563eb;
+}
+
+:deep(.p-checkbox) {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+:deep(.p-checkbox .p-checkbox-box.p-highlight) {
+  background: #3b82f6;
+  border-color: #3b82f6;
+}
 </style>

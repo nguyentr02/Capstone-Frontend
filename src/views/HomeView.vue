@@ -3,9 +3,7 @@ import BaseLayout from '../components/layout/BaseLayout.vue'
 
 export default {
   name: 'HomeView',
-  components: {
-    BaseLayout
-  }
+  components: { BaseLayout }
 }
 </script>
 
@@ -17,5 +15,5 @@ export default {
         <!-- Home page content goes here -->
       </div>
     </BaseLayout>
-  </template>
+</template>
   

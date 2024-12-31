@@ -23,7 +23,7 @@
 </script>
 
 <template>
-    <div class="tw-min-h-screen tw-bg-gray-50 tw-flex tw-items-center tw-justify-center">
+    <div class="tw-min-h-screen tw-bg-gray-100 tw-flex tw-items-center tw-justify-center">
         <Card class="tw-w-full tw-max-w-md tw-shadow-lg tw-p-6">
             <template #title>
                 <div class="tw-text-center tw-mb-4">
@@ -81,7 +81,7 @@
             <!-- Footer section of the login card -->
             <template #footer>
                 <p class="tw-text-center tw-text-gray-500 tw-text-sm">
-                copyright example@email.com
+                copyright Regimaster 2024
                 </p>
             </template>
         </Card>
@@ -92,6 +92,7 @@
 :deep(.p-card) {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: white;
 }
 
 :deep(.p-inputtext) {

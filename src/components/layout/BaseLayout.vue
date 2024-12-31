@@ -4,17 +4,17 @@
 </script>
 
 <template>
-  <div class="app-wrapper">
-    <!-- Navigation header -->
-  <Header />
+    <div class="app-wrapper">
+      <!-- Navigation header -->
+      <Header />
 
-    <main class="main-content">
-      <slot></slot>
-    </main>
+      <main class="main-content">
+         <slot></slot>
+      </main>
 
-    <!-- Footer -->
-    <Footer />
-  </div>
+      <!-- Footer -->
+      <Footer />
+    </div>
 </template>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <script>
-import BaseLayout from '../components/layout/BaseLayout.vue'
+import BaseLayout from '../layouts/BaseLayout.vue'
 
 export default {
   name: 'HomeView',

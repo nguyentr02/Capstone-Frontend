@@ -1,5 +1,5 @@
 <script setup>
-    import BaseLayout from '@/components/layout/BaseLayout.vue';
+    import BaseLayout from '@/layouts/BaseLayout.vue';
     import SideBar from '@/components/dashboard/SideBar.vue';
 </script>
 

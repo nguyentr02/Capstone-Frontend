@@ -1,4 +1,3 @@
-<!-- src/layout/AdminNavbar.vue -->
 <script setup>
 import { ref } from 'vue'
 import Button from 'primevue/button'

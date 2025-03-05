@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue'
-import AdminSidebar from './AdminSidebar.vue'
-import AdminNavbar from './AdminNavbar.vue'
-import AdminFooter from './AdminFooter.vue'
+import AdminSidebar from '../components/admin/AdminSidebar.vue'
+import AdminNavbar from '../components/admin/AdminNavbar.vue'
+import AdminFooter from '../components/admin/AdminFooter.vue'
 
 const sidebarCollapsed = ref(false)
 
@@ -13,11 +13,13 @@ const toggleSidebar = () => {
 
 <template>
   <div class="admin-layout">
+
     <!-- Sidebar -->
     <AdminSidebar :collapsed="sidebarCollapsed" />
     
     <!-- Main Content Area -->
     <div class="main-content" :class="{ 'with-expanded-sidebar': !sidebarCollapsed }">
+      
       <!-- Top Navbar -->
       <AdminNavbar @toggle-sidebar="toggleSidebar" />
       

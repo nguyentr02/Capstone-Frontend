@@ -40,7 +40,7 @@ const navigateTo = (item) => {
     <!-- Logo Area -->
     <div class="logo p-4 flex items-center justify-center border-b border-gray-700">
       <img 
-        src="@/assets/logo.png" 
+        src="@/assets/cat.jpeg" 
         alt="RegiMaster" 
         class="h-8"
         v-if="collapsed"

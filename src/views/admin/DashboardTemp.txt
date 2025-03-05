@@ -1,0 +1,169 @@
+<!-- Stats Cards -->
+    <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <Card v-for="(stat, index) in statsData" :key="index" class="shadow-sm">
+        <template #title>
+          <h3 class="text-gray-500 font-medium text-sm mb-2">{{ stat.title }}</h3>
+        </template>
+        <template #content>
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="text-2xl font-bold text-gray-800">{{ stat.value }}</div>
+              <div class="text-sm text-gray-500">{{ stat.period }}</div>
+            </div>
+            <div :class="stat.trend === 'up' ? 'text-green-500' : 'text-red-500'" class="font-medium">
+              {{ stat.change }}
+              <i :class="stat.trend === 'up' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+            </div>
+          </div>
+        </template>
+      </Card>
+    </div>
+
+    <!-- Orders Chart -->
+<Card class="mb-6 shadow-sm">
+  <template #title>
+    <div class="flex justify-between items-center">
+      <h3 class="text-gray-700 font-medium">Orders</h3>
+      <div class="flex">
+        <Button label="Today" severity="secondary" text size="small" class="mr-2" />
+        <Button label="Monthly" severity="secondary" text size="small" class="mr-2" />
+        <Button label="Annual" severity="secondary" text size="small" />
+      </div>
+    </div>
+  </template>
+  <template #content>
+    <div class="h-80">
+      <Chart type="bar" :data="chartData" :options="chartOptions" />
+    </div>
+  </template>
+</Card>
+
+<!-- Grid Layout for other sections -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <!-- Messages Section -->
+  <Card>
+    <template #title>
+      <div class="flex justify-between items-center">
+        <h3 class="text-gray-700 font-medium">Messages</h3>
+        <div>
+          <Button icon="pi pi-angle-up" text size="small" />
+          <Button icon="pi pi-times" text size="small" />
+        </div>
+      </div>
+    </template>
+    <template #content>
+      <div class="mb-4">
+        <h4 class="flex items-center text-gray-600">
+          <i class="pi pi-envelope mr-2"></i> New messages
+        </h4>
+        <p class="text-gray-500 text-sm">You have 22 new messages and 16 waiting in draft folder.</p>
+      </div>
+      
+      <div class="border-t pt-4">
+        <div class="mb-4">
+          <div class="flex justify-between">
+            <h5 class="font-medium">Monica Smith</h5>
+            <span class="text-xs text-gray-500">1m ago</span>
+          </div>
+          <p class="text-gray-600 text-sm mt-1">Lorem ipsum is simply dummy text of the printing and typesetting industry.</p>
+        </div>
+        
+        <div class="border-t pt-4">
+          <div class="flex justify-between">
+            <h5 class="font-medium">John Angel</h5>
+            <span class="text-xs text-gray-500">2m ago</span>
+          </div>
+          <p class="text-gray-600 text-sm mt-1">There are many variations of passages of Lorem Ipsum available</p>
+        </div>
+      </div>
+    </template>
+  </Card>
+
+  <!-- Project List -->
+  <Card>
+    <template #title>
+      <div class="flex justify-between items-center">
+        <h3 class="text-gray-700 font-medium">User project list</h3>
+        <div>
+          <Button icon="pi pi-angle-up" text size="small" />
+          <Button icon="pi pi-times" text size="small" />
+        </div>
+      </div>
+    </template>
+    <template #content>
+      <DataTable :value="projects" :paginator="false" class="p-datatable-sm" stripedRows>
+        <Column field="status" header="Status">
+          <template #body="{ data }">
+            <Tag :value="data.status" :severity="getStatusSeverity(data.status)" />
+          </template>
+        </Column>
+        <Column field="date" header="Date">
+          <template #body="{ data }">
+            <div class="flex items-center">
+              <i class="pi pi-clock mr-2 text-gray-500"></i>
+              {{ data.date }}
+            </div>
+          </template>
+        </Column>
+        <Column field="user" header="User"></Column>
+        <Column field="value" header="Value">
+          <template #body="{ data }">
+            <span :class="parseFloat(data.value) > 50 ? 'text-green-500' : 'text-blue-500'">
+              {{ data.value }}
+            </span>
+          </template>
+        </Column>
+      </DataTable>
+    </template>
+  </Card>
+
+  <!-- Todo List -->
+  <Card>
+    <template #title>
+      <div class="flex justify-between items-center">
+        <h3 class="text-gray-700 font-medium">Small todo list</h3>
+        <div>
+          <Button icon="pi pi-angle-up" text size="small" />
+          <Button icon="pi pi-times" text size="small" />
+        </div>
+      </div>
+    </template>
+    <template #content>
+      <ul class="space-y-3">
+        <li v-for="todo in todos" :key="todo.id" class="flex items-center">
+          <Checkbox v-model="todo.completed" :binary="true" :inputId="'todo-' + todo.id" />
+          <label :for="'todo-' + todo.id" class="ml-2" :class="{ 'line-through text-gray-400': todo.completed }">
+            {{ todo.text }}
+          </label>
+          <span v-if="todo.text.includes('Mike')" class="ml-2 bg-green-500 text-white text-xs rounded px-1">1 min</span>
+        </li>
+      </ul>
+    </template>
+  </Card>
+
+  <!-- Transactions -->
+  <Card>
+    <template #title>
+      <div class="flex justify-between items-center">
+        <h3 class="text-gray-700 font-medium">Transactions worldwide</h3>
+        <div>
+          <Button icon="pi pi-angle-up" text size="small" />
+          <Button icon="pi pi-times" text size="small" />
+        </div>
+      </div>
+    </template>
+    <template #content>
+      <DataTable :value="transactions" :paginator="false" class="p-datatable-sm" stripedRows>
+        <Column field="no" header="No."></Column>
+        <Column field="transaction" header="Transaction"></Column>
+        <Column field="date" header="Date"></Column>
+        <Column field="amount" header="Amount">
+          <template #body="{ data }">
+            <span class="text-green-500 font-medium">{{ data.amount }}</span>
+          </template>
+        </Column>
+      </DataTable>
+    </template>
+  </Card>
+</div>
+     -->

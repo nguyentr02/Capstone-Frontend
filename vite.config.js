@@ -12,7 +12,12 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  optimizeDeps: {
+    exclude: ['primevue/checkbox', 'primevue/button', 'primevue/chart', 'primevue/card', 
+              'primevue/datatable', 'primevue/column', 'primevue/tag', 'primevue/menu', 
+              'primevue/avatar', 'primevue/badge']
+  }
 })

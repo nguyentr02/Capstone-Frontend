@@ -1,70 +1,75 @@
 <script setup>
-import { ref } from 'vue'
-import Button from 'primevue/button'
-import Avatar from 'primevue/avatar'
-import Menu from 'primevue/menu'
-import Badge from 'primevue/badge'
+import { ref } from 'vue';
 
-const emit = defineEmits(['toggle-sidebar'])
-const menu = ref(null)
-const userMenuItems = [
-  { label: 'Profile', icon: 'pi pi-user' },
-  { label: 'Settings', icon: 'pi pi-cog' },
-  { separator: true },
-  { label: 'Logout', icon: 'pi pi-power-off' }
-]
+  const isUserMenuOpen = ref(false);
 
-const notifications = 5
-const messageCount = 3
+  const toggleUserMenu = () => {
+    isUserMenuOpen.value = !isUserMenuOpen.value;
+  };
 
-const toggleMenu = (event) => {
-  menu.value.toggle(event)
-}
+  defineEmits(['toggle-sidebar']);
+  
 </script>
 
 <template>
-  <div class="navbar bg-white shadow-sm flex items-center justify-between px-4 py-2">
+  <div class="bg-white shadow-sm h-16 flex items-center justify-between px-6">
     <!-- Left section -->
     <div class="flex items-center">
-      <Button 
-        icon="pi pi-bars" 
-        text 
-        @click="$emit('toggle-sidebar')"
-        aria-label="Toggle Sidebar" 
-      />
+      <button 
+        @click="$emit('toggle-sidebar')" 
+        class="mr-4 p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
+      >
+        <i class="pi pi-bars text-gray-600"></i>
+      </button>
       
-      <div class="ml-4 hidden md:block">
+      <div class="relative">
         <input 
           type="text" 
           placeholder="Search..." 
-          class="p-2 border border-gray-300 rounded-md w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-64"
         />
+        <i class="pi pi-search absolute left-3 top-3 text-gray-400"></i>
       </div>
     </div>
     
     <!-- Right section -->
-    <div class="flex items-center space-x-4">
+    <div class="flex items-center space-x-5">
       <!-- Notifications -->
-      <Button text icon="pi pi-bell" class="relative">
-        <Badge v-if="notifications" :value="notifications" class="absolute -top-1 -right-1"></Badge>
-      </Button>
-      
-      <!-- Messages -->
-      <Button text icon="pi pi-envelope" class="relative">
-        <Badge v-if="messageCount" :value="messageCount" class="absolute -top-1 -right-1"></Badge>
-      </Button>
+      <div class="relative">
+        <button class="p-2 rounded-full hover:bg-gray-100 transition-colors focus:outline-none">
+          <i class="pi pi-bell text-gray-600"></i>
+        </button>
+        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+          5
+        </span>
+      </div>
       
       <!-- User profile -->
-      <div class="flex items-center cursor-pointer" @click="toggleMenu">
-        <Avatar 
-          image="https://i.pravatar.cc/40" 
-          shape="circle" 
-          class="mr-2"
+      <div class="flex items-center cursor-pointer" @click="toggleUserMenu">
+        <img 
+          src="https://i.pravatar.cc/36" 
+          alt="User" 
+          class="w-8 h-8 rounded-full mr-2"
         />
-        <span class="hidden md:block">Admin User</span>
+        <span class="text-gray-800 hidden md:block">Admin User</span>
         <i class="pi pi-angle-down ml-2 text-sm"></i>
-        <Menu ref="menu" :model="userMenuItems" :popup="true" />
+        
+        <!-- User dropdown menu (shown when isUserMenuOpen is true) -->
+        <div v-if="isUserMenuOpen" class="absolute right-0 top-12 bg-white shadow-lg rounded-lg py-2 w-48 z-10">
+          <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+            <i class="pi pi-user mr-2"></i> Profile
+          </a>
+          <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+            <i class="pi pi-cog mr-2"></i> Settings
+          </a>
+          <div class="border-t my-1"></div>
+          <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100">
+            <i class="pi pi-power-off mr-2"></i> Logout
+          </a>
+        </div>
+
       </div>
     </div>
   </div>
 </template>
+

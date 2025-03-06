@@ -9,6 +9,8 @@ const props = defineProps({
   }
 })
 
+const emit  = defineEmits(['toggle-sidebar'])
+
 const router = useRouter()
 const activeItem = ref('dashboard')
 
@@ -30,6 +32,11 @@ const navigateTo = (item) => {
   activeItem.value = item.id
   router.push(item.route)
 }
+
+const toggleSidebar = () => {
+  emit('toggle-sidebar')
+}
+
 </script>
 
 <template>
@@ -45,7 +52,17 @@ const navigateTo = (item) => {
         class="h-8"
         v-if="collapsed"
       />
-      <div v-else class="text-xl font-bold">RegiMaster</div>
+      <!-- Display the full logo when the sidebar is collapsed -->
+      <div v-else class="text-xl font-bold">RegiMaster</div> 
+      
+      <!-- Toggle button inside sidebar - shows only when sidebar is collapsed -->
+      <button 
+        v-if="collapsed"
+        @click="toggleSidebar" 
+        class="text-white hover:bg-gray-700 rounded-full p-1"
+      >
+        <i class="pi pi-chevron-right"></i>
+      </button>
     </div>
     
     <!-- Navigation Menu -->
@@ -63,5 +80,16 @@ const navigateTo = (item) => {
         </li>
       </ul>
     </nav>
+
+
+    <div v-if="!collapsed" class="absolute bottom-4 right-4"
+    >
+      <button 
+        @click="toggleSidebar" 
+        class="bg-gray-700 hover:bg-gray-600 text-white rounded-full p-2"
+      >
+        <i class="pi pi-chevron-left"></i>
+      </button>
+    </div>
   </div>
 </template>

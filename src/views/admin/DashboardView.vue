@@ -114,11 +114,24 @@ import AdminLayout from '@/layouts/AdminLayout.vue'
 
 <template>
   <AdminLayout>
-    This is the dashboard view.
-    <div style="background-color: #f0f0f0; padding: 20px; display: flex;">
-  Test with direct styles
+  This is the dashboard view.
+  <div style="background-color: #f0f0f0; padding: 20px; display: flex;">
+    Test with direct styles
+  </div>
+  
+  <div class="bg-white rounded-lg shadow-sm p-4 mb-6" v-for="(stat, index) in statsData" :key="index">
+  <h3 class="text-gray-500 font-medium text-sm mb-2">{{ stat.title }}</h3>
+  <div class="flex justify-between items-center">
+    <div>
+      <div class="text-2xl font-bold text-gray-800">{{ stat.value }}</div>
+      <div class="text-sm text-gray-500">{{ stat.period }}</div>
+    </div>
+    <div :class="stat.trend === 'up' ? 'text-green-500' : 'text-red-500'" class="font-medium">
+      {{ stat.change }}
+      <i :class="stat.trend === 'up' ? 'pi pi-arrow-up' : 'pi pi-arrow-down'"></i>
+    </div>
+  </div>
 </div>
-    
   </AdminLayout>
 </template>
 

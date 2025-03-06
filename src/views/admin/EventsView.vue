@@ -3,6 +3,8 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
+import { eventsMockData } from '@/mock/eventsMock.js'
+
 const router = useRouter()
 const searchQuery = ref('')
 const statusFilter = ref('all')
@@ -10,138 +12,7 @@ const sortBy = ref('date')
 const sortOrder = ref('desc')
 
 // Mock data for events
-const eventsData = ref([
-  { 
-    id: 1, 
-    name: 'Tech Conference 2025', 
-    description: 'Annual technology conference featuring the latest innovations',
-    date: '2025-01-15', 
-    time: '09:00 AM',
-    location: 'San Francisco Convention Center',
-    capacity: 1000,
-    organizer: 'TechCorp Inc.',
-    status: 'Active', 
-    ticketsSold: 450, 
-    revenue: '$13,500'
-  },
-  { 
-    id: 2, 
-    name: 'Summer Music Festival', 
-    description: 'A three-day music festival featuring top artists',
-    date: '2025-06-22', 
-    time: '12:00 PM',
-    location: 'Riverside Park, Austin',
-    capacity: 5000,
-    organizer: 'MusicEvents LLC',
-    status: 'Upcoming', 
-    ticketsSold: 320, 
-    revenue: '$9,600'
-  },
-  { 
-    id: 3, 
-    name: 'Business Leadership Summit', 
-    description: 'Leadership training and networking for executives',
-    date: '2025-03-10', 
-    time: '10:00 AM',
-    location: 'Grand Hotel, Chicago',
-    capacity: 500,
-    organizer: 'Business Leaders Association',
-    status: 'Active', 
-    ticketsSold: 285, 
-    revenue: '$8,550'
-  },
-  { 
-    id: 4, 
-    name: 'Food & Wine Expo', 
-    description: 'Annual expo featuring culinary showcases and wine tastings',
-    date: '2025-04-05', 
-    time: '11:00 AM',
-    location: 'Metropolitan Pavilion, New York',
-    capacity: 1200,
-    organizer: 'Culinary Arts Foundation',
-    status: 'Upcoming', 
-    ticketsSold: 210, 
-    revenue: '$6,300'
-  },
-  { 
-    id: 5, 
-    name: 'Charity Gala Dinner', 
-    description: 'Annual fundraising event for children\'s hospital',
-    date: '2025-02-28', 
-    time: '07:00 PM',
-    location: 'Ritz Carlton, Boston',
-    capacity: 300,
-    organizer: 'Children\'s Hope Foundation',
-    status: 'Active', 
-    ticketsSold: 180, 
-    revenue: '$18,000'
-  },
-  { 
-    id: 6, 
-    name: 'AI and Machine Learning Workshop', 
-    description: 'Hands-on workshop on the latest AI technologies',
-    date: '2025-05-15', 
-    time: '09:30 AM',
-    location: 'Tech Hub, Seattle',
-    capacity: 150,
-    organizer: 'AI Research Institute',
-    status: 'Upcoming', 
-    ticketsSold: 95, 
-    revenue: '$4,750'
-  },
-  { 
-    id: 7, 
-    name: 'Photography Exhibition', 
-    description: 'Exhibition featuring works from international photographers',
-    date: '2024-11-10', 
-    time: '10:00 AM',
-    location: 'Art Gallery, Los Angeles',
-    capacity: 500,
-    organizer: 'Art Collective',
-    status: 'Completed', 
-    ticketsSold: 450, 
-    revenue: '$9,000'
-  },
-  { 
-    id: 8, 
-    name: 'Winter Sports Expo', 
-    description: 'Showcasing the latest winter sports equipment and apparel',
-    date: '2025-01-20', 
-    time: '09:00 AM',
-    location: 'Mountain Convention Center, Denver',
-    capacity: 800,
-    organizer: 'Winter Sports Association',
-    status: 'Upcoming', 
-    ticketsSold: 120, 
-    revenue: '$3,600'
-  },
-  { 
-    id: 9, 
-    name: 'Health and Wellness Fair', 
-    description: 'Promoting healthy living and wellness practices',
-    date: '2024-12-05', 
-    time: '10:00 AM',
-    location: 'Community Center, Portland',
-    capacity: 400,
-    organizer: 'Wellness Institute',
-    status: 'Completed', 
-    ticketsSold: 380, 
-    revenue: '$7,600'
-  },
-  { 
-    id: 10, 
-    name: 'Comic Book Convention', 
-    description: 'Annual gathering for comic book enthusiasts',
-    date: '2025-07-10', 
-    time: '10:00 AM',
-    location: 'Exhibition Center, San Diego',
-    capacity: 2000,
-    organizer: 'Comic Events Inc.',
-    status: 'Upcoming', 
-    ticketsSold: 150, 
-    revenue: '$4,500'
-  }
-])
+const eventsData = ref([...eventsMockData])
 
 // Computed property for filtered and sorted events
 const filteredEvents = computed(() => {
@@ -189,6 +60,7 @@ const toggleSortOrder = () => {
   sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc'
 }
 
+// Navigation methods
 const viewEventDetails = (eventId) => {
   router.push(`/admin/events/${eventId}`)
 }
@@ -201,13 +73,18 @@ const editEvent = (eventId) => {
   router.push(`/admin/events/edit/${eventId}`)
 }
 
+// Delete event (mock data only) (will use API in real app)
 const deleteEvent = (eventId) => {
-  // In a real app, this would call an API
   if (confirm('Are you sure you want to delete this event?')) {
     eventsData.value = eventsData.value.filter(event => event.id !== eventId)
   }
+
+  // Call API to delete event
+
+
 }
 
+// Fomat date to 'MMM DD, YYYY'
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('en-US', { 
     year: 'numeric', 
@@ -216,6 +93,7 @@ const formatDate = (dateString) => {
   })
 }
 
+// Color classes for event status
 const getStatusClass = (status) => {
   switch (status) {
     case 'Active':
@@ -331,6 +209,7 @@ const getStatusClass = (status) => {
                 <th class="px-4 py-3 text-center text-sm font-medium text-gray-500">Actions</th>
               </tr>
             </thead>
+
             <tbody>
               <tr 
                 v-for="event in filteredEvents" 
@@ -428,4 +307,3 @@ const getStatusClass = (status) => {
     </div>
   </AdminLayout>
 </template>
-```

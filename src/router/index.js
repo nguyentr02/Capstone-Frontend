@@ -42,6 +42,11 @@ const router = createRouter({
       path: '/admin/events/edit/:id',
       name: 'event-edit',
       component: () => import('../views/admin/EventFormView.vue')
+    },
+    {
+      path: '/admin/users',
+      name: 'users',
+      component: () => import('../views/admin/UsersView.vue')
     }
 
   ],

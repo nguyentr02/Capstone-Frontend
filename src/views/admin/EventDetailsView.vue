@@ -4,6 +4,9 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
+import { mockAttendees } from '@/mock/attendeesMock'
+import { mockTickets } from '@/mock/ticketsMock'
+
 const route = useRoute()
 const router = useRouter()
 const eventId = parseInt(route.params.id)
@@ -12,41 +15,10 @@ const loading = ref(true)
 const activeTab = ref('overview')
 
 // Mock ticket types for the event
-const ticketTypes = ref([
-  { 
-    id: 1, 
-    name: 'General Admission', 
-    price: '$30.00', 
-    sold: 300, 
-    available: 500,
-    total: 800 
-  },
-  { 
-    id: 2, 
-    name: 'VIP', 
-    price: '$100.00', 
-    sold: 100, 
-    available: 100,
-    total: 200 
-  },
-  { 
-    id: 3, 
-    name: 'Early Bird', 
-    price: '$20.00', 
-    sold: 50, 
-    available: 0,
-    total: 50 
-  }
-])
+const ticketTypes = ref([ ...mockTickets])
 
 // Mock attendees for the event
-const attendees = ref([
-  { id: 1, name: 'John Smith', email: 'john@example.com', ticketType: 'VIP', purchaseDate: '2024-11-10' },
-  { id: 2, name: 'Sarah Johnson', email: 'sarah@example.com', ticketType: 'General Admission', purchaseDate: '2024-11-12' },
-  { id: 3, name: 'Michael Brown', email: 'michael@example.com', ticketType: 'General Admission', purchaseDate: '2024-11-15' },
-  { id: 4, name: 'Emily Davis', email: 'emily@example.com', ticketType: 'Early Bird', purchaseDate: '2024-10-05' },
-  { id: 5, name: 'Robert Wilson', email: 'robert@example.com', ticketType: 'VIP', purchaseDate: '2024-11-18' }
-])
+const attendees = ref([...mockAttendees])
 
 onMounted(() => {
   // Simulate API call to fetch event details

@@ -23,54 +23,54 @@
 </script>
 
 <template>
-    <div class="tw-min-h-screen tw-bg-gray-100 tw-flex tw-items-center tw-justify-center">
-        <Card class="tw-w-full tw-max-w-md tw-shadow-lg tw-p-6">
+    <div class=" min-h-screen  bg-gray-100  flex  items-center  justify-center">
+        <Card class=" w-full  max-w-md  shadow-lg  p-6">
             <template #title>
-                <div class="tw-text-center tw-mb-4">
-                    <h2 class="tw-text-2xl tw-font-bold tw-text-gray-800">Login</h2>
-                    <p class="tw-text-gray-600 tw-mt-2">Welcome to RegiMaster</p>
+                <div class=" text-center  mb-4">
+                    <h2 class=" text-2xl  font-bold  text-gray-800">Login</h2>
+                    <p class=" text-gray-600  mt-2">Welcome to RegiMaster</p>
                 </div>
             </template>
 
             <template #content>
-                <form @submit.prevent="handleLogin" class="tw-space-y-6">
+                <form @submit.prevent="handleLogin" class=" space-y-6">
                     
                     <!-- Username input box -->
-                    <div class="tw-space-y-2"> 
-                        <label for="username" class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">Username</label>
-                        <span class="p-input-icon-left tw-w-full">
+                    <div class=" space-y-2"> 
+                        <label for="username" class=" block  text-sm  font-medium  text-gray-700">Username</label>
+                        <span class="p-input-icon-left  w-full">
                             <i class="pi pi-user" />
-                            <InputText  v-model="username" placeholder="Enter your username" :class="{'p-invalid': false}" class="tw-w-full" />
+                            <InputText  v-model="username" placeholder="Enter your username" :class="{'p-invalid': false}" class=" w-full" />
                         </span>
                     </div>
 
                     <!-- Password input box -->
-                    <div class="tw-space-y-2"> 
-                        <label for="password" class="tw-block tw-text-sm tw-font-medium tw-text-gray-700">Password</label>
-                        <Password v-model="password" placeholder="Enter your password" :feedback="false" toggleMask class="tw-w-full" inputClass = "tw-w-full"/>
-                        <div class="tw-flex tw-justify-end">
-                          <a href="#" class="tw-text-sm tw-text-blue-600 hover:tw-text-blue-800">
+                    <div class=" space-y-2"> 
+                        <label for="password" class=" block  text-sm  font-medium  text-gray-700">Password</label>
+                        <Password v-model="password" placeholder="Enter your password" :feedback="false" toggleMask class=" w-full" inputClass = " w-full"/>
+                        <div class=" flex  justify-end">
+                          <a href="#" class=" text-sm  text-blue-600 hover: text-blue-800">
                             Forgot password?
                             </a>
                         </div>
                     </div>
 
                     <!-- Remember me checkbox -->
-                    <div class="tw-flex tw-items-center">
+                    <div class=" flex  items-center">
                         <Checkbox v-model="rememberMe" :binary="true"  inputId="rememberMe" />
-                        <label for="rememberMe" class="tw-ml-2 tw-text-sm tw-text-gray-600">Remember me?</label>
+                        <label for="rememberMe" class=" ml-2  text-sm  text-gray-600">Remember me?</label>
                     </div>
 
                     <Divider />
 
                     <!-- Login button -->
-                    <Button type="submit" class="tw-w-full" label="LOGIN" />
+                    <Button type="submit" class=" w-full" label="LOGIN" />
 
                     <!-- Register link -->
-                    <div class="tw-text-center tw-mt-4">
-                        <span class="tw-text-gray tw-text-sm">
+                    <div class=" text-center  mt-4">
+                        <span class=" text-gray  text-sm">
                             Don't have an account?
-                            <router-link to="/register"  class="tw-text-blue-600 hover:tw-text-blue-800 tw-ml-1">
+                            <router-link to="/register"  class=" text-blue-600 hover: text-blue-800  ml-1">
                                 Register now!
                             </router-link>
                         </span>
@@ -80,8 +80,8 @@
 
             <!-- Footer section of the login card -->
             <template #footer>
-                <p class="tw-text-center tw-text-gray-500 tw-text-sm">
-                copyright Regimaster 2024
+                <p class=" text-center  text-gray-500  text-sm">
+                copyright Regimaster 2025
                 </p>
             </template>
         </Card>

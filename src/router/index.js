@@ -6,7 +6,7 @@ import AdminReportView from "@/views/AdminReportView.vue";
 const routes = [
   { path: "/", component: Homepage },
   { path: "/admin", component : AdminHomeView},
-  { path: "/adminreport", component : AdminReportView},
+  { path: "/admin/report", component : AdminReportView},
 ];
 
 const router = createRouter({

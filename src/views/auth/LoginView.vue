@@ -19,6 +19,7 @@
     const handleLogin = async () => {
         // TODO: Implement login logic
         console.log('Login attempted:', { username: username.value, password: password.value })
+        router.push('/admin');
     }
 </script>
 

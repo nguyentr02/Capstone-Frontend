@@ -11,6 +11,7 @@ const eventId = isEditMode.value ? parseInt(route.params.id) : null
 const loading = ref(true)
 const saving = ref(false)
 const activeTab = ref('basic')
+const questions = ref([])
 
 // Form state
 const eventForm = ref({
@@ -29,18 +30,18 @@ const eventForm = ref({
   capacity: 100,
   status: 'Upcoming',
   imageUrl: '',
-  features: ['', '', '']
+  features: ['', '', ''],
 })
 
 // Ticket types
 const ticketTypes = ref([
-  { 
-    id: 1, 
-    name: 'General Admission', 
-    price: 30.00, 
+  {
+    id: 1,
+    name: 'General Admission',
+    price: 30.0,
     quantity: 800,
-    description: 'Standard entry to the event' 
-  }
+    description: 'Standard entry to the event',
+  },
 ])
 
 // Form validation
@@ -57,7 +58,7 @@ const locations = [
   'Art Gallery, Los Angeles',
   'Mountain Convention Center, Denver',
   'Community Center, Portland',
-  'Exhibition Center, San Diego'
+  'Exhibition Center, San Diego',
 ]
 
 onMounted(() => {
@@ -67,7 +68,8 @@ onMounted(() => {
       // In a real app, this would be an API call
       eventForm.value = {
         name: 'Tech Conference 2025',
-        description: 'Annual technology conference featuring the latest innovations in AI, blockchain, and cloud computing.',
+        description:
+          'Annual technology conference featuring the latest innovations in AI, blockchain, and cloud computing.',
         date: '2025-01-15',
         startTime: '09:00',
         endTime: '18:00',
@@ -84,34 +86,34 @@ onMounted(() => {
         features: [
           'Keynote speeches from industry leaders',
           'Interactive workshops and hands-on sessions',
-          'Networking opportunities with tech professionals'
-        ]
+          'Networking opportunities with tech professionals',
+        ],
       }
-      
+
       ticketTypes.value = [
-        { 
-          id: 1, 
-          name: 'General Admission', 
-          price: 30.00, 
+        {
+          id: 1,
+          name: 'General Admission',
+          price: 30.0,
           quantity: 800,
-          description: 'Standard entry to the event' 
+          description: 'Standard entry to the event',
         },
-        { 
-          id: 2, 
-          name: 'VIP', 
-          price: 100.00, 
+        {
+          id: 2,
+          name: 'VIP',
+          price: 100.0,
           quantity: 200,
-          description: 'Premium experience with exclusive access' 
+          description: 'Premium experience with exclusive access',
         },
-        { 
-          id: 3, 
-          name: 'Early Bird', 
-          price: 20.00, 
+        {
+          id: 3,
+          name: 'Early Bird',
+          price: 20.0,
           quantity: 50,
-          description: 'Limited availability discounted tickets' 
-        }
+          description: 'Limited availability discounted tickets',
+        },
       ]
-      
+
       loading.value = false
     }, 500)
   } else {
@@ -120,31 +122,31 @@ onMounted(() => {
   }
 })
 
-// Methods
+// Validate form fields
 const validateForm = () => {
   errors.value = {}
-  
+
   if (!eventForm.value.name) {
     errors.value.name = 'Event name is required'
   }
-  
+
   if (!eventForm.value.date) {
     errors.value.date = 'Event date is required'
   }
-  
+
   if (!eventForm.value.location) {
     errors.value.location = 'Location is required'
   }
-  
+
   if (!eventForm.value.capacity || eventForm.value.capacity <= 0) {
     errors.value.capacity = 'Valid capacity is required'
   }
-  
+
   // Validate at least one ticket type
   if (ticketTypes.value.length === 0) {
     errors.value.tickets = 'At least one ticket type is required'
   }
-  
+
   return Object.keys(errors.value).length === 0
 }
 
@@ -160,9 +162,9 @@ const addTicketType = () => {
   ticketTypes.value.push({
     id: Date.now(), // Temporary ID for new ticket types
     name: '',
-    price: 0.00,
+    price: 0.0,
     quantity: 0,
-    description: ''
+    description: '',
   })
 }
 
@@ -175,19 +177,19 @@ const saveEvent = () => {
     // Form has errors
     return
   }
-  
+
   saving.value = true
-  
+
   // Simulate API call to save event
   setTimeout(() => {
     // In a real app, this would be an API call
     console.log('Event saved:', {
       event: eventForm.value,
-      tickets: ticketTypes.value
+      tickets: ticketTypes.value,
     })
-    
+
     saving.value = false
-    
+
     // Navigate back to events list
     router.push('/admin/events')
   }, 1000)
@@ -196,6 +198,34 @@ const saveEvent = () => {
 const cancelForm = () => {
   router.push('/admin/events')
 }
+
+const addQuestion = () => {
+  const newId = Date.now()
+  questions.value.push({
+    id: newId,
+    text: '',
+    type: text,
+    required: false,
+    options: ['Option 1'],
+    hasMaxLength: false,
+    maxLength: 255,
+    order: questions.value.length + 1,
+  })
+}
+
+const removeQuestion = (index) => {
+  questions.value.splice(index, 1)
+}
+
+const addOption = (question) => {
+  question.options.push(`Option ${question.options.length + 1}`)
+}
+
+const removeOption = (question, optionIndex) => {
+  if (question.options.length > 1) {
+    question.options.splice(optionIndex, 1)
+  }
+}
 </script>
 
 <template>
@@ -203,9 +233,11 @@ const cancelForm = () => {
     <div class="p-4">
       <!-- Loading state -->
       <div v-if="loading" class="flex justify-center items-center h-64">
-        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div
+          class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
+        ></div>
       </div>
-      
+
       <div v-else>
         <!-- Form Header -->
         <div class="mb-6">
@@ -213,48 +245,89 @@ const cancelForm = () => {
             {{ isEditMode ? 'Edit Event' : 'Create New Event' }}
           </h1>
           <p class="text-gray-600 mt-1">
-            {{ isEditMode ? 'Update the details of your event' : 'Fill out the form to create a new event' }}
+            {{
+              isEditMode
+                ? 'Update the details of your event'
+                : 'Fill out the form to create a new event'
+            }}
           </p>
         </div>
-        
+
         <!-- Form Tabs -->
         <div class="bg-white rounded-lg shadow-sm mb-6">
           <div class="flex border-b overflow-x-auto">
-            <button 
+            <!-- Basic information -->
+            <button
               @click="activeTab = 'basic'"
               class="px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors"
-              :class="activeTab === 'basic' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600 hover:text-gray-800'"
+              :class="
+                activeTab === 'basic'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-800'
+              "
             >
               <i class="pi pi-info-circle mr-1"></i>
               Basic Information
             </button>
-            <button 
+
+            <!-- Location -->
+            <button
               @click="activeTab = 'location'"
               class="px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors"
-              :class="activeTab === 'location' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600 hover:text-gray-800'"
+              :class="
+                activeTab === 'location'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-800'
+              "
             >
               <i class="pi pi-map-marker mr-1"></i>
               Location
             </button>
-            <button 
+
+            <!-- Tickets -->
+            <button
               @click="activeTab = 'tickets'"
               class="px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors"
-              :class="activeTab === 'tickets' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600 hover:text-gray-800'"
+              :class="
+                activeTab === 'tickets'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-800'
+              "
             >
               <i class="pi pi-ticket mr-1"></i>
               Tickets
             </button>
-            <button 
+
+            <!-- Features -->
+            <button
               @click="activeTab = 'features'"
               class="px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors"
-              :class="activeTab === 'features' ? 'border-b-2 border-blue-500 text-blue-600' : 'text-gray-600 hover:text-gray-800'"
+              :class="
+                activeTab === 'features'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-800'
+              "
             >
               <i class="pi pi-list mr-1"></i>
               Features
             </button>
+
+            <!-- Questionnaire -->
+            <button
+              @click="activeTab = 'questionnaire'"
+              class="px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors"
+              :class="
+                activeTab === 'questionnaire'
+                  ? 'border-b-2 border-blue-500 text-blue-600'
+                  : 'text-gray-600 hover:text-gray-800'
+              "
+            >
+              <i class="pi pi-list-alt mr-1"></i>
+              Questionnaire
+            </button>
           </div>
         </div>
-        
+
         <!-- Form Content -->
         <div class="bg-white rounded-lg shadow-sm p-6">
           <form @submit.prevent="saveEvent">
@@ -266,115 +339,107 @@ const cancelForm = () => {
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     Event Name <span class="text-red-500">*</span>
                   </label>
-                  <input 
+                  <input
                     v-model="eventForm.name"
-                    type="text" 
+                    type="text"
                     placeholder="Enter event name"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    :class="{'border-red-500': errors.name}"
+                    :class="{ 'border-red-500': errors.name }"
                   />
                   <p v-if="errors.name" class="mt-1 text-xs text-red-500">{{ errors.name }}</p>
                 </div>
-                
+
                 <!-- Event Description -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Description
-                  </label>
-                  <textarea 
+                  <label class="block text-sm font-medium text-gray-700 mb-1"> Description </label>
+                  <textarea
                     v-model="eventForm.description"
                     placeholder="Describe your event"
                     rows="4"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   ></textarea>
                 </div>
-                
+
                 <!-- Date and Time -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                       Date <span class="text-red-500">*</span>
                     </label>
-                    <input 
+                    <input
                       v-model="eventForm.date"
-                      type="date" 
+                      type="date"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      :class="{'border-red-500': errors.date}"
+                      :class="{ 'border-red-500': errors.date }"
                     />
                     <p v-if="errors.date" class="mt-1 text-xs text-red-500">{{ errors.date }}</p>
                   </div>
-                  
+
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      Start Time
-                    </label>
-                    <input 
+                    <label class="block text-sm font-medium text-gray-700 mb-1"> Start Time </label>
+                    <input
                       v-model="eventForm.startTime"
-                      type="time" 
+                      type="time"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  
+
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      End Time
-                    </label>
-                    <input 
+                    <label class="block text-sm font-medium text-gray-700 mb-1"> End Time </label>
+                    <input
                       v-model="eventForm.endTime"
-                      type="time" 
+                      type="time"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
-                
+
                 <!-- Organizer Information -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      Organizer
-                    </label>
-                    <input 
+                    <label class="block text-sm font-medium text-gray-700 mb-1"> Organizer </label>
+                    <input
                       v-model="eventForm.organizer"
-                      type="text" 
+                      type="text"
                       placeholder="Organizing company or person"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  
+
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                       Organizer Contact
                     </label>
-                    <input 
+                    <input
                       v-model="eventForm.organizerContact"
-                      type="email" 
+                      type="email"
                       placeholder="Contact email"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
-                
+
                 <!-- Capacity and Status -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                       Capacity <span class="text-red-500">*</span>
                     </label>
-                    <input 
+                    <input
                       v-model="eventForm.capacity"
-                      type="number" 
+                      type="number"
                       min="1"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      :class="{'border-red-500': errors.capacity}"
+                      :class="{ 'border-red-500': errors.capacity }"
                     />
-                    <p v-if="errors.capacity" class="mt-1 text-xs text-red-500">{{ errors.capacity }}</p>
+                    <p v-if="errors.capacity" class="mt-1 text-xs text-red-500">
+                      {{ errors.capacity }}
+                    </p>
                   </div>
-                  
+
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      Status
-                    </label>
-                    <select 
+                    <label class="block text-sm font-medium text-gray-700 mb-1"> Status </label>
+                    <select
                       v-model="eventForm.status"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
@@ -385,25 +450,24 @@ const cancelForm = () => {
                     </select>
                   </div>
                 </div>
-                
+
                 <!-- Image URL -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Image URL
-                  </label>
-                  <input 
+                  <label class="block text-sm font-medium text-gray-700 mb-1"> Image URL </label>
+                  <input
                     v-model="eventForm.imageUrl"
-                    type="text" 
+                    type="text"
                     placeholder="URL to event image"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   <p class="mt-1 text-xs text-gray-500">
-                    Enter a URL for the event image. For best results, use a 16:9 aspect ratio image.
+                    Enter a URL for the event image. For best results, use a 16:9 aspect ratio
+                    image.
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <!-- Location Tab -->
             <div v-if="activeTab === 'location'" class="space-y-6">
               <div class="grid grid-cols-1 gap-6">
@@ -412,10 +476,10 @@ const cancelForm = () => {
                   <label class="block text-sm font-medium text-gray-700 mb-1">
                     Venue <span class="text-red-500">*</span>
                   </label>
-                  <select 
+                  <select
                     v-model="eventForm.location"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    :class="{'border-red-500': errors.location}"
+                    :class="{ 'border-red-500': errors.location }"
                   >
                     <option value="">Select a venue</option>
                     <option v-for="location in locations" :key="location" :value="location">
@@ -423,135 +487,136 @@ const cancelForm = () => {
                     </option>
                     <option value="other">Other (specify below)</option>
                   </select>
-                  <p v-if="errors.location" class="mt-1 text-xs text-red-500">{{ errors.location }}</p>
+                  <p v-if="errors.location" class="mt-1 text-xs text-red-500">
+                    {{ errors.location }}
+                  </p>
                 </div>
-                
+
                 <!-- Address Details -->
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">
-                    Address
-                  </label>
-                  <input 
+                  <label class="block text-sm font-medium text-gray-700 mb-1"> Address </label>
+                  <input
                     v-model="eventForm.address"
-                    type="text" 
+                    type="text"
                     placeholder="Street address"
                     class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                   />
-                  
+
                   <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
-                      <input 
+                      <input
                         v-model="eventForm.city"
-                        type="text" 
+                        type="text"
                         placeholder="City"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
-                    
+
                     <div>
-                      <input 
+                      <input
                         v-model="eventForm.state"
-                        type="text" 
+                        type="text"
                         placeholder="State"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
-                    
+
                     <div>
-                      <input 
+                      <input
                         v-model="eventForm.zipCode"
-                        type="text" 
+                        type="text"
                         placeholder="Zip Code"
                         class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />
                     </div>
                   </div>
                 </div>
-                
+
                 <!-- Location Notes -->
                 <div>
                   <p class="text-sm text-gray-500 italic">
-                    The address information helps attendees locate your event. It will be displayed on the event details page.
+                    The address information helps attendees locate your event. It will be displayed
+                    on the event details page.
                   </p>
                 </div>
               </div>
             </div>
-            
+
             <!-- Tickets Tab -->
             <div v-if="activeTab === 'tickets'" class="space-y-6">
               <div v-if="errors.tickets" class="bg-red-50 text-red-500 p-3 rounded-md mb-4">
                 {{ errors.tickets }}
               </div>
-              
-              <div v-for="(ticket, index) in ticketTypes" :key="ticket.id" class="bg-gray-50 p-4 rounded-lg mb-4">
+
+              <div
+                v-for="(ticket, index) in ticketTypes"
+                :key="ticket.id"
+                class="bg-gray-50 p-4 rounded-lg mb-4"
+              >
                 <div class="flex justify-between items-start mb-4">
                   <h3 class="font-medium text-gray-800">Ticket Type {{ index + 1 }}</h3>
-                  <button 
+                  <button
                     v-if="ticketTypes.length > 1"
-                    @click="removeTicketType(index)" 
+                    @click="removeTicketType(index)"
                     type="button"
                     class="text-red-500 hover:text-red-700"
                   >
                     <i class="pi pi-trash"></i>
                   </button>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      Name
-                    </label>
-                    <input 
+                    <label class="block text-sm font-medium text-gray-700 mb-1"> Name </label>
+                    <input
                       v-model="ticket.name"
-                      type="text" 
+                      type="text"
                       placeholder="e.g. General Admission"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  
+
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                       Description
                     </label>
-                    <input 
+                    <input
                       v-model="ticket.description"
-                      type="text" 
+                      type="text"
                       placeholder="Brief description of this ticket type"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">
-                      Price ($)
-                    </label>
-                    <input 
+                    <label class="block text-sm font-medium text-gray-700 mb-1"> Price ($) </label>
+                    <input
                       v-model="ticket.price"
-                      type="number" 
+                      type="number"
                       step="0.01"
                       min="0"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  
+
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">
                       Quantity Available
                     </label>
-                    <input 
+                    <input
                       v-model="ticket.quantity"
-                      type="number" 
+                      type="number"
                       min="1"
                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
               </div>
-              
+
               <div>
-                <button 
+                <button
                   @click="addTicketType"
                   type="button"
                   class="flex items-center text-blue-600 hover:text-blue-800"
@@ -560,34 +625,36 @@ const cancelForm = () => {
                   Add Another Ticket Type
                 </button>
               </div>
-              
+
               <div class="bg-yellow-50 p-4 rounded-lg border-l-4 border-yellow-400">
                 <h4 class="font-medium text-yellow-800 mb-1">Important Note</h4>
                 <p class="text-sm text-yellow-700">
-                  Make sure the total number of tickets available does not exceed the event capacity.
-                  Current capacity: {{ eventForm.capacity }} attendees.
+                  Make sure the total number of tickets available does not exceed the event
+                  capacity. Current capacity: {{ eventForm.capacity }} attendees.
                 </p>
               </div>
             </div>
-            
+
             <!-- Features Tab -->
             <div v-if="activeTab === 'features'" class="space-y-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-3">
-                  Event Features
-                </label>
+                <label class="block text-sm font-medium text-gray-700 mb-3"> Event Features </label>
                 <p class="text-sm text-gray-500 mb-4">
                   List the key features or highlights of your event that would attract attendees.
                 </p>
-                
-                <div v-for="(feature, index) in eventForm.features" :key="index" class="flex items-center mb-3">
-                  <input 
+
+                <div
+                  v-for="(feature, index) in eventForm.features"
+                  :key="index"
+                  class="flex items-center mb-3"
+                >
+                  <input
                     v-model="eventForm.features[index]"
-                    type="text" 
+                    type="text"
                     placeholder="e.g. Networking opportunities, Free refreshments, etc."
                     class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
-                  <button 
+                  <button
                     @click="removeFeature(index)"
                     type="button"
                     class="ml-2 text-red-500 hover:text-red-700"
@@ -596,8 +663,8 @@ const cancelForm = () => {
                     <i class="pi pi-times"></i>
                   </button>
                 </div>
-                
-                <button 
+
+                <button
                   @click="addFeature"
                   type="button"
                   class="flex items-center text-blue-600 hover:text-blue-800 mt-2"
@@ -607,25 +674,89 @@ const cancelForm = () => {
                 </button>
               </div>
             </div>
-            
+
+            <!-- Questionnaire Tab -->
+            <div v-if="activeTab === 'questionnaire'" class="space-y-6">
+              <div class="flex justify-between items-center mb-4">
+                <div>
+                  <h3 class="text-lg font-medium text-gray-800">Registration Questions</h3>
+                  <p class="text-sm text-gray-600">
+                    Create questions that attendees will answer during registration
+                  </p>
+                </div>
+
+                <button
+                  @click="addQuestion"
+                  type="button"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg transition-colors flex items-center"
+                >
+                  <i class="pi pi-plus mr-2"></i>
+                  Add Question
+                </button>
+              </div>
+
+              <!-- Empty state where there is no questions -->
+              <div
+                v-if="!questions.length"
+                class="bg-gray-50 p-8 rounded-lg border-gray-200 text-center"
+              >
+                <div class="text-gray-500">
+                  <i class="pi pi-list-alt"></i>
+                </div>
+
+                <h4 class="text-lg font-medium text-gray-700 mb-2">No questions</h4>
+
+                <p class="text-gray-500 mb-4">
+                  Add questions to collect information from your attendees during registration
+                </p>
+                <button
+                  @click="addQuestion"
+                  type="button"
+                  class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors inline-flex items-center"
+                >
+                  <i class="pi pi-plus mr-2"></i>
+                  Add First Question
+                </button>
+              </div>
+
+              <!-- Question List -->
+              <div v-else class="space-y-4">
+                <div
+                  v-for="(question, index) in questions"
+                  :key="question.id"
+                  class="bg-white border border-gray-200 rounded-lg overflow-hidden"
+                >
+                  <!-- Question header -->
+                  <div class="bg-gray-50 px-4 py-3 flex justify-between items-center border-b">
+                    <div class="flex items-center">
+                      <i class="pi pi-bars text-gray-400 mr-3 cursor-move"></i>
+                      <span class="font-medium"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <!-- Form Actions -->
             <div class="mt-8 pt-6 border-t flex justify-end space-x-4">
-              <button 
+              <button
                 @click="cancelForm"
                 type="button"
                 class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
-              
-              <button 
+
+              <button
                 type="submit"
                 class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="saving"
               >
                 <span v-if="!saving">{{ isEditMode ? 'Update Event' : 'Create Event' }}</span>
                 <div v-else class="flex items-center">
-                  <div class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                  <div
+                    class="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"
+                  ></div>
                   Saving...
                 </div>
               </button>

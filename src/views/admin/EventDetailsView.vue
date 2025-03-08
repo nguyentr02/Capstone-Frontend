@@ -13,6 +13,7 @@ const eventId = parseInt(route.params.id)
 const event = ref(null)
 const loading = ref(true)
 const activeTab = ref('overview')
+const questions = ref([])
 
 // Mock ticket types for the event
 const ticketTypes = ref([ ...mockTickets])

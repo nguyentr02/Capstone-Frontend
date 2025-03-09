@@ -200,11 +200,12 @@ const cancelForm = () => {
 }
 
 const addQuestion = () => {
+  console.log('Adding new question')
   const newId = Date.now()
   questions.value.push({
     id: newId,
     text: '',
-    type: text,
+    type: 'text',
     required: false,
     options: ['Option 1'],
     hasMaxLength: false,
@@ -730,10 +731,133 @@ const removeOption = (question, optionIndex) => {
                   <div class="bg-gray-50 px-4 py-3 flex justify-between items-center border-b">
                     <div class="flex items-center">
                       <i class="pi pi-bars text-gray-400 mr-3 cursor-move"></i>
-                      <span class="font-medium"></span>
+                      <span class="font-medium text-gray-700"> Question {{ index + 1 }}</span>
+                      <span
+                        v-if="question.required"
+                        class="ml-2 text-xs bg-red-100 text-red-800 px-2 py-0.5 rounded-full"
+                      >
+                        Required
+                      </span>
+                    </div>
+
+                    <div class="flex items-center">
+                      <span class="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded mr-2">
+                        {{ question.type }}
+                      </span>
+                      <button
+                        @click="removeQuestion(index)"
+                        type="button"
+                        class="text-red-500 hover:text-red-700"
+                      >
+                        <i class="pi pi-trash"></i>
+                      </button>
                     </div>
                   </div>
+
+                  <!-- Question content -->
+                  <div class="p-4">
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Question Text
+                      </label>
+                      <input
+                        v-model="question.text"
+                        type="text"
+                        placeholder="Enter your question"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+
+                    <div class="mb-4">
+                      <label class="block text-sm font-medium text-gray-700 mb-1">
+                        Question Type
+                      </label>
+                      <select
+                        v-model="question.type"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      >
+                        <option value="text">Text Input</option>
+                        <option value="textarea">Text Area (long text)</option>
+                        <option value="select">Dropdown</option>
+                        <option value="radio">Multiple Choice (single selection)</option>
+                        <option value="checkbox">Checkboxes (multiple selection)</option>
+                        <option value="date">Date</option>
+                        <option value="email">Email</option>
+                        <option value="number">Number</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Options for select, radio or checkbox types -->
+                  <div v-if="['select', 'radio', 'checkbox'].includes(question.type)" class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2"> Options </label>
+
+                    <div
+                      v-for="(option, optionIndex) in question.options"
+                      :key="optionIndex"
+                      class="flex items-center mb-2"
+                    >
+                      <input
+                        v-model="questions.options[optionIndex]"
+                        type="text"
+                        placeholder="Option text"
+                        class="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+
+                      <button
+                        @click="removeOption(question, optIndex)"
+                        type="button"
+                        class="ml-2, text-red-500 hover:text-red-700"
+                        :disabled="question.options.length <= 1"
+                      >
+                        <i class="pi pi-times"></i>
+                      </button>
+                    </div>
+
+                    <button
+                      @click="addOption(question)"
+                      type="button"
+                      class="flex items-center text-blue-600 hover:text-blue-800 mt-2 text-sm"
+                    >
+                      <i class="pi pi-plus mr-1"></i>
+                      Add Option
+                    </button>
+                  </div>
+
+                  <!-- Additional settings -->
+                  <div class="flex items-center space-x-6">
+                    <label class="flex items-center">
+                      <input
+                        v-model="question.required"
+                        type="checkbox"
+                        class="w-4 h-4 text-blue-600 rounded"
+                      />
+                      <span class="ml-2 text-sm text-gray-700">Required</span>
+                    </label>
+
+                    <label
+                      v-if="question.type === 'text' || question.type === 'textarea'"
+                      class="flex items-center"
+                    >
+                      <input
+                        v-model="question.hasMaxLength"
+                        type="checkbox"
+                        class="w-4 h-4 text-blue-600 rounded"
+                      />
+                      <span class="ml-2 text-sm text-gray-700">Set max length</span>
+                    </label>
+                  </div>
                 </div>
+              </div>
+
+              <div class="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-400">
+                <h4 class="font-medium text-blue-800 mb-1">Tips for Creating Questions</h4>
+                <ul class="list-disc list-inside text-sm text-blue-700 space-y-1">
+                  <li>Keep questions clear and concise</li>
+                  <li>Only make questions required if you absolutely need the information</li>
+                  <li>Use appropriate question types for the data you're collecting</li>
+                  <li>Consider the privacy implications of the data you collect</li>
+                </ul>
               </div>
             </div>
 

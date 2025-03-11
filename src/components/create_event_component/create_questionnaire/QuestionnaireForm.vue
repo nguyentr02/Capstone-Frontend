@@ -6,6 +6,7 @@
       <QuestionnaireInput
         label="Questionnaire Name"
         class="questionnaire-input"
+        :readonly="true"
       />
 
       <div class="text-input-container">
@@ -15,12 +16,10 @@
       <QuestionnaireInput
         label="Questionnaire Type"
         class="questionnaire-type-input"
+        :readonly="true"
       />
 
       <QuestionnaireTypeSelector />
-
-      <QuestionTypeList />
-
       <ConfirmButtons />
     </form>
   </section>
@@ -66,8 +65,8 @@ export default {
 }
 
 .text-input-container {
-  margin-top: 21px;
-  width: 388px;
+  margin-top: 18px;
+  width: 70%;
   max-width: 100%;
 }
 

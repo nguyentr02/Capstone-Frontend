@@ -21,29 +21,31 @@
   </header>
 </template>
 
-<script>
-import '@fortawesome/fontawesome-free/css/all.css';
+<script setup>
+import { useRouter } from 'vue-router'
+import '@fortawesome/fontawesome-free/css/all.css'
 
-export default {
-  name: "AppNavbar",
-  methods: {
-    goToLogin() {
-      this.$router.push("/login"); 
-    },
-    goToSignUp() {
-      this.$router.push("/signup"); 
-    },
-    goToHome() {
-      this.$router.push("/"); 
-    },
-    goToTickets() {
-      this.$router.push("/tickets"); 
-    },
-    goToProfile() {
-      this.$router.push("/profile"); 
-    },
-  },
-};
+const router = useRouter()
+
+const goToLogin = () => {
+  router.push('/login')
+}
+
+const goToSignUp = () => {
+  router.push('/signup')
+}
+
+const goToHome = () => {
+  router.push('/')
+}
+
+const goToTickets = () => {
+  router.push('/tickets')
+}
+
+const goToProfile = () => {
+  router.push('/profile')
+}
 </script>
 
 <style scoped>

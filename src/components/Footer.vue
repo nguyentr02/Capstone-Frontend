@@ -24,17 +24,12 @@
   </footer>
 </template>
 
-<script>
-export default {
-  name: "AppFooter",
-  data() {
-    return {
-      facebookIcon: require("@/assets/facebook-logo.png"),
-      instagramIcon: require("@/assets/instagram-logo.png"),
-      whatsappIcon: require("@/assets/whatsapp-logo.png"),
-    };
-  },
-};
+<script setup>
+import { ref } from 'vue'
+
+const facebookIcon = new URL('@/assets/images/facebook-logo.png', import.meta.url).href
+const instagramIcon = new URL('@/assets/images/instagram-logo.png', import.meta.url).href
+const whatsappIcon = new URL('@/assets/images/whatsapp-logo.png', import.meta.url).href
 </script>
 
 <style scoped>

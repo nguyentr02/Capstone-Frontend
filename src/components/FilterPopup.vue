@@ -1,8 +1,15 @@
 <template>
   <transition name="fade">
+    
     <div v-if="showFilter" class="filter-overlay">
       <div class="filter-popup">
-        <button class="close-button" @click="closeFilter" aria-label="Close Filter Popup">&times;</button>
+        <button
+          class="close-button"
+          @click="closeFilter"
+          aria-label="Close Filter Popup"
+        >
+          &times;
+        </button>
         <h2>Filter Options</h2>
 
         <!-- Activity Type Section -->
@@ -16,7 +23,10 @@
               :class="{ selected: selectedActivity === activity.name }"
               @click="selectActivity(activity.name)"
             >
-              <img :src="require(`@/assets/${activity.image}`)" :alt="activity.name" />
+              <img
+                :src="activity.image"
+                :alt="activity.name"
+              />
               <span>{{ activity.name }}</span>
             </div>
           </div>
@@ -37,7 +47,13 @@
               placeholder="Enter location or select from map"
               :disabled="isGeocoding"
             />
-            <button class="map-button" @click="toggleMap" :disabled="isGeocoding">Map</button>
+            <button
+              class="map-button"
+              @click="toggleMap"
+              :disabled="isGeocoding"
+            >
+              Map
+            </button>
           </div>
           <div v-if="errors.location" class="error-message">
             {{ errors.location }}
@@ -76,245 +92,261 @@
         </div>
       </div>
     </div>
+ 
   </transition>
 </template>
 
-<script>
+<script setup>
+import { ref, onBeforeUnmount, nextTick } from "vue";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
-export default {
-  name: "FilterPopup",
-  props: ["showFilter"],
-  data() {
-    return {
-      activities: [
-        { name: "Sport", image: "Sport.png" },
-        { name: "Music", image: "Music.png" },
-        { name: "Art", image: "Art.png" },
-        { name: "Food", image: "Food.png" },
-      ],
-      selectedActivity: "",
-      location: "",
-      minPrice: "",
-      maxPrice: "",
-      showMap: false,
-      map: null,
-      marker: null,
-      errors: {
-        selectedActivity: "",
-        location: "",
-        minPrice: "",
-        maxPrice: "",
-      },
-      isGeocoding: false, // Indicates if a geocoding request is in progress
-    };
-  },
-  methods: {
-    selectActivity(activityName) {
-      this.selectedActivity = activityName;
-      this.errors.selectedActivity = ""; // Clear error
-    },
-    clearFilter() {
-      this.selectedActivity = "";
-      this.location = "";
-      this.minPrice = "";
-      this.maxPrice = "";
-      this.errors = {
-        selectedActivity: "",
-        location: "",
-        minPrice: "",
-        maxPrice: "",
-      };
-      if (this.marker) {
-        this.map.removeLayer(this.marker);
-        this.marker = null;
-      }
-    },
-    async applyFilter() {
-      if (this.validateInputs()) {
-        this.$emit("applyFilter", {
-          selectedActivity: this.selectedActivity,
-          location: this.location,
-          minPrice: this.minPrice,
-          maxPrice: this.maxPrice,
-        });
-        this.closeFilter(); // Close the filter popup after applying
-      }
-    },
-    closeFilter() {
-      this.$emit("closeFilter");
-    },
-    toggleMap() {
-      this.showMap = !this.showMap;
-      if (this.showMap) {
-        this.$nextTick(() => {
-          this.initMap();
-        });
-      }
-    },
-    initMap() {
-      if (!this.map) {
-        // Initialize the map
-        this.map = L.map(this.$refs.map).setView([51.505, -0.09], 13);
+// Props
+const props = defineProps({
+  showFilter: {
+    type: Boolean,
+    required: true
+  }
+});
+const emit = defineEmits(["closeFilter", "applyFilter"]);
 
-        // Add OpenStreetMap tiles
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-        }).addTo(this.map);
+// Reactive State
+const activities = ref([
+  { name: "Sport", image: new URL("@/assets/images/Sport.png", import.meta.url).href },
+  { name: "Music", image: new URL("@/assets/images/Music.png", import.meta.url).href },
+  { name: "Art", image: new URL("@/assets/images/Art.png", import.meta.url).href },
+  { name: "Food", image: new URL("@/assets/images/Food.png", import.meta.url).href },
+]);
 
-        // Add click event listener
-        this.map.on("click", this.onMapClick);
-      } else {
-        // If the map is already initialized, refresh its size
-        this.map.invalidateSize();
-      }
-    },
-    async onMapClick(e) {
-      const { lat, lng } = e.latlng;
+const selectedActivity = ref("");
+const location = ref("");
+const minPrice = ref("");
+const maxPrice = ref("");
+const showMap = ref(false);
+const map = ref(null);
+const marker = ref(null);
+const isGeocoding = ref(false);
 
-      if (this.marker) {
-        this.marker.setLatLng(e.latlng);
-      } else {
-        this.marker = L.marker(e.latlng).addTo(this.map);
-      }
+const errors = ref({
+  selectedActivity: "",
+  location: "",
+  minPrice: "",
+  maxPrice: "",
+});
 
-      try {
-        const address = await this.reverseGeocode(lat, lng);
-        this.location = address;
-        this.errors.location = ""; // Clear location error
-      } catch (error) {
-        console.error("Reverse Geocoding Error:", error);
-        this.errors.location = "Unable to retrieve the address for the selected location.";
-      }
-
-      this.showMap = false;
-    },
-    async reverseGeocode(lat, lng) {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      if (data.error) {
-        throw new Error(data.error);
-      }
-      return data.display_name;
-    },
-    async geocodeAddress(address) {
-      const encodedAddress = encodeURIComponent(address);
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodedAddress}`
-      );
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data = await response.json();
-      if (data.length === 0) {
-        throw new Error("No results found for the entered address.");
-      }
-      // Return the first result's display_name and coordinates
-      return {
-        address: data[0].display_name,
-        lat: parseFloat(data[0].lat),
-        lng: parseFloat(data[0].lon),
-      };
-    },
-    async handleManualInput() {
-      if (!this.location.trim()) {
-        this.errors.location = "Please enter or select a location.";
-        return;
-      }
-
-      this.isGeocoding = true;
-      try {
-        const result = await this.geocodeAddress(this.location);
-        this.location = result.address;
-        this.errors.location = "";
-
-        // Update the map view and marker
-        if (this.map) {
-          this.map.setView([result.lat, result.lng], 13);
-          if (this.marker) {
-            this.marker.setLatLng([result.lat, result.lng]);
-          } else {
-            this.marker = L.marker([result.lat, result.lng]).addTo(this.map);
-          }
-        } else {
-          // Initialize the map centered at the geocoded location
-          this.showMap = true;
-          this.$nextTick(() => {
-            this.initMap();
-            this.map.setView([result.lat, result.lng], 13);
-            if (this.marker) {
-              this.marker.setLatLng([result.lat, result.lng]);
-            } else {
-              this.marker = L.marker([result.lat, result.lng]).addTo(this.map);
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Geocoding Error:", error);
-        this.errors.location = "Unable to find the entered address. Please try again.";
-      } finally {
-        this.isGeocoding = false;
-      }
-    },
-    validateInputs() {
-      let isValid = true;
-
-      // Validate Activity Type
-      if (!this.selectedActivity) {
-        this.errors.selectedActivity = "Please select at least one activity type.";
-        isValid = false;
-      } else {
-        this.errors.selectedActivity = "";
-      }
-
-      // Validate Location
-      if (!this.location.trim()) {
-        this.errors.location = "Please enter or select a location.";
-        isValid = false;
-      }
-
-      // Validate Price Range
-      if (this.minPrice === "" || this.maxPrice === "") {
-        this.errors.minPrice = "Please enter a price range.";
-        this.errors.maxPrice = "Please enter a price range.";
-        isValid = false;
-      } else {
-        if (isNaN(this.minPrice) || this.minPrice < 0) {
-          this.errors.minPrice = "Min price must be a non-negative number.";
-          isValid = false;
-        } else {
-          this.errors.minPrice = "";
-        }
-
-        if (isNaN(this.maxPrice) || this.maxPrice < 0) {
-          this.errors.maxPrice = "Max price must be a non-negative number.";
-          isValid = false;
-        } else {
-          this.errors.maxPrice = "";
-        }
-
-        if (Number(this.minPrice) > Number(this.maxPrice)) {
-          this.errors.minPrice = "Min price cannot be greater than max price.";
-          this.errors.maxPrice = "Max price cannot be less than min price.";
-          isValid = false;
-        }
-      }
-
-      return isValid;
-    },
-  },
-  beforeUnmount() {
-    if (this.map) {
-      this.map.remove();
-    }
-  },
+// Methods
+const selectActivity = (activityName) => {
+  selectedActivity.value = activityName;
+  errors.value.selectedActivity = ""; // Clear error
 };
+
+const clearFilter = () => {
+  selectedActivity.value = "";
+  location.value = "";
+  minPrice.value = "";
+  maxPrice.value = "";
+  errors.value = {
+    selectedActivity: "",
+    location: "",
+    minPrice: "",
+    maxPrice: "",
+  };
+  if (marker.value) {
+    map.value.removeLayer(marker.value);
+    marker.value = null;
+  }
+};
+
+const validateInputs = () => {
+  let isValid = true;
+
+  // Validate Activity Type
+  if (!selectedActivity.value) {
+    errors.value.selectedActivity = "Please select at least one activity type.";
+    isValid = false;
+  } else {
+    errors.value.selectedActivity = "";
+  }
+
+  // Validate Location
+  if (!location.value.trim()) {
+    errors.value.location = "Please enter or select a location.";
+    isValid = false;
+  }
+
+  // Validate Price Range
+  if (minPrice.value === "" || maxPrice.value === "") {
+    errors.value.minPrice = "Please enter a price range.";
+    errors.value.maxPrice = "Please enter a price range.";
+    isValid = false;
+  } else {
+    if (isNaN(minPrice.value) || minPrice.value < 0) {
+      errors.value.minPrice = "Min price must be a non-negative number.";
+      isValid = false;
+    } else {
+      errors.value.minPrice = "";
+    }
+
+    if (isNaN(maxPrice.value) || maxPrice.value < 0) {
+      errors.value.maxPrice = "Max price must be a non-negative number.";
+      isValid = false;
+    } else {
+      errors.value.maxPrice = "";
+    }
+
+    if (Number(minPrice.value) > Number(maxPrice.value)) {
+      errors.value.minPrice = "Min price cannot be greater than max price.";
+      errors.value.maxPrice = "Max price cannot be less than min price.";
+      isValid = false;
+    }
+  }
+
+  return isValid;
+};
+
+const applyFilter = async () => {
+  if (validateInputs()) {
+    emit("applyFilter", {
+      selectedActivity: selectedActivity.value,
+      location: location.value,
+      minPrice: minPrice.value,
+      maxPrice: maxPrice.value,
+    });
+    closeFilter();
+  }
+};
+
+const closeFilter = () => {
+  emit("closeFilter");
+};
+
+const toggleMap = () => {
+  showMap.value = !showMap.value;
+  if (showMap.value) {
+    nextTick(() => {
+      initMap();
+    });
+  }
+};
+
+const initMap = () => {
+  if (!map.value) {
+    const mapElement = document.getElementById('map');
+    if (!mapElement) return;
+
+    map.value = L.map(mapElement).setView([51.505, -0.09], 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    }).addTo(map.value);
+
+    map.value.on("click", onMapClick);
+  } else {
+    map.value.invalidateSize();
+  }
+};
+
+const onMapClick = async (e) => {
+  const { lat, lng } = e.latlng;
+
+  if (marker.value) {
+    marker.value.setLatLng(e.latlng);
+  } else {
+    marker.value = L.marker(e.latlng).addTo(map.value);
+  }
+
+  try {
+    const address = await reverseGeocode(lat, lng);
+    location.value = address;
+    errors.value.location = "";
+  } catch (error) {
+    console.error("Reverse Geocoding Error:", error);
+    errors.value.location =
+      "Unable to retrieve the address for the selected location.";
+  }
+
+  showMap.value = false;
+};
+
+const reverseGeocode = async (lat, lng) => {
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  if (data.error) {
+    throw new Error(data.error);
+  }
+  return data.display_name;
+};
+
+const geocodeAddress = async (address) => {
+  const encodedAddress = encodeURIComponent(address);
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=jsonv2&q=${encodedAddress}`
+  );
+  if (!response.ok) {
+    throw new Error("Network response was not ok");
+  }
+  const data = await response.json();
+  if (data.length === 0) {
+    throw new Error("No results found for the entered address.");
+  }
+  return {
+    address: data[0].display_name,
+    lat: parseFloat(data[0].lat),
+    lng: parseFloat(data[0].lon),
+  };
+};
+
+const handleManualInput = async () => {
+  if (!location.value.trim()) {
+    errors.value.location = "Please enter or select a location.";
+    return;
+  }
+
+  isGeocoding.value = true;
+  try {
+    const result = await geocodeAddress(location.value);
+    location.value = result.address;
+    errors.value.location = "";
+
+    if (map.value) {
+      map.value.setView([result.lat, result.lng], 13);
+      if (marker.value) {
+        marker.value.setLatLng([result.lat, result.lng]);
+      } else {
+        marker.value = L.marker([result.lat, result.lng]).addTo(map.value);
+      }
+    } else {
+      showMap.value = true;
+      await nextTick();
+      initMap();
+      map.value.setView([result.lat, result.lng], 13);
+      if (marker.value) {
+        marker.value.setLatLng([result.lat, result.lng]);
+      } else {
+        marker.value = L.marker([result.lat, result.lng]).addTo(map.value);
+      }
+    }
+  } catch (error) {
+    console.error("Geocoding Error:", error);
+    errors.value.location =
+      "Unable to find the entered address. Please try again.";
+  } finally {
+    isGeocoding.value = false;
+  }
+};
+
+// Lifecycle hooks
+onBeforeUnmount(() => {
+  if (map.value) {
+    map.value.remove();
+  }
+});
 </script>
 
 <style scoped>

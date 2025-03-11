@@ -1,27 +1,22 @@
 <template>
   <div id="app" class="page-container">
-    <AppNavbar />
-    <router-view />
-    <AppFooter />
+    <Navbar />
+    <RouterView />
+    <Footer />
   </div>
 </template>
 
-<script>
-import AppNavbar from "./components/Navbar.vue";
-import AppFooter from "./components/Footer.vue";
-
-export default {
-  components: {
-    AppNavbar,
-    AppFooter,
-  },
-};
+<script setup>
+import { RouterView } from "vue-router";
+import Navbar from "./components/Navbar.vue";
+import Footer from "./components/Footer.vue";
 </script>
 
 <style scoped>
-.page-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+
+#app {
+  width: 100%;
+}
+@media (min-width: 1024px) {
 }
 </style>

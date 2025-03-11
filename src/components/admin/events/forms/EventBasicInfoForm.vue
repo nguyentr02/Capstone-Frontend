@@ -1,4 +1,3 @@
-<!-- src/components/events/form/EventBasicInfoForm.vue -->
 <script setup>
 const props = defineProps({
   eventForm: {

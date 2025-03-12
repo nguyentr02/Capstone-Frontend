@@ -11,7 +11,7 @@
       </div>
 
 
-      <h1 style="width: 80%">Event Management</h1>
+      <h1 style="width: 80%">Admin Overview Widget</h1>
       <hr />
       <!-- Direct to create event page -->
     </header>

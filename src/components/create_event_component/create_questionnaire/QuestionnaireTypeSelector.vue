@@ -29,6 +29,7 @@ export default {
     updateType(type) {
       this.selectedType = type; // 更新显示的类型
       this.showList = false; // 选中后隐藏列表
+      this.$emit("update-type", type);
     },
   },
 };

@@ -1,5 +1,5 @@
 <template>
-  <section class="question-field" @click="addField">
+  <section class="question-field">
     <input v-model="editableFieldName" class="field-label" />
     <div class="field-type">Type: {{ fieldType }}</div>
   </section>

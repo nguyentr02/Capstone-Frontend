@@ -29,18 +29,20 @@ export default {
   },
   data() {
     return {
-      fields: [
-        { name: "event code", type: "number" },
-        { name: "name", type: "Text" },
-        { name: "phone number", type: "Text" },
-        { name: "rating", type: "rating bar" },
-      ],
+    fields: JSON.parse(localStorage.getItem("fields")) || [
+      { name: "event code", type: "number" },
+      { name: "name", type: "Text" },
+      { name: "phone number", type: "Text" },
+      { name: "rating", type: "rating bar" },
+    ], 
     };
   },
   methods: {
     // 父组件监听到 add-field 事件后，把新字段 push 到 fields 数组里
     addFieldToList(newField) {
       this.fields.push(newField);
+      console.log("新增字段", newField);
+      localStorage.setItem("fields", JSON.stringify(this.fields));
     },
   },
 };

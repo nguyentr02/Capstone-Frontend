@@ -3,7 +3,6 @@
     <form class="questionnaire-form">
       <QuestionnaireHeader />
 
-      <!-- 这行先留着，也可改成 v-model="questionnaireName" -->
       <QuestionnaireInput
         label="Questionnaire Name"
         class="questionnaire-input"
@@ -26,7 +25,7 @@
         :readonly="true"
       />
 
-      <QuestionnaireTypeSelector />
+      <QuestionnaireTypeSelector @update-type="formData.selectedType = $event" />
 
       <!-- 点击 Confirm 时，handleConfirm 触发 $emit("add-field", ...) -->
       <ConfirmButtons @confirm="handleConfirm" />
@@ -54,7 +53,8 @@ export default {
     return {
       // 用于存储当前表单输入
       formData: {
-        type: "",
+        type: "", 
+        selectedType:"",
       },
     };
   },
@@ -62,14 +62,14 @@ export default {
     handleConfirm() {
       // 点击 Confirm 时，向父组件传递新字段
       const newField = {
-        // 这里可根据你的需求，比如:
-        name: "New Field",
-        type: this.formData.type || "Text",
+        name: this.formData.type || "Text",
+        type: this.formData.selectedType || "Type: Text",
       };
       this.$emit("add-field", newField);
 
       // 提交后清空输入
       this.formData.type = "";
+      this.formData.selectedType = "";
     },
   },
 };

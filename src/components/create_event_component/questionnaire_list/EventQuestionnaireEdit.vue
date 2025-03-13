@@ -10,25 +10,19 @@
           v-model:fieldName="field.name"
           v-model:fieldType="field.type"
         />
-        <!-- 如果还需要添加按钮，可以保留 AddFieldButton，但需要从父组件添加数据 -->
-        <!-- <AddFieldButton @addField="..."/> -->
       </section>
-      <!-- 如果此处 ConfirmButtons 不再需要，可删除 -->
-      <!-- <ConfirmButtons @confirm="handleConfirm" /> -->
     </div>
   </main>
 </template>
 
 <script>
 import QuestionField from "./QuestionField.vue";
-import AddFieldButton from "./AddFieldButton.vue";
 import ConfirmButtons from "../create_questionnaire/ConfirmButtons.vue";
 
 export default {
   name: "EventQuestionnaireEdit",
   components: {
     QuestionField,
-    AddFieldButton,
     ConfirmButtons,
   },
   // ✅ 改为使用 props 接收父组件的 fields

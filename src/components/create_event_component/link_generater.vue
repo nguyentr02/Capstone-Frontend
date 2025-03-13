@@ -7,7 +7,7 @@
           <button class="copy-button">copy</button>
         </div>
       </div>
-      <div class="link-display">link</div>
+      <div class="link-display">empty_empty_empty</div>
     </section>
   </template>
   
@@ -24,6 +24,7 @@
       sans-serif;
     font-size: 16px;
     flex-wrap: wrap;
+    max-width: 40%;
   }
   
   @media (max-width: 640px) {
@@ -55,15 +56,15 @@
     cursor: pointer;
     border-radius: 5px;
     background-color: rgba(119, 120, 176, 1);
-    padding: 10px 70px;
+    padding: 10px 100px;
     color: inherit;
     font: inherit;
   }
   
   @media (max-width: 991px) {
     .generate-button {
-      padding-left: 20px;
-      padding-right: 20px;
+      padding-left: 40px;
+      padding-right: 40px;
     }
   }
   

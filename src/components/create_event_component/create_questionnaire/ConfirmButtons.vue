@@ -1,15 +1,21 @@
 <template>
   <div class="button-container">
-    <button class="confirm-button">Confirm</button>
-    <button class="confirm-button">cancel</button>
+    <button class="button" @click="confirm">Confirm</button>
+    <button class="button">Cancel</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "ConfirmButtons",
+  methods: {
+    confirm() {
+      this.$emit("confirm"); // 触发事件
+    },
+  },
 };
 </script>
+
   
 <style scoped>
 .button-container {
@@ -24,7 +30,7 @@ export default {
   line-height: 2;
 }
 
-.confirm-button {
+.button {
   border: none;
   border-radius: 5px;
   background-color: rgba(162, 157, 235, 0.1);
@@ -39,7 +45,7 @@ export default {
     white-space: initial;
   }
 
-  .confirm-button {
+  .button {
     padding: 10px 20px;
   }
 }

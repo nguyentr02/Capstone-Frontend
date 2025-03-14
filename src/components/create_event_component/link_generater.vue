@@ -39,16 +39,16 @@ export default {
     confirmLink() {
       const data = localStorage.getItem("fields");
       if (data) {
-        console.log("数据库数据:", JSON.parse(data));
-        alert("数据库数据:\n" + data);
+        console.log("database collected:", JSON.parse(data));
+        alert("database collected:\n" + data);
       } else {
-        alert("数据库数据为空！");
+        alert("database is empty!");
       }
     },
     // Cancel：删除数据库 (localStorage 中的 fields) 并通知父组件
     cancelAction() {
       localStorage.removeItem("fields");
-      alert("数据库数据已删除！");
+      alert("database deleted");
       // 清空链接
       this.generatedLink = "";
 

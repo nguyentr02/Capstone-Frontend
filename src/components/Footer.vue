@@ -30,6 +30,7 @@ import { ref } from 'vue'
 const facebookIcon = new URL('@/assets/images/facebook-logo.png', import.meta.url).href
 const instagramIcon = new URL('@/assets/images/instagram-logo.png', import.meta.url).href
 const whatsappIcon = new URL('@/assets/images/whatsapp-logo.png', import.meta.url).href
+
 </script>
 
 <style scoped>

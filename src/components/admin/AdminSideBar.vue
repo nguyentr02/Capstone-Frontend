@@ -23,7 +23,7 @@
       </div>
       <div class="menu_item">
         <i class="fa-solid fa-calendar-days fa-xl"></i>
-        <router-link to="/"> <span>Event</span></router-link>
+        <router-link to="/admin/event"> <span>Event</span></router-link>
       </div>
       <div class="menu_item">
         <i class="fa-regular fa-credit-card fa-xl"></i>

@@ -3,14 +3,15 @@
     <form class="questionnaire-form">
       <QuestionnaireHeader />
 
+      <!-- 这里是问卷名称输入框，当前示例用 readonly 只是演示 -->
       <QuestionnaireInput
         label="Questionnaire Name"
         class="questionnaire-input"
         :readonly="true"
       />
 
+      <!-- 让用户输入 Type 文本，使用 v-model 绑定到 formData.type -->
       <div class="text-input-container">
-        <!-- 让用户输入 Type 文本，使用 v-model 绑定到 formData.type -->
         <input
           type="text"
           class="text-input"
@@ -19,15 +20,17 @@
         />
       </div>
 
+      <!-- 这里是问卷类型输入框，当前示例用 readonly 只是演示 -->
       <QuestionnaireInput
         label="Questionnaire Type"
         class="questionnaire-type-input"
         :readonly="true"
       />
 
+      <!-- 选择器子组件，会将选择结果通过 @update-type="..." 返回给父组件 -->
       <QuestionnaireTypeSelector @update-type="formData.selectedType = $event" />
 
-      <!-- 点击 Confirm 时，handleConfirm 触发 $emit("add-field", ...) -->
+      <!-- 点击 Confirm 后触发 handleConfirm()，再 $emit('add-field') 给父组件 -->
       <ConfirmButtons @confirm="handleConfirm" />
     </form>
   </section>
@@ -51,20 +54,20 @@ export default {
   },
   data() {
     return {
-      // 用于存储当前表单输入
       formData: {
-        type: "", 
-        selectedType:"",
+        type: "",
+        selectedType: "",
       },
     };
   },
   methods: {
     handleConfirm() {
-      // 点击 Confirm 时，向父组件传递新字段
+      // 组装一个新字段对象
       const newField = {
         name: this.formData.type || "Text",
         type: this.formData.selectedType || "Type: Text",
       };
+      // 通过自定义事件把新字段传给父组件
       this.$emit("add-field", newField);
 
       // 提交后清空输入
@@ -78,7 +81,7 @@ export default {
 
 <style scoped>
 .questionnaire-container {
-  max-width: 497px;
+  max-width: 100%;
   font-family: Poppins, -apple-system, Roboto, Helvetica, sans-serif;
   font-size: 16px;
   color: #302d27;

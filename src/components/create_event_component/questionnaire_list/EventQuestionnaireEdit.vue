@@ -3,11 +3,11 @@
     <div class="questionnaire-wrapper">
       <header class="questionnaire-header">Event Questionnaire Edit</header>
       <section class="fields-container">
-        <!-- 循环显示父组件传进来的 fields -->
+        <!-- 遍历父组件传进来的 fields -->
         <QuestionField
           v-for="(field, index) in fields"
           :key="index"
-          v-model:fieldName="field.name"
+          v-model:fieldName="field.name" 
           v-model:fieldType="field.type"
         />
       </section>
@@ -17,15 +17,12 @@
 
 <script>
 import QuestionField from "./QuestionField.vue";
-import ConfirmButtons from "../create_questionnaire/ConfirmButtons.vue";
 
 export default {
   name: "EventQuestionnaireEdit",
   components: {
     QuestionField,
-    ConfirmButtons,
   },
-  // ✅ 改为使用 props 接收父组件的 fields
   props: {
     fields: {
       type: Array,
@@ -34,8 +31,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style scoped>
 .questionnaire-container {

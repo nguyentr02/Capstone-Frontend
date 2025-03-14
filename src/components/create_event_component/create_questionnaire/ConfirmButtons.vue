@@ -16,7 +16,7 @@ export default {
 };
 </script>
 
-  
+
 <style scoped>
 .button-container {
   align-self: flex-start;

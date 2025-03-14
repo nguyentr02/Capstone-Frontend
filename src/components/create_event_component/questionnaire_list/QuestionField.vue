@@ -1,6 +1,6 @@
 <template>
   <section class="question-field">
-    <input v-model="editableFieldName" class="field-label" />
+    <input v-model="editableFieldName" class="field-label" readonly />
     <div class="field-type">Type: {{ fieldType }}</div>
   </section>
 </template>
@@ -9,7 +9,7 @@
 export default {
   name: "QuestionField",
   props: {
-    fieldName: String,
+    fieldName: String, 
     fieldType: String,
   },
   emits: ['update:fieldName', 'update:fieldType'],
@@ -58,7 +58,7 @@ export default {
   font-size: 16px;
   font-weight: 500;
   font-family: Poppins;
-  width: 100%;
+  width: 70%;
   height: 53px;
   border-radius: 15px;
   background-color: #f3f3f3;

@@ -37,6 +37,10 @@ export default {
     };
   },
   methods: {
+    // 在 sections 发生改变的时候调用
+    updateLocalStorage() {
+      localStorage.setItem("descriptions", JSON.stringify(this.sections));
+    },
     // 每点击一次按钮，在 sections 数组中添加一个新的 section 对象
     addSection() {
       this.sections.push({

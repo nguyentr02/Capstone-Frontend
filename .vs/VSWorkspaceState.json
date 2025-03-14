@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\components",
+    "\\src\\components\\create_event_component",
+    "\\src\\router",
+    "\\src\\views"
+  ],
+  "SelectedNode": "\\src\\views\\Create_questionnaire_view.vue",
+  "PreviewInSolutionExplorer": false
+}

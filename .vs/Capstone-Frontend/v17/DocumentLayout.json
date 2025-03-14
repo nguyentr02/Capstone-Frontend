@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\bachlor\\2024Sem2\\project\\Project\\Capstone-Frontend\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\bachlor\\2024Sem2\\project\\Project\\Capstone-Frontend\\src\\views\\Create_questionnaire_view.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:src\\views\\Create_questionnaire_view.vue||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Create_questionnaire_view.vue",
+              "DocumentMoniker": "E:\\bachlor\\2024Sem2\\project\\Project\\Capstone-Frontend\\src\\views\\Create_questionnaire_view.vue",
+              "RelativeDocumentMoniker": "src\\views\\Create_questionnaire_view.vue",
+              "ToolTip": "E:\\bachlor\\2024Sem2\\project\\Project\\Capstone-Frontend\\src\\views\\Create_questionnaire_view.vue",
+              "RelativeToolTip": "src\\views\\Create_questionnaire_view.vue",
+              "ViewState": "AQIAABsAAAAAAAAAAAAAABkAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003491|",
+              "WhenOpened": "2025-03-14T03:25:31.153Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 <template>
-  <header class="navbar">
+  <header class="user navbar">
     <div class="logo" role="banner" aria-label="公司标志">
       <div class="logo-icon">LOGO</div>
     </div>
@@ -12,8 +12,6 @@
       </button>
     </div>
     <div class="header-auth">
-      <button class="auth-button login" @click="goToLogin">Sign in</button>
-      <button class="auth-button signup" @click="goToSignUp">Register</button>
       <button class="link-button" @click="goToProfile">
         <i class="fas fa-user"></i>
       </button>
@@ -21,31 +19,23 @@
   </header>
 </template>
 
-<script setup>
-import { useRouter } from 'vue-router'
-import '@fortawesome/fontawesome-free/css/all.css'
+<script>
+import '@fortawesome/fontawesome-free/css/all.css';
 
-const router = useRouter()
-
-const goToLogin = () => {
-  router.push('/login')
-}
-
-const goToSignUp = () => {
-  router.push('/signup')
-}
-
-const goToHome = () => {
-  router.push('/')
-}
-
-const goToTickets = () => {
-  router.push('/tickets')
-}
-
-const goToProfile = () => {
-  router.push('/profile')
-}
+export default {
+  name: "AppNavbar",
+  methods: {
+    goToHome() {
+      this.$router.push("/"); // Skip to main page
+    },
+    goToTickets() {
+      this.$router.push("/tickets"); // Jump to Tickets
+    },
+    goToProfile() {
+      this.$router.push("/profile"); // Jump to profile page
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -111,11 +101,6 @@ const goToProfile = () => {
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
-}
-
-.auth-button.signup {
-  background-color: #2C2C2C;
-  color: white;
 }
 
 .auth-button:hover {

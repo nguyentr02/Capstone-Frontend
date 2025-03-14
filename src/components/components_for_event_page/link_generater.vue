@@ -58,8 +58,6 @@ export default {
 };
 </script>
 
-
-
 <style scoped>
 .link-generator {
   display: flex;

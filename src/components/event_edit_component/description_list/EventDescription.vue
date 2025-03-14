@@ -22,25 +22,14 @@ export default {
   },
   data() {
     return {
-      // 用一个数组来存储所有的 section 信息
       sections: [
         {
-          title: "Descript of the Event In Here",
-          content: `Chocolate Starfish marks 30 years with a spectacular Australian tour
-            that celebrates the best of everything – the albums, the songs, and
-            the exhilarating shows for which the band is widely renowned.
-            Featuring the hits of their self-titled debut album and favourites
-            from Box, Spide(editable text)`,
+          title: "",
+          content: `Chocolate Starfish marks 30 years with a spectacular Australian tour that celebrates the best of everything – the albums, the songs, and the exhilarating shows for which the band is widely renowned. Featuring the hits of their self-titled debut album and favourites from Box, Spide(editable text)`,
         },
         {
-          title: "Descript the Notice in Here",
-          content: {
-            description: `This project supports conditional refunds. The specific refund
-              period, refund handling fees, and other refund conditions that can be
-              applied for are subject to the refund policy provided by the project
-              organizer. Please refer to the refund policy published in the service
-              description or project details page for details(editable text)`
-          },
+          title: "",
+          content: `This project supports conditional refunds. The specific refund period, refund handling fees, and other refund conditions that can be applied for are subject to the refund policy provided by the project organizer. Please refer to the refund policy published in the service description or project details page for details(editable text)`,
         }
       ],
     };
@@ -49,10 +38,8 @@ export default {
     // 每点击一次按钮，在 sections 数组中添加一个新的 section 对象
     addSection() {
       this.sections.push({
-        title: "New Event Section",
-        subtitle: "",
-        content: "Enter content here",
-        type: "event"
+        title: "",
+        content: "",
       });
     }
   },
@@ -66,7 +53,6 @@ export default {
   gap: 40px;
   width: 100%;
   max-width: 1306px;
-  height: 481px;
   padding: 20px;
 }
 

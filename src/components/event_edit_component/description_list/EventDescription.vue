@@ -5,6 +5,8 @@
       :key="index" 
       :title="section.title"  
       :content="section.content" 
+      @update:title="val => { sections.title = val; updateLocalStorage(); }"
+      @update:content="val => { sections.content = val; updateLocalStorage(); }"
     />
     <div class="button-container">
       <button class="add-description-btn" @click="addSection">Add more description</button>

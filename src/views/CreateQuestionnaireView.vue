@@ -25,7 +25,7 @@
 <script>
 import QuestionnaireForm from "@/components/create_event_component/create_questionnaire/QuestionnaireForm.vue";
 import EventQuestionnaireEdit from "@/components/create_event_component/questionnaire_list/EventQuestionnaireEdit.vue";
-import LinkGenerator from "@/components/components_for_event_page/link_generater.vue";
+import LinkGenerator from "@/components/create_event_component/link_generater.vue";
 import DashBar from "@/components/components_for_event_page/DashBar.vue";
 
 export default {
@@ -49,7 +49,7 @@ export default {
   methods: {
     addFieldToList(newField) {
       this.fields.push(newField);
-      console.log("新增字段", newField);
+      console.log("newField", newField);
       localStorage.setItem("fields", JSON.stringify(this.fields));
     },
     clearFieldsInMemory() {
@@ -102,7 +102,7 @@ export default {
 /* 右侧区域：QuestionnaireForm */
 .right-block {
   float: left;        
-  width: 30%;          
+  width: 35%;          
   box-sizing: border-box;
   border-radius: 8px;
   padding: 20px;

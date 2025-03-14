@@ -15,7 +15,7 @@
 import DashBar from "@/components/components_for_event_page/DashBar.vue";
 import EventDetails from "@/components/event_edit_component/information_list/EventDetails.vue";
 import EventDescription from "@/components/event_edit_component/description_list/EventDescription.vue";
-import LinkGenerator from "@/components/components_for_event_page/link_generater.vue";
+import LinkGenerator from "@/components/event_edit_component/link_generater.vue";
 
 export default {
   name: "Event_Information_Edit",
@@ -26,6 +26,7 @@ export default {
     LinkGenerator,
   },
   methods: {
+    
     // 清空数据：清空 localStorage 及子组件中存储的数据
     clearFieldsInMemory() {
       localStorage.removeItem("fields");
@@ -37,6 +38,7 @@ export default {
         this.$refs.eventDescription.sections = [];
       }
     },
+
     // 收集子组件数据，组合后模拟发送到后端
     async saveDataToDatabase() {
       // 从 EventDetails 获取 fields 数据

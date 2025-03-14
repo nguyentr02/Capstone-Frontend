@@ -15,7 +15,7 @@ const routes = [
   { path: "/admin/questionaire", component : AdminQuestionaireManagementView},
   { path: "/admin/payment", component : AdminPaymentManagementView},
   { path: "/admin/registration", component : AdminRegistrationManagementView},
-  { path: "/admin/Create questionnaire", component : Create_questionnaire_view},
+  { path: "/admin/Create_questionnaire", component : Create_questionnaire_view},
   { path: "/admin/Event_creation", component : Event_Information_Edit},
 ];
 

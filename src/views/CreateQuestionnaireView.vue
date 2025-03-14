@@ -25,8 +25,8 @@
 <script>
 import QuestionnaireForm from "@/components/create_event_component/create_questionnaire/QuestionnaireForm.vue";
 import EventQuestionnaireEdit from "@/components/create_event_component/questionnaire_list/EventQuestionnaireEdit.vue";
-import LinkGenerator from "@/components/create_event_component/link_generater.vue";
-import DashBar from "@/components/create_event_component/DashBar.vue";
+import LinkGenerator from "@/components/components_for_event_page/link_generater.vue";
+import DashBar from "@/components/components_for_event_page/DashBar.vue";
 
 export default {
   name: "CreateQuestionnaireView",

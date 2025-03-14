@@ -51,7 +51,6 @@ export default {
       alert("database deleted");
       // 清空链接
       this.generatedLink = "";
-
       // 通知父组件清空内存中的 fields
       this.$emit("database-cleared");
     },
@@ -101,7 +100,7 @@ export default {
   cursor: pointer;
   border-radius: 5px;
   background-color: rgba(119, 120, 176, 1);
-  padding: 10px 100px;
+  padding: 10px 109px;
   color: inherit;
   font: inherit;
 }
@@ -126,7 +125,7 @@ export default {
   cursor: pointer;
   border-radius: 5px;
   background-color: rgba(238, 18, 18, 0.84);
-  padding: 10px 52px;
+  padding: 10px 55px;
   color: inherit;
   font: inherit;
 }
@@ -143,7 +142,7 @@ export default {
   cursor: pointer;
   border-radius: 5px;
   background-color: rgba(119, 120, 176, 0.84);
-  padding: 10px 57px;
+  padding: 10px 55px;
   white-space: nowrap;
   color: inherit;
   font: inherit;

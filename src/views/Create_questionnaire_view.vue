@@ -90,8 +90,8 @@ export default {
 
 /* 左侧区域：EventQuestionnaireEdit */
 .left-block {
-  float: left;         /* 左浮动 */
-  width: 60%;          /* 可根据需求调整 */
+  float: left;         
+  width: 50%;          
   box-sizing: border-box;
   border-radius: 8px;
   padding: 20px;
@@ -101,22 +101,18 @@ export default {
 
 /* 右侧区域：QuestionnaireForm */
 .right-block {
-  float: right;        /* 右浮动 */
-  width: 20%;          /* 可根据需求调整 */
+  float: left;        
+  width: 30%;          
   box-sizing: border-box;
   border-radius: 8px;
   padding: 20px;
-  margin-left: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  margin-right: 10px;
 }
 
 /* 底部区域：LinkGenerator */
 .bottom-container {
   padding: 16px;
   text-align: center;
-  /* 如果想固定在视窗底部，可使用 position: fixed; bottom: 0; left: 0; 等，
-     这里仅示例普通的底部块状区域
-  */
   margin-top: 20px;
 }
 </style>

@@ -1,4 +1,5 @@
 <template>  
+  <Navbar />
   <div class="event-page">
 
     <div class="search-bar">
@@ -54,12 +55,15 @@
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import FilterPopup from './FilterPopup.vue'
+import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
 
 const router = useRouter()
 const showFilter = ref(false)

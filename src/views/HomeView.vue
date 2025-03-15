@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import FilterPopup from "@/components/FilterPopup.vue";
+import FilterPopup from "@/views/FilterPopup.vue";
 
 export default {
   components: { FilterPopup },

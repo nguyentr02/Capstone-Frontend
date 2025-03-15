@@ -10,13 +10,11 @@
 <script>
 import AdminSideBar from "@/components/admin/AdminSideBar.vue";
 import AdminHomePage from "@/components/admin/AdminHomePage.vue";
-import Navbar from "@/components/Navbar.vue";
 
 export default {
   components: {
     AdminHomePage,
     AdminSideBar,
-    Navbar,
   },
 };
 </script>

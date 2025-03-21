@@ -6,7 +6,7 @@ import AdminQuestionaireManagementView from "@/views/AdminQuestionaireManagement
 import AdminPaymentManagementView from "@/views/AdminPaymentManagementView.vue"
 import AdminRegistrationManagementView from "@/views/AdminRegistrationManagementView.vue"
 import Create_questionnaire_view from "@/views/CreateQuestionnaireView.vue"
-import Event_Information_Edit from "@/views/EventEditView.vue"
+import Event_Information_Edit from "@/views/EventCreationView.vue"
 
 const routes = [
   { path: "/", component: Homepage },
@@ -15,7 +15,7 @@ const routes = [
   { path: "/admin/questionaire", component : AdminQuestionaireManagementView},
   { path: "/admin/payment", component : AdminPaymentManagementView},
   { path: "/admin/registration", component : AdminRegistrationManagementView},
-  
+
   { path: "/admin/Create_questionnaire", component : Create_questionnaire_view},
   { path: "/admin/Event_creation", component : Event_Information_Edit},
 ];

@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import { generateLink } from "@/components/components_for_event_page/linkGenerator.js";
+
 export default {
   name: "LinkGenerator",
   data() {
@@ -33,7 +35,7 @@ export default {
   methods: {
     // 模拟生成链接
     generateLink() {
-      this.generatedLink = "https://example.com/link/" + Date.now();
+      this.generatedLink = generateLink();
     },
     // Confirm：打印数据库 (localStorage 中的 fields)
     confirmLink() {

@@ -39,6 +39,7 @@ export default {
 }
 
 .selection-label {
+  display: flex;
   width: 215px;
   height: 34px;
   border-radius: 5px;
@@ -48,6 +49,8 @@ export default {
   color: #261bc3;
   font-weight: 400;
   background-color: #fff;
+  align-items: center;
+  justify-content: center;
 }
 
 .selection-container {

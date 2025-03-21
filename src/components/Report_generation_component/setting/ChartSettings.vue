@@ -4,19 +4,17 @@
     <div class="settings-content">
 
       <!-- 第一行：选择图表类型 -->
-      <SelectionField
-        label="Select chart type" :value="chartType" @click="handleChartTypeClick" />
+      <SelectionField label="Select chart type" :value="chartType" @click="handleChartTypeClick" />
       <!-- 下拉列表：仅在 showChartTypeList 为 true 时显示 -->
       <ul v-if="showChartTypeList" class="dropdown-list">
-        <li
-          v-for="type in chartTypeOptions" :key="type" @click="selectChartType(type)"> {{ type }}
+        <li v-for="type in chartTypeOptions" :key="type" @click="selectChartType(type)" > {{ type }} 
         </li>
       </ul>
 
       <!-- 第二行：选择 X -->
       <SelectionField label="Select X" :value="xValue" @click="handleXAxisClick" />
       <ul v-if="showXAxisList" class="dropdown-list">
-        <li v-for="option in xOptions" :key="option" @click="selectX(option)" > {{ option }}
+        <li v-for="option in xOptions" :key="option" @click="selectX(option)"> {{ option }} 
         </li>
       </ul>
 
@@ -146,10 +144,12 @@ export default {
   color: #261bc3;
   font-weight: 400;
   background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .topic-input {
-  flex: 1;
   padding: 0 27px;
   font-family: "Poppins", sans-serif;
   font-size: 16px;
@@ -159,6 +159,25 @@ export default {
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 15px;
   background-color: #f3f3f3;
+}
+
+.dropdown-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  width:50%;
+}
+
+.dropdown-list li {
+  margin-bottom: 0px;        
+  border: 1px solid #ccc;    
+  padding: 8px;              
+  cursor: pointer;
+  background-color: #fff;           
+}
+
+.dropdown-list li:last-child {
+  margin-bottom: 0;
 }
 
 @media (max-width: 991px) {

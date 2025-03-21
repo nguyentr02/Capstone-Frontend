@@ -7,6 +7,7 @@ import AdminPaymentManagementView from "@/views/AdminPaymentManagementView.vue"
 import AdminRegistrationManagementView from "@/views/AdminRegistrationManagementView.vue"
 import Create_questionnaire_view from "@/views/CreateQuestionnaireView.vue"
 import Event_Information_Edit from "@/views/EventCreationView.vue"
+import ReportGeneration from "@/views/ReportGeneration.vue"
 
 const routes = [
   { path: "/", component: Homepage },
@@ -18,6 +19,7 @@ const routes = [
 
   { path: "/admin/Create_questionnaire", component : Create_questionnaire_view},
   { path: "/admin/Event_creation", component : Event_Information_Edit},
+  { path: "/admin/Report_Generation", component : ReportGeneration},
 ];
 
 const router = createRouter({

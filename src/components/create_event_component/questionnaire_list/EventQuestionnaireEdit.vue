@@ -4,12 +4,7 @@
       <header class="questionnaire-header">Event Questionnaire Edit</header>
       <section class="fields-container">
         <!-- 遍历父组件传进来的 fields -->
-        <QuestionField
-          v-for="(field, index) in fields"
-          :key="index"
-          v-model:fieldName="field.name" 
-          v-model:fieldType="field.type"
-        />
+        <QuestionField v-for="(field, index) in fields" :key="index" v-model:fieldName="field.name"  v-model:fieldType="field.type" />
       </section>
     </div>
   </main>

@@ -38,12 +38,18 @@ export default {
   },
   data() {
     return {
-      fields: JSON.parse(localStorage.getItem("fields")) || [
-        { name: "event code", type: "number" },
-        { name: "name", type: "Text" },
-        { name: "phone number", type: "Text" },
-        { name: "rating", type: "rating bar" },
-      ],
+      // 如果 localStorage 中存储的字段数组为空，也使用默认值
+      fields: (() => {
+        const stored = JSON.parse(localStorage.getItem("fields"));
+        return stored && stored.length > 0
+          ? stored
+          : [
+              { name: "event code", type: "number" },
+              { name: "name", type: "Text" },
+              { name: "phone number", type: "Text" },
+              { name: "rating", type: "rating bar" },
+            ];
+      })(),
     };
   },
   methods: {

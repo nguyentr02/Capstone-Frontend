@@ -26,7 +26,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .question-field {
   display: flex;

@@ -1,7 +1,6 @@
 <template>
   <div class="button-container">
     <button class="button" @click="confirm">Confirm</button>
-    <button class="button">Cancel</button>
   </div>
 </template>
 

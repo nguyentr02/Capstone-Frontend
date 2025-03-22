@@ -1,31 +1,19 @@
 <template>
   <section class="questionnaire-container">
     <form class="questionnaire-form">
+
       <QuestionnaireHeader />
 
       <!-- 这里是问卷名称输入框，当前示例用 readonly 只是演示 -->
-      <QuestionnaireInput
-        label="Questionnaire Name"
-        class="questionnaire-input"
-        :readonly="true"
-      />
+      <QuestionnaireInput label="Questionnaire Name" class="questionnaire-input" :readonly="true" />
 
       <!-- 让用户输入 Type 文本，使用 v-model 绑定到 formData.type -->
       <div class="text-input-container">
-        <input
-          type="text"
-          class="text-input"
-          placeholder="Type: Text"
-          v-model="formData.type"
-        />
+        <input type="text" class="text-input" placeholder="Type: Text" v-model="formData.type" />
       </div>
 
       <!-- 这里是问卷类型输入框，当前示例用 readonly 只是演示 -->
-      <QuestionnaireInput
-        label="Questionnaire Type"
-        class="questionnaire-type-input"
-        :readonly="true"
-      />
+      <QuestionnaireInput label="Questionnaire Type" class="questionnaire-type-input" :readonly="true" />
 
       <!-- 选择器子组件，会将选择结果通过 @update-type="..." 返回给父组件 -->
       <QuestionnaireTypeSelector @update-type="formData.selectedType = $event" />
@@ -107,10 +95,10 @@ export default {
 
 .text-input {
   -webkit-text-stroke-width: 0.36px;
-  -webkit-text-stroke-color: #f5f5f5;
+  -webkit-text-stroke-color: #acacac;
   border: 1px solid rgba(245, 245, 245, 1);
   border-radius: 15px;
-  background-color: rgba(243, 243, 243, 1);
+  background-color: rgb(243, 242, 242);
   width: 100%;
   padding: 20px;
   line-height: 2;

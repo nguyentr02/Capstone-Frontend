@@ -42,7 +42,7 @@ export default {
   border: 1px solid rgba(245, 245, 245, 1);
   display: flex;
   margin-top: 14px;
-  width: 80%;
+  width: 75%;
   max-width: 100%;
   padding-left: 20px;
   align-items: center;

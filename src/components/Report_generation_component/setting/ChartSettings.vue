@@ -28,12 +28,14 @@
       <!-- chart topic 保持原先输入框 -->
       <section class="chart-topic">
         <label class="topic-label">chart topic</label>
-        <input
-          type="text"
-          class="topic-input"
-          v-model="chartTopic"
-        />
+        <input type="text" class="topic-input" v-model="chartTopic" />
       </section>
+
+      <!-- 新增确认按钮 -->
+      <div class="confirm-container">
+        <button class="confirm-button" type="button" @click="confirmSettings"> Confirm </button>
+      </div>
+
     </div>
   </main>
 </template>
@@ -97,6 +99,16 @@ export default {
       this.yValue = option;
       this.showYAxisList = false;
     },
+
+        // 确认按钮点击时，发送所有设置数据给父组件
+    confirmSettings() {
+      this.$emit("confirm-settings", {
+        chartType: this.chartType,
+        xValue: this.xValue,
+        yValue: this.yValue,
+        chartTopic: this.chartTopic,
+      });
+     },
   },
 };
 </script>
@@ -178,6 +190,24 @@ export default {
 
 .dropdown-list li:last-child {
   margin-bottom: 0;
+}
+
+/* 确认按钮样式 */
+.confirm-container {
+  margin-top: 16px;
+  text-align: center;
+}
+.confirm-button {
+  padding: 16px 32px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 20px;  /* 调整字体大小 */
+}
+.confirm-button:hover {
+  background-color: #0056b3;
 }
 
 @media (max-width: 991px) {

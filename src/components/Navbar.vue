@@ -21,38 +21,36 @@
   </header>
 </template>
 
-<script setup>
-import { useRouter } from 'vue-router'
-import '@fortawesome/fontawesome-free/css/all.css'
+<script>
+import "@fortawesome/fontawesome-free/css/all.css";
 
-const router = useRouter()
-
-const goToLogin = () => {
-  router.push('/login')
-}
-
-const goToSignUp = () => {
-  router.push('/signup')
-}
-
-const goToHome = () => {
-  router.push('/')
-}
-
-const goToTickets = () => {
-  router.push('/tickets')
-}
-
-const goToProfile = () => {
-  router.push('/profile')
-}
+export default {
+  name: "AppNavbar",
+  methods: {
+    goToLogin() {
+      this.$router.push("/login"); // 跳转到登录页面
+    },
+    goToSignUp() {
+      this.$router.push("/signup"); // 跳转到注册页面
+    },
+    goToHome() {
+      this.$router.push("/"); // 跳转到主页
+    },
+    goToTickets() {
+      this.$router.push("/tickets"); // 跳转到票务页面
+    },
+    goToProfile() {
+      this.$router.push("/profile"); // 跳转到个人资料页面
+    },
+  },
+};
 </script>
 
 <style scoped>
 .navbar {
   width: 100%;
   height: 79px;
-  background-color: #0A075F;
+  background-color: #0a075f;
   display: flex;
   justify-content: space-between;
   align-items: center;

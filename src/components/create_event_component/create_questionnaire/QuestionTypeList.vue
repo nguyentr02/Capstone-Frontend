@@ -11,7 +11,7 @@ export default {
   name: "QuestionTypeList",
   data() {
     return {
-      types: ["Type: Text", "Type: Rating", "Type: 3", "Type: 4", "Type: 5"],
+      types: ["Type: Text", "Type: Rating bar", "Type: number", "Type: date", "Type: ???"],
     };
   },
   methods: {

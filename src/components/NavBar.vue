@@ -1,27 +1,47 @@
 <template>
-  <header class="navbar">
-    <div class="logo" role="banner" aria-label="公司标志">
-      <div class="logo-icon">LOGO</div>
+  <!-- Add Bootstrap JS dependencies -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css">
+
+  
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0a075f;">
+    <a class="navbar-brand" href="/">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Bootstrap_logo.svg/2560px-Bootstrap_logo.svg.png" 
+           width="30" height="30" alt="Logo">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" 
+            data-target="#navbarContent" aria-controls="navbarContent" 
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <button class="nav-link link-button" @click="goToHome">
+            <i class="fas fa-calendar-alt"></i> Events
+          </button>
+        </li>
+        <li class="nav-item">
+          <button class="nav-link link-button" @click="goToTickets">
+            <i class="fas fa-ticket-alt"></i> Tickets
+          </button>
+        </li>
+      </ul>
+      
+      <div class="header-auth">
+        <button class="auth-button login" @click="goToLogin">Sign in</button>
+        <button class="auth-button signup" @click="goToSignUp">Register</button>
+        <button class="nav-link link-button" @click="goToProfile">
+          <i class="fas fa-user"></i>
+        </button>
+      </div>
     </div>
-    <div class="header-links">
-      <button class="link-button" @click="goToHome">
-        <i class="fas fa-calendar-alt"></i> Events
-      </button>
-      <button class="link-button" @click="goToTickets">
-        <i class="fas fa-ticket-alt"></i> Tickets
-      </button>
-    </div>
-    <div class="header-auth">
-      <button class="auth-button login" @click="goToLogin">Sign in</button>
-      <button class="auth-button signup" @click="goToSignUp">Register</button>
-      <button class="link-button" @click="goToProfile">
-        <i class="fas fa-user"></i>
-      </button>
-    </div>
-  </header>
+  </nav>
 </template>
 
 <script>
+
 import "@fortawesome/fontawesome-free/css/all.css";
 
 export default {
@@ -48,14 +68,8 @@ export default {
 
 <style scoped>
 .navbar {
-  width: 100%;
-  height: 79px;
   background-color: #0a075f;
-  display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  box-sizing: border-box;
 }
 
 .logo {
@@ -66,7 +80,7 @@ export default {
 .logo-icon {
   width: 80px;
   height: 66px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,7 +117,7 @@ export default {
 
 .auth-button {
   padding: 8px 16px;
-  background-color: #E3E3E3;
+  background-color: #e3e3e3;
   border: 1px solid #767676;
   border-radius: 8px;
   cursor: pointer;
@@ -112,7 +126,7 @@ export default {
 }
 
 .auth-button.signup {
-  background-color: #2C2C2C;
+  background-color: #2c2c2c;
   color: white;
 }
 
@@ -120,7 +134,7 @@ export default {
   background-color: #ccc;
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
     align-items: flex-start;
@@ -156,5 +170,5 @@ export default {
     font-size: 14px;
     padding: 6px 10px;
   }
-}
+} */
 </style>

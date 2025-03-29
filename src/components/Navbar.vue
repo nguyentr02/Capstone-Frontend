@@ -66,7 +66,7 @@ export default {
 .logo-icon {
   width: 80px;
   height: 66px;
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,7 +103,7 @@ export default {
 
 .auth-button {
   padding: 8px 16px;
-  background-color: #E3E3E3;
+  background-color: #e3e3e3;
   border: 1px solid #767676;
   border-radius: 8px;
   cursor: pointer;
@@ -112,7 +112,7 @@ export default {
 }
 
 .auth-button.signup {
-  background-color: #2C2C2C;
+  background-color: #2c2c2c;
   color: white;
 }
 

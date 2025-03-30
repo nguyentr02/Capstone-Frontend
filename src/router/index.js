@@ -21,6 +21,7 @@ import AdminRegistrationManagementView from "@/views/AdminRegistrationManagement
 import Create_questionnaire_view from "@/views/CreateQuestionnaireView.vue"
 import Event_Information_Edit from "@/views/EventEditView.vue"
 import AdminEventManagementView from "@/views/AdminEventManagementView.vue"
+import UserProfileView from "@/views/UserProfileView.vue"
 
 
 const routes = [
@@ -47,6 +48,8 @@ const routes = [
   { path: "/admin/Event_creation", component : Event_Information_Edit},
 
   { path: "/admin/event", component : AdminEventManagementView},
+
+  { path: "/user/profile", component : UserProfileView},
 
 ];
 

@@ -71,7 +71,36 @@ export default {
 
 <style scoped>
 .navbar {
-  padding: 0.5rem 1rem;
+  width: 100%;
+  height: 79px;
+  background-color: #0a075f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo-icon {
+  width: 80px;
+  height: 66px;
+  background-color: #d9d9d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #333;
+}
+
+.header-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 }
 
 .link-button {

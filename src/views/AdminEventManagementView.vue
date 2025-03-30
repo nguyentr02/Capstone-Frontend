@@ -2,8 +2,7 @@
   <div class="admin_report_generation">
 
     <main>
-      <AdminSideBar />
-      <AdminEventManagement />
+      <Navbar/>
     </main>
   </div>
 </template>

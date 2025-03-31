@@ -8,7 +8,7 @@ import { RouterView } from "vue-router";
   </div>
 </template>
 
-<style scoped>
+<style>
 @font-face {
   font-family: "LogoFont";
   src: url("./assets/fonts/Horizon.otf");
@@ -24,19 +24,8 @@ import { RouterView } from "vue-router";
   margin: 0;
 }
 
-h {
+h, label, p, button {
   font-family: "Font";
 }
-label {
-  font-family: "Font";
-}
-label {
-  font-family: "Font";
-}
-p {
-  font-family: "Font";
-}
-button {
-  font-family: "Font";
-}
+
 </style>

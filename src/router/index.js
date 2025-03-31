@@ -1,42 +1,49 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import UserLogin from "@/views/Login.vue";
-import SignUp from "@/views/SignUp.vue";
-import EventList from "@/views/EventList.vue";
-import EventDetails from "@/views/EventDetails.vue";
-import TicketSelectionPage from "@/views/TicketSelectionPage.vue"; // Importing the TicketSelectionPage Component
-import CompleteFormPage from '@/views/CompleteFormPage.vue'; // Introducing the form page here
-import PaymentPage from '@/views/PaymentPage.vue'; // Introducing a payment page
-import BookingConfirmationPage from '@/views/BookingConfirmationPage.vue'; // confirmation page
-import ResetPassword from "@/views/ResetPassword.vue";
-import TicketsPage from '../views/TicketsPage.vue';
-  
-// import Homepage from '@/views/HomeView.vue'
-import AdminHomeView from "@/views/AdminHomeView.vue";
-import AdminReportView from "@/views/AdminReportView.vue";
-import AdminQuestionaireManagementView from "@/views/AdminQuestionaireManagementView.vue"
-import AdminPaymentManagementView from "@/views/AdminPaymentManagementView.vue"
-import AdminRegistrationManagementView from "@/views/AdminRegistrationManagementView.vue"
+import Home from "@/views/home.vue";
+import Events from "@/views/events.vue";
+import SignIn from "@/views/signIn.vue";
+import SignUp from "@/views/signUp.vue";
+import eventDetail from "@/views/eventDetail.vue";
+import RegisterEvent from "@/views/registerEvent.vue";
+import SelectCategory from '@/views/SelectCategory.vue';
+import PersonalInfo from '@/views/PersonalInfo.vue';
+import Questionnaire from '@/views/Questionnaire.vue';
+import Review from '@/views/Review.vue';
+import Checkout from '@/views/Checkout.vue';
 
 const routes = [
-  
-  { path: "/", component: EventList },
-  { path: "/events/:id", component: EventDetails, props: true },
-  { path: "/login", component: UserLogin },
-  { path: "/signup", component: SignUp },
-  { path: "/ticket-selection", component: TicketSelectionPage },  // Ticket selection page routing
-  { path: '/complete-form', component: CompleteFormPage }, // Form page routing
-  { path: '/payment', component: PaymentPage }, // Payment page routing
-  { path: '/booking-confirmation', component: BookingConfirmationPage }, // Confirm page routing
-  { path: "/reset-password", component: ResetPassword },
-  { path: '/tickets',name: 'Tickets', component: TicketsPage },
-    
-//   { path: "/", component: Homepage },
-  { path: "/admin", component : AdminHomeView},
-  { path: "/admin/report", component : AdminReportView},
-  { path: "/admin/questionaire", component : AdminQuestionaireManagementView},
-  { path: "/admin/payment", component : AdminPaymentManagementView},
-  { path: "/admin/registration", component : AdminRegistrationManagementView},
+  { path: "/", component: Home },
+  { path: "/events", component: Events },
+  { path: "/signIn", component: SignIn },
+  { path: "/signUp", component: SignUp },
+  { path: "/eventDetail", component: eventDetail },
+  { path: "/registerEvent", component: RegisterEvent },
+  {
+    path: '/select-category',
+    name: 'SelectCategory',
+    component: SelectCategory,
+  },
+  {
+    path: '/complete-form/personal',
+    name: 'PersonalInfo',
+    component: PersonalInfo,
+  },
+  {
+    path: '/complete-form/questionnaire',
+    name: 'Questionnaire',
+    component: Questionnaire,
+  },
+  {
+    path: '/complete-form/review',
+    name: 'Review',
+    component: Review,
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: Checkout,
+  },
 ];
 
 const router = createRouter({

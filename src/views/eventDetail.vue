@@ -47,13 +47,15 @@
               scrolling="no"
               marginheight="0"
               marginwidth="0"
-            ></iframe
-            ><a href="https://embedgooglemap.net/124/">spiral 2021 123movies</a
-            ><br /><a href="https://www.embedgooglemap.net"></a>
+            ></iframe>
+            <a href="https://embedgooglemap.net/124/">spiral 2021 123movies</a>
+            <br />
+            <a href="https://www.embedgooglemap.net"></a>
           </div>
         </div>
         <div class="align-item-center mt-5">
-          <router-link to="/registerEvent">
+          <!-- Modify the registration jump link to /select-category -->
+          <router-link to="/select-category">
             <button class="btn btn-outline-warning fw-semibold">
               Register now
             </button>
@@ -66,15 +68,9 @@
 
 <script setup>
 import navbar from "@/components/navbar.vue";
-import Footer from "@/components/footer.vue";
-import { ref, computed, watch, reactive } from "vue";
+import { ref } from "vue";
 
-// export default {
-//   components: {
-//     navbar,
-//     Footer,
-//   },
-// };
+import Footer from "@/components/footer.vue";
 </script>
 
 <style scoped>
@@ -87,7 +83,6 @@ import { ref, computed, watch, reactive } from "vue";
 p {
   font-family: "Font";
 }
-
 h4 {
   font-family: "Font";
 }

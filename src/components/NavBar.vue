@@ -2,6 +2,7 @@
   <header class="navbar">
     <div class="logo" role="banner" aria-label="公司标志">
       <div class="logo-icon">LOGO</div>
+        />
     </div>
     <div class="header-links">
       <button class="link-button" @click="goToHome">

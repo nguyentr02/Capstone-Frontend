@@ -1,18 +1,42 @@
+<script setup>
+import { RouterView } from "vue-router";
+</script>
+
 <template>
-  <div id="app" class="page-container">
+  <div id="app">
     <RouterView />
   </div>
 </template>
 
-<script>
-import { RouterView } from "vue-router";
-</script>
-
 <style scoped>
-
-#app {
-  width: 100%;
+@font-face {
+  font-family: "LogoFont";
+  src: url("./assets/fonts/Horizon.otf");
 }
-@media (min-width: 1024px) {
+
+@font-face {
+  font-family: "Font";
+  src: url("./assets/fonts/Poppins-Regular.woff");
+}
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+h {
+  font-family: "Font";
+}
+label {
+  font-family: "Font";
+}
+label {
+  font-family: "Font";
+}
+p {
+  font-family: "Font";
+}
+button {
+  font-family: "Font";
 }
 </style>

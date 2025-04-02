@@ -7,7 +7,7 @@
     <!-- Page Title -->
     <h2 class="fw-bold mb-4">2024 NIKE MELBOURNE MARATHON FESTIVAL</h2>
 
-    <!-- 项目1：11:30AM | BIG M 5KM RUN -->
+    <!-- 1：11:30AM | BIG M 5KM RUN -->
     <div class="mb-5">
       <h4 class="mb-3"><strong>11:30AM | BIG M 5KM RUN</strong></h4>
 
@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <!-- 项目2：12:00PM | CHOBANI FIT 2.5KM WALK -->
+    <!-- 2：12:00PM | CHOBANI FIT 2.5KM WALK -->
     <div class="mb-5">
       <h4 class="mb-3"><strong>12:00PM | CHOBANI FIT 2.5KM WALK</strong></h4>
 

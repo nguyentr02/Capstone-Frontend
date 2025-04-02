@@ -11,7 +11,7 @@ import BookingConfirmationPage from '@/views/BookingConfirmationPage.vue'; // co
 import ResetPassword from "@/views/ResetPassword.vue";
 import TicketsPage from '../views/TicketsPage.vue';
   
-// import Homepage from '@/views/HomeView.vue'
+import HomeView from '@/views/HomeView.vue'
 import AdminHomeView from "@/views/AdminHomeView.vue";
 import AdminReportView from "@/views/AdminReportView.vue";
 import AdminQuestionaireManagementView from "@/views/AdminQuestionaireManagementView.vue"
@@ -26,7 +26,7 @@ import UserProfileView from "@/views/UserProfileView.vue"
 
 const routes = [
   
-  { path: "/", component: EventList },
+  { path: "/", component: HomeView },
   { path: "/events/:id", component: EventDetails, props: true },
   { path: "/login", component: UserLogin },
   { path: "/signup", component: SignUp },

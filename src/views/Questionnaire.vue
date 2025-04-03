@@ -47,7 +47,7 @@
           </div>
         </div>
 
-        <!-- 新增团队选择部分 -->
+        <! -- Added team selection section -->
         <div class="card custom-card">
           <h5 class="card-title">Team Options</h5>
           <div class="row g-3">
@@ -84,7 +84,7 @@ const route = useRoute();
 
 // ticketList data passed from the PersonalInfo page
 const ticketList = ref([]);
-const teamOption = ref("");  // 新增团队选项的响应式变量
+const teamOption = ref("");  // Responsive variables with new team options
 
 onMounted(() => {
   if (route.query.tickets) {
@@ -114,7 +114,7 @@ const goToReview = () => {
     name: "Review",
     query: { 
       tickets: JSON.stringify(ticketList.value),
-      teamOption: teamOption.value   // 传递团队选择项到下一页面
+      teamOption: teamOption.value   // Pass the team selections to the next page
     },
   });
 };

@@ -1,58 +1,60 @@
 <template>
-  <navbar />
-  <div class="container mt-3 mb-5">
-    <div class="row">
-      <div class="col-7">
-        <img :src="eventDetail.banner" alt="img" class="img-fluid" />
-        <h4 class="fw-semibold mt-4">Description</h4>
-        <p class="mt-3">
-          {{ eventDetail.description }}
-        </p>
-        <h5>📅 Date & Time:</h5>
-        <ul>
-          <li>
-            <strong>When:</strong>
-            {{ eventDetail.when }}
-          </li>
-          <li>
-            <strong>Where:</strong> {{ eventDetail.where }}
-          </li>
-        </ul>
-      </div>
-      <div class="col-5 text-start align-item-center">
-        <h1 class="fw-bold">{{ eventDetail.name }}</h1>
-        <p class="text-warning fw-semibold">{{ eventDetail.timeAndDate }}</p>
-        <h3 class="fw-bold">Location</h3>
-        <p class="text-secondary" style="margin-top: -2%">{{ eventDetail.mode }}</p>
-        <p class="fw-semibold" style="margin-top: -1%">{{ eventDetail.address }}</p>
-        <div class="mapouter">
-          <div class="gmap_canvas">
-            <iframe
-              width="400"
-              height="400"
-              :src="eventDetail.mapSrc"
-              frameborder="0"
-              scrolling="no"
-              marginheight="0"
-              marginwidth="0"
-            ></iframe>
+  <div>
+    <navbar />
+    <div class="container mt-3 mb-5">
+      <div class="row">
+        <div class="col-7">
+          <img :src="eventDetail.banner" alt="img" class="img-fluid" />
+          <h4 class="fw-semibold mt-4">Description</h4>
+          <p class="mt-3">
+            {{ eventDetail.description }}
+          </p>
+          <h5>📅 Date & Time:</h5>
+          <ul>
+            <li>
+              <strong>When:</strong>
+              {{ eventDetail.when }}
+            </li>
+            <li>
+              <strong>Where:</strong> {{ eventDetail.where }}
+            </li>
+          </ul>
+        </div>
+        <div class="col-5 text-start align-item-center">
+          <h1 class="fw-bold">{{ eventDetail.name }}</h1>
+          <p class="text-warning fw-semibold">{{ eventDetail.timeAndDate }}</p>
+          <h3 class="fw-bold">Location</h3>
+          <p class="text-secondary" style="margin-top: -2%">{{ eventDetail.mode }}</p>
+          <p class="fw-semibold" style="margin-top: -1%">{{ eventDetail.address }}</p>
+          <div class="mapouter">
+            <div class="gmap_canvas">
+              <iframe
+                width="400"
+                height="400"
+                :src="eventDetail.mapSrc"
+                frameborder="0"
+                scrolling="no"
+                marginheight="0"
+                marginwidth="0"
+              ></iframe>
+            </div>
           </div>
-        </div>
-        <div class="align-item-center mt-5">
-          <!-- Change registration link to /select-category -->
-          <router-link to="/select-category">
-            <button class="btn btn-outline-warning fw-semibold">
-              Register now
-            </button>
-          </router-link>
-        </div>
-        <div class="align-item-center mt-3">
-          <!-- Back to events list -->
-          <router-link to="/events">
-            <button class="btn btn-secondary">
-              Back to events
-            </button>
-          </router-link>
+          <div class="align-item-center mt-5">
+            <!-- Change registration link to /select-category -->
+            <router-link to="/select-category">
+              <button class="btn btn-outline-warning fw-semibold">
+                Register now
+              </button>
+            </router-link>
+          </div>
+          <div class="align-item-center mt-3">
+            <!-- Back to events list -->
+            <router-link to="/events">
+              <button class="btn btn-secondary">
+                Back to events
+              </button>
+            </router-link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 <template>
   <!-- Bootstrap Modal for Filter Popup -->
-  <div v-if="showFilter" class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+  <div v-if="showFilter" class="modal fade show d-block" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
       <div class="modal-content">
         <!-- Modal Header -->
@@ -16,9 +16,8 @@
             <div class="row">
               <div class="col-3" v-for="activity in activities" :key="activity.name">
                 <div
-                  class="card text-center"
+                  class="card text-center clickable"
                   :class="{ 'border-primary': selectedActivity === activity.name }"
-                  style="cursor: pointer;"
                   @click="selectActivity(activity.name)"
                 >
                   <img :src="activity.image" class="card-img-top" :alt="activity.name" />
@@ -55,7 +54,7 @@
             <div v-if="isGeocoding" class="mt-1 text-muted">
               Loading...
             </div>
-            <div v-if="showMap" ref="mapContainer" class="mt-2" style="height: 400px;"></div>
+            <div v-if="showMap" ref="mapContainer" class="mt-2 map-container"></div>
           </div>
 
           <!-- Price Range Section -->
@@ -141,13 +140,13 @@ const errors = ref({
   maxPrice: "",
 });
 
-// Important: Update selected activity and clear its error
+// Update selected activity and clear its error
 const selectActivity = (activityName) => {
   selectedActivity.value = activityName;
   errors.value.selectedActivity = "";
 };
 
-// Important: Reset all filter fields and remove map marker if present
+// Reset all filter fields and remove map marker if present
 const clearFilter = () => {
   selectedActivity.value = "";
   location.value = "";
@@ -165,7 +164,7 @@ const clearFilter = () => {
   }
 };
 
-// Important: Validate price inputs
+// Validate price inputs
 const validateInputs = () => {
   let isValid = true;
   errors.value.selectedActivity = "";
@@ -194,7 +193,7 @@ const validateInputs = () => {
   return isValid;
 };
 
-// Important: Apply filter conditions and emit to parent if valid
+// Apply filter conditions and emit to parent if valid
 const applyFilter = async () => {
   if (validateInputs()) {
     const min = minPrice.value === "" ? 0 : Number(minPrice.value);
@@ -326,3 +325,15 @@ onBeforeUnmount(() => {
   }
 });
 </script>
+
+<style scoped>
+/* Custom clickable style: replacing inline cursor style */
+.clickable {
+  cursor: pointer;
+}
+
+/* Define height for map container */
+.map-container {
+  height: 400px;
+}
+</style>

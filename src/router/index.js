@@ -6,6 +6,7 @@ import SignIn from "@/views/signIn.vue";
 import SignUp from "@/views/signUp.vue";
 import eventDetail from "@/views/eventDetail.vue";
 import RegisterEvent from "@/views/registerEvent.vue";
+import UserProfileView from "@/views/UserProfileView.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -14,6 +15,7 @@ const routes = [
   { path: "/signUp", component: SignUp },
   { path: "/eventDetail", component: eventDetail },
   { path: "/registerEvent", component: RegisterEvent },
+  { path: "/user/profile", component: UserProfileView},
 ];
 
 const router = createRouter({

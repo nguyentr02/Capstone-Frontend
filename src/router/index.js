@@ -11,6 +11,7 @@ import PersonalInfo from '@/views/PersonalInfo.vue';
 import Questionnaire from '@/views/Questionnaire.vue';
 import Review from '@/views/Review.vue';
 import Checkout from '@/views/Checkout.vue';
+import UserProfileView from "@/views/UserProfileView.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -48,6 +49,7 @@ const routes = [
     name: 'Checkout',
     component: Checkout,
   },
+  { path: "/user/profile", component: UserProfileView},
 ];
 
 const router = createRouter({

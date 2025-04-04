@@ -16,19 +16,23 @@ const routes = [
   { path: "/", component: Home },
   { path: "/events", component: Events },
   { path: "/signIn", component: SignIn },
-  { path: "/signUp", component: SignUp },
-  { path: "/eventDetail", component: eventDetail },
+  { path: "/signUp", component: SignUp },  
   { path: "/registerEvent", component: RegisterEvent },
+  {
+    path: '/eventDetail/:id',
+    name: 'EventDetail',
+    component: () => import('@/views/EventDetail.vue'),
+  },
   {
     path: '/select-category',
     name: 'SelectCategory',
     component: SelectCategory,
   },
   {
-    path: '/complete-form/personal',
+    path: '/personalInfo',
     name: 'PersonalInfo',
-    component: PersonalInfo,
-  },
+    component: () => import('@/views/PersonalInfo.vue'),
+  },  
   {
     path: '/complete-form/questionnaire',
     name: 'Questionnaire',

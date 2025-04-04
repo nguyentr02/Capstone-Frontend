@@ -23,13 +23,23 @@
               class="form-control"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
-              v-model="email"
               style="font-family: 'Font'; background-color: #fcfcfa"
             />
-            <p v-for="error of v$.email.$errors" :key="error.$uid"></p>
-            <!-- <div id="emailHelp" class="form-text ">
-              We'll never share your email with anyone else.
-            </div> -->
+          </div>
+          <div class="mb-3 text-start">
+            <label
+              for="exampleInputEmail1"
+              class="form-label"
+              style="font-family: 'Font'"
+              >Confirm email address</label
+            >
+            <input
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              style="font-family: 'Font'; background-color: #fcfcfa"
+            />
           </div>
           <div class="mb-3 text-start">
             <label
@@ -43,10 +53,23 @@
               class="form-control"
               id="exampleInputPassword1"
               style="background-color: #edece8"
-              v-model="pwd"
             />
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <div class="mb-3 text-start">
+            <label
+              for="exampleInputPassword1"
+              class="form-label"
+              style="font-family: 'Font'"
+              >Confirm password</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="exampleInputPassword1"
+              style="background-color: #edece8"
+            />
+          </div>
+          <button type="submit" class="btn btn-primary" href="/events">Sign Up</button>
         </form>
         <div class="col-4"></div>
       </div>
@@ -57,32 +80,17 @@
 <script>
 import navbar from "@/components/navbar.vue";
 import Footer from "@/components/footer.vue";
-import { useVuelidate } from "@vuelidate/core";
-import { minLength, required, email } from "@vuelidate/validators";
 
 export default {
-  setup() {
-    return { v$: useVuelidate() };
-  },
-
   components: {
     navbar,
     Footer,
   },
-
-  data() {
-    return {
-      email: "",
-      pwd: "",
-    };
-  },
-  validations() {
-    return {
-      email: { required, email },
-      pwd: { required, minLengthValue: minLength(16)  },
-    };
-  },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+h.p {
+  font-family: "Font";
+}
+</style>

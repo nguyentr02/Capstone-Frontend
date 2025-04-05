@@ -17,8 +17,6 @@ import Profile from "@/components/user/Profile.vue"
         <router-view />
       </main>
     </div>
-
-    <Footer/>
   </div>
 </template>
 

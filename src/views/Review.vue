@@ -1,13 +1,17 @@
 <template>
   <div>
     <navbar />
-    <!-- Step indicator: Current step is 2 (Preview Information) -->
+    <!-- Step indicator: current step is 2 (preview message) -->
     <StepIndicator :steps="['Select Ticket', 'Complete Info', 'Checkout']" :currentStep="2" />
 
     <div class="container mt-4">
       <h4 class="section-title">Review Your Information</h4>
 
-      <div v-for="(ticket, index) in ticketList" :key="ticket.id" class="card custom-card preview-card">
+      <div
+        v-for="(ticket, index) in ticketList"
+        :key="ticket.id"
+        class="card custom-card preview-card"
+      >
         <div class="d-flex justify-content-between align-items-center preview-header">
           <h5>
             Participant #{{ index + 1 }}
@@ -27,19 +31,26 @@
           <div class="col-md-3"><strong>State:</strong> {{ ticket.state }}</div>
           <div class="col-md-3"><strong>Zip:</strong> {{ ticket.zip }}</div>
           <div class="col-md-12"><strong>ID/Passport:</strong> {{ ticket.idNumber }}</div>
-          <div v-if="ticket.type === 'childRun' || ticket.type === 'childWalk'" class="col-md-12">
-            <strong>Child ticket certificate:</strong> {{ ticket.proof ? ticket.proof.name : "Not Uploaded" }}
+          <div
+            v-if="ticket.type === 'childRun' || ticket.type === 'childWalk'"
+            class="col-md-12"
+          >
+            <strong>Child ticket certificate:</strong>
+            {{ ticket.proof ? ticket.proof.name : "Not Uploaded" }}
           </div>
 
-          <!-- Display questionnaire information with default values to avoid undefined errors -->
+          <!-- Display questionnaire information, use default values to prevent undefined errors -->
           <div class="col-md-6 mt-3">
-            <strong>Emergency Contact Name:</strong> {{ ticket.survey.emergencyContactName || '' }}
+            <strong>Emergency Contact Name:</strong>
+            {{ ticket.survey.emergencyContactName || '' }}
           </div>
           <div class="col-md-6 mt-3">
-            <strong>Emergency Contact Phone:</strong> {{ ticket.survey.emergencyContactPhone || '' }}
+            <strong>Emergency Contact Phone:</strong>
+            {{ ticket.survey.emergencyContactPhone || '' }}
           </div>
           <div class="col-md-6 mt-3">
-            <strong>Medical Condition:</strong> {{ ticket.survey.hasMedicalCondition || '' }}
+            <strong>Medical Condition:</strong>
+            {{ ticket.survey.hasMedicalCondition || '' }}
           </div>
           <div class="col-md-12 mt-3">
             <strong>Reason:</strong> {{ ticket.survey.reason || '' }}
@@ -47,13 +58,19 @@
         </div>
       </div>
 
-      <!-- Bottom operation buttons -->
+      <!-- Bottom operating buttons -->
       <div class="d-flex justify-content-between mt-4">
         <div>
-          <button class="btn btn-warning me-2" @click="goBackToQuestionnaire">Return to edit questionnaire</button>
-          <button class="btn btn-info" @click="goBackToPersonalInfo">Return to modify personal information</button>
+          <button class="btn btn-warning me-2" @click="goBackToQuestionnaire">
+            Return to edit questionnaire
+          </button>
+          <button class="btn btn-info" @click="goBackToPersonalInfo">
+            Return to modify personal information
+          </button>
         </div>
-        <button class="btn btn-success" @click="goToCheckout">Submit and Continue (Checkout)</button>
+        <button class="btn btn-success" @click="goToCheckout">
+          Submit and Continue (Checkout)
+        </button>
       </div>
     </div>
   </div>
@@ -70,13 +87,13 @@ const route = useRoute();
 
 const ticketList = ref([]);
 
-// onMounted: Parse ticketList from route query and add default survey object if missing
+// onMounted hook: parses the ticketList from the routing query parameters and ensures that each ticket has a survey object
 onMounted(() => {
   if (route.query.tickets) {
     try {
-      ticketList.value = JSON.parse(route.query.tickets);
-      // Ensure each ticket has a survey object to avoid undefined errors
-      ticketList.value.forEach(ticket => {
+      let parsedTickets = JSON.parse(route.query.tickets);
+      // Ensure that the survey attribute exists for each ticket, or assign a default value if it is missing.
+      parsedTickets = parsedTickets.map(ticket => {
         if (!ticket.survey) {
           ticket.survey = {
             emergencyContactName: '',
@@ -85,7 +102,9 @@ onMounted(() => {
             reason: ''
           };
         }
+        return ticket;
       });
+      ticketList.value = parsedTickets;
     } catch (error) {
       console.error('Error parsing tickets:', error);
     }
@@ -94,7 +113,7 @@ onMounted(() => {
   }
 });
 
-// Sanitize tickets to remove non-serializable properties (like File objects)
+// sanitizeTickets function: filters out non-serialisable properties (e.g. File objects)
 const sanitizeTickets = (tickets) => {
   return tickets.map(ticket => {
     const { proof, ...rest } = ticket;
@@ -105,7 +124,7 @@ const sanitizeTickets = (tickets) => {
   });
 };
 
-// Navigation functions to go back to questionnaire, personal info, or proceed to checkout
+// Navigation function to return to the Edit Questionnaire page
 const goBackToQuestionnaire = () => {
   const sanitizedTickets = sanitizeTickets(ticketList.value);
   router.push({
@@ -114,6 +133,7 @@ const goBackToQuestionnaire = () => {
   });
 };
 
+// Returns the navigation function of the Edit Profile page
 const goBackToPersonalInfo = () => {
   const sanitizedTickets = sanitizeTickets(ticketList.value);
   router.push({
@@ -122,6 +142,7 @@ const goBackToPersonalInfo = () => {
   });
 };
 
+// Navigating functions to the Checkout page
 const goToCheckout = () => {
   const sanitizedTickets = sanitizeTickets(ticketList.value);
   router.push({
@@ -130,6 +151,7 @@ const goToCheckout = () => {
   });
 };
 
+// Auxiliary function: returns the label corresponding to the ticket type
 const ticketTypeLabel = (type) => {
   switch (type) {
     case 'adultWalk':

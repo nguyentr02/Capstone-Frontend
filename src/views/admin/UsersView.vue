@@ -2,43 +2,54 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import { usersMockData } from '@/mock/usersMock.js'  // 假设有用户模拟数据
+import { usersMockData } from '@/mock/usersMock.js'
 
 const router = useRouter()
 const searchQuery = ref('')
-const statusFilter = ref('all')
+const roleFilter = ref('all')
 const sortBy = ref('name')
 const sortOrder = ref('asc')
 
-// 模拟用户数据
 const usersData = ref([...usersMockData])
 
-// 计算属性：根据搜索、状态筛选和排序规则对用户数据进行过滤和排序
+// 将角色数字转换为文本
+const getRoleText = (role) => {
+  switch (role) {
+    case 1:
+      return 'Admin'
+    case 2:
+      return 'Manager'
+    case 3:
+      return 'User'
+    default:
+      return 'Unknown'
+  }
+}
+
 const filteredUsers = computed(() => {
   return usersData.value
     .filter(user => {
-      // 根据状态进行筛选
-      if (statusFilter.value !== 'all' && user.status !== statusFilter.value) {
+      // 角色筛选（转换为字符串后进行比较）
+      if (roleFilter.value !== 'all' && user.role.toString() !== roleFilter.value) {
         return false
       }
-      // 根据搜索关键字过滤（不区分大小写）
       if (searchQuery.value) {
         const query = searchQuery.value.toLowerCase()
         return (
-          user.name.toLowerCase().includes(query) ||
+          (user.first_name + ' ' + user.last_name).toLowerCase().includes(query) ||
           user.email.toLowerCase().includes(query) ||
-          user.role.toLowerCase().includes(query)
+          user.phone_no.toLowerCase().includes(query) ||
+          getRoleText(user.role).toLowerCase().includes(query)
         )
       }
       return true
     })
     .sort((a, b) => {
-      // 根据选中的排序方式进行排序
       let comparison = 0
       if (sortBy.value === 'name') {
-        comparison = a.name.localeCompare(b.name)
+        comparison = (a.first_name + ' ' + a.last_name).localeCompare(b.first_name + ' ' + b.last_name)
       } else if (sortBy.value === 'registrationDate') {
-        comparison = new Date(a.registrationDate) - new Date(b.registrationDate)
+        comparison = new Date(a.created_at) - new Date(b.created_at)
       }
       return sortOrder.value === 'asc' ? comparison : -comparison
     })
@@ -71,25 +82,13 @@ const deleteUser = (userId) => {
   }
 }
 
-// 格式化日期
+// 格式化日期（使用 created_at 字段）
 const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
     day: 'numeric'
   })
-}
-
-// 根据用户状态返回对应的样式（Bootstrap 类）
-const getStatusClass = (status) => {
-  switch (status) {
-    case 'Active':
-      return 'bg-light text-success'
-    case 'Disabled':
-      return 'bg-light text-danger'
-    default:
-      return 'bg-light text-secondary'
-  }
 }
 </script>
 
@@ -118,11 +117,12 @@ const getStatusClass = (status) => {
               />
               <i class="pi pi-search position-absolute text-muted" style="left: 1rem; top: 0.75rem;"></i>
             </div>
-            <!-- 状态筛选 -->
-            <select v-model="statusFilter" class="form-select" style="max-width: 16rem;">
-              <option value="all">All Statuses</option>
-              <option value="Active">Active</option>
-              <option value="Disabled">Disabled</option>
+            <!-- 角色筛选 -->
+            <select v-model="roleFilter" class="form-select" style="max-width: 16rem;">
+              <option value="all">All Roles</option>
+              <option value="1">Admin</option>
+              <option value="2">Manager</option>
+              <option value="3">User</option>
             </select>
           </div>
           <!-- 创建用户按钮 -->
@@ -146,6 +146,7 @@ const getStatusClass = (status) => {
                   </div>
                 </th>
                 <th class="px-3 py-2 text-start fs-6 text-muted">Email</th>
+                <th class="px-3 py-2 text-start fs-6 text-muted">Phone</th>
                 <th class="px-3 py-2 text-start fs-6 text-muted">Role</th>
                 <th class="px-3 py-2 text-start fs-6 text-muted">
                   <div style="cursor: pointer;" class="d-flex align-items-center" @click="sortBy = 'registrationDate'; toggleSortOrder()">
@@ -153,23 +154,18 @@ const getStatusClass = (status) => {
                     <i v-if="sortBy === 'registrationDate'" :class="sortOrder === 'asc' ? 'pi pi-sort-up' : 'pi pi-sort-down'" class="ms-1"></i>
                   </div>
                 </th>
-                <th class="px-3 py-2 text-start fs-6 text-muted">Status</th>
                 <th class="px-3 py-2 text-center fs-6 text-muted">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="user in filteredUsers" :key="user.id" class="border-bottom">
                 <td class="px-3 py-2">
-                  <div class="fw-medium text-dark">{{ user.name }}</div>
+                  <div class="fw-medium text-dark">{{ user.first_name }} {{ user.last_name }}</div>
                 </td>
                 <td class="px-3 py-2 text-dark">{{ user.email }}</td>
-                <td class="px-3 py-2 text-dark">{{ user.role }}</td>
-                <td class="px-3 py-2 text-dark">{{ formatDate(user.registrationDate) }}</td>
-                <td class="px-3 py-2">
-                  <span :class="getStatusClass(user.status)" class="px-2 py-1 rounded-pill small fw-medium">
-                    {{ user.status }}
-                  </span>
-                </td>
+                <td class="px-3 py-2 text-dark">{{ user.phone_no }}</td>
+                <td class="px-3 py-2 text-dark">{{ getRoleText(user.role) }}</td>
+                <td class="px-3 py-2 text-dark">{{ formatDate(user.created_at) }}</td>
                 <td class="px-3 py-2">
                   <div class="d-flex justify-content-center gap-2">
                     <button @click="viewUserDetails(user.id)" class="btn btn-link text-primary p-0" title="View Details">

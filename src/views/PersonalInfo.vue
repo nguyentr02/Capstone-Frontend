@@ -1,32 +1,34 @@
 <template>
   <div>
     <navbar />
-    <!-- Step indicator: Current step is 0 (Personal Information) -->
+    <!-- Step indicator: current step is 0 (personal message) -->
     <StepIndicator :steps="['Select Ticket', 'Complete Info', 'Checkout']" :currentStep="0" />
 
     <div class="container mt-4">
       <h4 class="section-title">YOUR INFORMATION</h4>
-      <!-- Form for each ticket's personal information -->
+      <!-- Personal information form for each participant -->
       <form @submit.prevent="goToQuestionnaire">
-        <div v-for="(ticket, index) in ticketList" :key="ticket.id" class="card custom-card">
+        <div v-for="(ticket, index) in ticketList" :key="ticket.id || index" class="card custom-card">
           <h5 class="card-title">
             Participant #{{ index + 1 }}
             <span class="ticket-type">({{ ticketTypeLabel(ticket.type) }})</span>
           </h5>
 
-          <!-- Email and Confirm Email -->
+          <!-- Email & Confirmation Email -->
           <div class="row g-3">
             <div class="col-md-6">
               <label class="form-label">Email</label>
               <input type="email" class="form-control" v-model="ticket.email" required />
+              <small v-if="ticket.errors.email" class="text-danger">{{ ticket.errors.email }}</small>
             </div>
             <div class="col-md-6">
               <label class="form-label">Confirm Email</label>
               <input type="email" class="form-control" v-model="ticket.confirmEmail" required />
+              <small v-if="ticket.errors.confirmEmail" class="text-danger">{{ ticket.errors.confirmEmail }}</small>
             </div>
           </div>
 
-          <!-- Full Name, Gender, and Date of Birth -->
+          <!-- Name, sex and date of birth -->
           <div class="row g-3 mt-3">
             <div class="col-md-4">
               <label class="form-label">Full Name</label>
@@ -44,14 +46,16 @@
             <div class="col-md-4">
               <label class="form-label">Date of Birth</label>
               <input type="date" class="form-control" v-model="ticket.dob" required />
+              <small v-if="ticket.errors.dob" class="text-danger">{{ ticket.errors.dob }}</small>
             </div>
           </div>
 
-          <!-- Phone and Country -->
+          <!-- Telephone and country -->
           <div class="row g-3 mt-3">
             <div class="col-md-6">
               <label class="form-label">Phone</label>
               <input type="tel" class="form-control" v-model="ticket.phone" required />
+              <small v-if="ticket.errors.phone" class="text-danger">{{ ticket.errors.phone }}</small>
             </div>
             <div class="col-md-6">
               <label class="form-label">Country</label>
@@ -67,7 +71,7 @@
             </div>
           </div>
 
-          <!-- Address, City, State, and Zip -->
+          <!-- Address, city, state and postcode -->
           <div class="row g-3 mt-3">
             <div class="col-md-12">
               <label class="form-label">Address</label>
@@ -84,18 +88,20 @@
             <div class="col-md-4">
               <label class="form-label">Zip</label>
               <input type="text" class="form-control" v-model="ticket.zip" required />
+              <small v-if="ticket.errors.zip" class="text-danger">{{ ticket.errors.zip }}</small>
             </div>
           </div>
 
-          <!-- ID/Passport Number -->
+          <!-- Identity card/passport number -->
           <div class="row g-3 mt-3">
             <div class="col-md-6">
               <label class="form-label">ID/Passport Number</label>
               <input type="text" class="form-control" v-model="ticket.idNumber" required />
+              <small v-if="ticket.errors.idNumber" class="text-danger">{{ ticket.errors.idNumber }}</small>
             </div>
           </div>
 
-          <!-- For children's tickets: file upload for certificate -->
+          <!-- Children's tickets: upload your documents -->
           <div v-if="ticket.type === 'childRun' || ticket.type === 'childWalk'" class="row g-3 mt-3">
             <div class="col-md-12">
               <label class="form-label">Child ticket certificate (upload document)</label>
@@ -107,7 +113,7 @@
           </div>
         </div>
 
-        <!-- Bottom operation buttons -->
+        <!-- Bottom operating buttons -->
         <div class="d-flex justify-content-between mt-4">
           <button class="btn btn-outline-danger" @click="goBack">Start Over</button>
           <button class="btn btn-primary" type="submit">NEXT</button>
@@ -126,91 +132,82 @@ import navbar from '@/components/navbar.vue';
 const router = useRouter();
 const route = useRoute();
 
-// Create a list of tickets based on counts passed via query parameters
+// Default ticket data, used when no tickets parameter is passed in the route
+const defaultTickets = [
+  {
+    id: 1,
+    type: 'adultWalk',
+    email: '',
+    confirmEmail: '',
+    name: '',
+    gender: '',
+    dob: '',
+    phone: '',
+    country: '',
+    address: '',
+    city: '',
+    state: '',
+    zip: '',
+    idNumber: '',
+    proof: null,
+    survey: {
+      emergencyContactName: "",
+      emergencyContactPhone: "",
+      hasMedicalCondition: "",
+      reason: ""
+    },
+    errors: {}
+  }
+];
+
+// Create ticketList based on route query parameters
 const ticketList = ref([]);
 
-// onMounted lifecycle hook to generate ticketList with default survey objects
 onMounted(() => {
-  const childRunCount = parseInt(route.query.childRun || 0);
-  const adultWalkCount = parseInt(route.query.adultWalk || 0);
-  const childWalkCount = parseInt(route.query.childWalk || 0);
-  let currentId = 1;
-  // Generate tickets for childRun type
-  for (let i = 0; i < childRunCount; i++) {
-    ticketList.value.push({
-      id: currentId++,
-      type: 'childRun',
-      email: '',
-      confirmEmail: '',
-      name: '',
-      gender: '',
-      dob: '',
-      phone: '',
-      country: '',
-      address: '',
-      city: '',
-      state: '',
-      zip: '',
-      idNumber: '',
-      proof: null,
-      survey: {} // Default empty survey object
-    });
-  }
-  // Generate tickets for adultWalk type
-  for (let i = 0; i < adultWalkCount; i++) {
-    ticketList.value.push({
-      id: currentId++,
-      type: 'adultWalk',
-      email: '',
-      confirmEmail: '',
-      name: '',
-      gender: '',
-      dob: '',
-      phone: '',
-      country: '',
-      address: '',
-      city: '',
-      state: '',
-      zip: '',
-      idNumber: '',
-      proof: null,
-      survey: {} // Default empty survey object
-    });
-  }
-  // Generate tickets for childWalk type
-  for (let i = 0; i < childWalkCount; i++) {
-    ticketList.value.push({
-      id: currentId++,
-      type: 'childWalk',
-      email: '',
-      confirmEmail: '',
-      name: '',
-      gender: '',
-      dob: '',
-      phone: '',
-      country: '',
-      address: '',
-      city: '',
-      state: '',
-      zip: '',
-      idNumber: '',
-      proof: null,
-      survey: {} // Default empty survey object
-    });
+  if (route.query.tickets) {
+    try {
+      const parsedTickets = JSON.parse(route.query.tickets);
+      ticketList.value = parsedTickets.map(ticket => {
+        return {
+          ...ticket,
+          survey: ticket.survey
+            ? {
+                emergencyContactName: ticket.survey.emergencyContactName || "",
+                emergencyContactPhone: ticket.survey.emergencyContactPhone || "",
+                hasMedicalCondition: ticket.survey.hasMedicalCondition || "",
+                reason: ticket.survey.reason || ""
+              }
+            : {
+                emergencyContactName: "",
+                emergencyContactPhone: "",
+                hasMedicalCondition: "",
+                reason: ""
+              },
+          errors: ticket.errors || {}
+        };
+      });
+    } catch (error) {
+      console.error("Analysis tickets Failure:", error);
+      // If parsing fails, the default ticket data is used
+      ticketList.value = defaultTickets;
+    }
+  } else {
+    // If no tickets parameter is passed, use the default data instead of redirection
+    ticketList.value = defaultTickets;
   }
 });
 
-// Handle file upload event and store file object in ticket.proof
+// Handles file uploads, saving file objects to ticket.proof
 const handleFileUpload = (event, index) => {
   ticketList.value[index].proof = event.target.files[0];
 };
 
-// Function to navigate back to the SelectCategory page
+// Return to Select Ticket Type page
 const goBack = () => {
-  router.push({ name: 'SelectCategory' });
+  router.push({ name: "SelectCategory" });
 };
 
-// Sanitize tickets by removing non-serializable properties (like File objects)
+// sanitizeTickets function: filters out non-serialisable properties (e.g. File objects)
 const sanitizeTickets = (tickets) => {
   return tickets.map(ticket => {
     const { proof, ...rest } = ticket;
@@ -221,26 +218,98 @@ const sanitizeTickets = (tickets) => {
   });
 };
 
-// On form submission, navigate to the Questionnaire page with sanitized ticket data
-const goToQuestionnaire = () => {
-  const sanitizedTickets = sanitizeTickets(ticketList.value);
-  router.push({
-    name: 'Questionnaire',
-    query: { tickets: JSON.stringify(sanitizedTickets) }
+// Form Validation Functions
+const validateForm = () => {
+  let isValid = true;
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const zipPattern = /^[0-9]{5}$/; // Postal code: 5 digits
+  const phonePattern = /^[0-9]{10,15}$/; // Telephone: 10 to 15 digits
+  const idPattern = /^[A-Za-z0-9]{5,}$/; // Identity card/passport: minimum 5-digit alphanumeric combination
+
+  ticketList.value.forEach(ticket => {
+    // Reset error messages
+    ticket.errors = {};
+
+    // Verification Email Format
+    if (!emailPattern.test(ticket.email)) {
+      ticket.errors.email = "Incorrect mailbox format";
+      isValid = false;
+    }
+    // Verify that the confirmation mailbox matches the mailbox
+    if (ticket.email !== ticket.confirmEmail) {
+      ticket.errors.confirmEmail = "Inconsistency in the email address entered twice";
+      isValid = false;
+    }
+    // Validate postcode format
+    if (!zipPattern.test(ticket.zip)) {
+      ticket.errors.zip = "Postcode must be 5 digits";
+      isValid = false;
+    }
+    // Verification Phone Format
+    if (!phonePattern.test(ticket.phone)) {
+      ticket.errors.phone = "Phone number must be 10 to 15 digits";
+      isValid = false;
+    }
+    // Validate ID/passport number format
+    if (!idPattern.test(ticket.idNumber)) {
+      ticket.errors.idNumber = "ID/passport number needs to be at least 5 alphanumeric digits";
+      isValid = false;
+    }
+    // Verify date of birth and calculate age
+    if (!ticket.dob) {
+      ticket.errors.dob = "The date of birth cannot be empty";
+      isValid = false;
+    } else {
+      const dob = new Date(ticket.dob);
+      const today = new Date();
+      if (dob >= today) {
+        ticket.errors.dob = "Date of birth must be before today";
+        isValid = false;
+      } else {
+        const age = Math.floor((today - dob) / (365.25 * 24 * 3600 * 1000));
+        if (age < 1 || age > 120) {
+          ticket.errors.dob = "Please enter a valid age (1-120 years)";
+          isValid = false;
+        }
+        // Age verification for ticket types
+        if (ticket.type === "adultWalk" && age < 14) {
+          ticket.errors.dob = "Full-price tickets require 14 years of age or older";
+          isValid = false;
+        }
+        if ((ticket.type === "childRun" || ticket.type === "childWalk") && age >= 14) {
+          ticket.errors.dob = "Child tickets require age below 14 years";
+          isValid = false;
+        }
+      }
+    }
   });
+  return isValid;
 };
 
-// Function to return ticket type label
+// Form submission: after validation, navigate to the questionnaire page and pass filtered ticket information
+const goToQuestionnaire = () => {
+  if (validateForm()) {
+    const sanitizedTickets = sanitizeTickets(ticketList.value);
+    router.push({
+      name: "Questionnaire",
+      query: { tickets: JSON.stringify(sanitizedTickets) }
+    });
+  } else {
+    alert("Please fix the error in the form before submitting.");
+  }
+};
+
+// Helper function: return the corresponding label according to the ticket type
 const ticketTypeLabel = (type) => {
   switch (type) {
-    case 'adultWalk':
-      return '2.5KM WALK Adult Ticket';
-    case 'childRun':
+    case "adultWalk":
+      return "2.5KM WALK Adult Ticket";
+    case "childRun":
       return "5KM RUN Children's Tickets";
-    case 'childWalk':
+    case "childWalk":
       return "2.5KM WALK Children's Tickets";
     default:
-      return 'Unknown ticket type';
+      return "Unknown ticket type";
   }
 };
 </script>
@@ -276,5 +345,8 @@ label.form-label {
   font-weight: 600;
   margin-bottom: 0.3rem;
   color: #444;
+}
+.text-danger {
+  font-size: 0.875rem;
 }
 </style>

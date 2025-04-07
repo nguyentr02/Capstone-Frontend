@@ -23,14 +23,19 @@
               class="form-control"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
+              v-model="email"
               style="font-family: 'Font'; background-color: #fcfcfa"
+              required
             />
-            <div id="emailHelp" class="form-text ">
-              We'll never share your email with anyone else.
-            </div>
+            <!-- <p v-for="error of $v.$errors" :key="error.$uid">
+              {{ error.$message }}
+            </p> -->
           </div>
           <div class="mb-3 text-start">
-            <label for="exampleInputPassword1" class="form-label" style="font-family: 'Font';"
+            <label
+              for="exampleInputPassword1"
+              class="form-label"
+              style="font-family: 'Font'"
               >Password</label
             >
             <input
@@ -38,9 +43,11 @@
               class="form-control"
               id="exampleInputPassword1"
               style="background-color: #edece8"
+              v-model="pwd"
+              required
             />
           </div>
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <button type="submit" class="btn btn-primary" @click="signIn">Submit</button>
         </form>
         <div class="col-4"></div>
       </div>
@@ -51,14 +58,30 @@
 <script>
 import navbar from "@/components/navbar.vue";
 import Footer from "@/components/footer.vue";
+import router from "@/router";
 
 export default {
+
   components: {
     navbar,
     Footer,
   },
+
+  data() {
+    return {
+      email: "",
+      pwd: "",
+    };
+  },
+
+  methods: {
+    signIn() {
+      // Integration with BE
+
+      router.push("/");
+    }
+  }
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -176,11 +176,11 @@ import navbar from '@/components/navbar.vue'
 const router = useRouter()
 const ticketStore = useTicketStore()
 
-// 当前正在编辑的票据索引
+// Index of tickets currently being edited
 const currentTicketIndex = ref(0)
 const currentTicket = computed(() => ticketStore.ticketList[currentTicketIndex.value])
 
-// 判断某票据是否完整填写（仅简单判断必填项是否存在）
+// Determine whether a ticket is fully filled out (simple judgement of the presence of required fields only)
 const isTicketComplete = (ticket) => {
   return (
     ticket.email?.trim() &&
@@ -201,7 +201,7 @@ const goBack = () => {
   router.push({ name: 'SelectCategory' })
 }
 
-// 验证所有票据信息是否完整填写
+// Verify that all ticket information is completely filled out
 const validateForm = () => {
   let isValid = true
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/

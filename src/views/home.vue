@@ -82,7 +82,7 @@
             No matter your age or experience, we’re here to find your perfect
             events.
           </p>
-          <a href="/signIn" class="btn btn-light btn-lg" style="font-family: 'Font';">Start your journey now</a>
+          <a href="#" class="btn btn-light btn-lg" style="font-family: 'Font';">Start your journey now</a>
         </div>
         <div class="col-lg-6">
           <img
@@ -107,7 +107,7 @@
         <div class="col-lg-6">
           <h1 class="fw-semibold">Join and start enjoying our offers</h1>
           <p>Let Teket take care of your boring days.</p>
-          <a href="/signUp" class="btn btn-light btn-lg" style="font-family: 'Font';">Create an account</a>
+          <a href="#" class="btn btn-light btn-lg" style="font-family: 'Font';">Create an account</a>
         </div>
       </div>
     </div>

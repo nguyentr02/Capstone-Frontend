@@ -4,21 +4,16 @@ import Home from "@/views/home.vue";
 import Events from "@/views/events.vue";
 import SignIn from "@/views/signIn.vue";
 import SignUp from "@/views/signUp.vue";
-import eventDetail from "@/views/eventDetail.vue";
-import RegisterEvent from "@/views/registerEvent.vue";
 import SelectCategory from '@/views/SelectCategory.vue';
-import PersonalInfo from '@/views/PersonalInfo.vue';
 import Questionnaire from '@/views/Questionnaire.vue';
 import Review from '@/views/Review.vue';
 import Checkout from '@/views/Checkout.vue';
-import UserProfileView from "@/views/UserProfileView.vue";
 
 const routes = [
   { path: "/", component: Home },
   { path: "/events", component: Events },
   { path: "/signIn", component: SignIn },
   { path: "/signUp", component: SignUp },  
-  { path: "/registerEvent", component: RegisterEvent },
   {
     path: '/eventDetail/:id',
     name: 'EventDetail',
@@ -49,7 +44,6 @@ const routes = [
     name: 'Checkout',
     component: Checkout,
   },
-  { path: "/user/profile", component: UserProfileView},
 ];
 
 const router = createRouter({

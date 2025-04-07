@@ -1,45 +1,19 @@
+<!-- src/views/SelectCategory.vue -->
 <template>
   <div>
     <navbar />
-    <!-- Step indicator: current step is 0 -->
-    <StepIndicator :steps="['Select Ticket', 'Complete Info', 'Checkout']" :currentStep="0" />
+    <StepIndicator
+      :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']"
+      :currentStep="0"
+    />
 
     <div class="container mt-5">
-      <!-- Page Title -->
       <h2 class="fw-bold mb-4">2024 NIKE MELBOURNE MARATHON FESTIVAL</h2>
 
-      <!-- Section 1: 11:30AM | BIG M 5KM RUN -->
+      <!-- Example: Displaying ticket type information -->
       <div class="mb-5">
         <h4 class="mb-3"><strong>11:30AM | BIG M 5KM RUN</strong></h4>
-
-        <!-- Adult: SOLD OUT -->
-        <div class="d-flex justify-content-between align-items-start border-bottom py-3">
-          <div>
-            <p class="fw-bold mb-1">Adult</p>
-            <p class="mb-0 text-secondary small">
-              Ages 17 and over as of 10/3/2024<br />
-              Australia residents only
-            </p>
-          </div>
-          <div>
-            <span class="badge bg-danger">SOLD OUT</span>
-          </div>
-        </div>
-
-        <!-- International Participant: SOLD OUT -->
-        <div class="d-flex justify-content-between align-items-start border-bottom py-3">
-          <div>
-            <p class="fw-bold mb-1">International Participant</p>
-            <p class="mb-0 text-secondary small">
-              Collect your Race Bib from the Race Week Office
-            </p>
-          </div>
-          <div>
-            <span class="badge bg-danger">SOLD OUT</span>
-          </div>
-        </div>
-
-        <!-- Child (5KM RUN) with interactive ticket control -->
+        <!-- Child (5KM RUN) -->
         <div class="d-flex justify-content-between align-items-start border-bottom py-3">
           <div>
             <p class="fw-bold mb-1">Child (5KM RUN)</p>
@@ -49,24 +23,23 @@
             </p>
           </div>
           <div class="d-flex align-items-center">
-            <button class="btn btn-outline-secondary btn-sm" @click="decrementChildRun">-</button>
+            <button class="btn btn-outline-secondary btn-sm" @click="decrement('childRun')">-</button>
             <input
               type="number"
-              v-model.number="tickets.childRun"
+              v-model.number="ticketStore.ticketCounts.childRun"
               min="0"
               class="form-control text-center mx-2"
               style="width: 60px;"
             />
-            <button class="btn btn-outline-secondary btn-sm" @click="incrementChildRun">+</button>
+            <button class="btn btn-outline-secondary btn-sm" @click="increment('childRun')">+</button>
           </div>
         </div>
       </div>
 
-      <!-- Section 2: 12:00PM | CHOBANI FIT 2.5KM WALK -->
+      <!-- Other tickets: Adult 2.5KM WALK and Child (2.5KM WALK) -->
       <div class="mb-5">
         <h4 class="mb-3"><strong>12:00PM | CHOBANI FIT 2.5KM WALK</strong></h4>
-
-        <!-- Adult (2.5KM WALK) with interactive ticket control -->
+        <!-- Adult (2.5KM WALK) -->
         <div class="d-flex justify-content-between align-items-start border-bottom py-3">
           <div>
             <p class="fw-bold mb-1">Adult (2.5KM WALK)</p>
@@ -74,19 +47,19 @@
           </div>
           <div class="d-flex align-items-center">
             <span class="me-2 text-primary fw-bold">AUD 45.00</span>
-            <button class="btn btn-outline-secondary btn-sm" @click="decrementAdultWalk">-</button>
+            <button class="btn btn-outline-secondary btn-sm" @click="decrement('adultWalk')">-</button>
             <input
               type="number"
-              v-model.number="tickets.adultWalk"
+              v-model.number="ticketStore.ticketCounts.adultWalk"
               min="0"
               class="form-control text-center mx-2"
               style="width: 60px;"
             />
-            <button class="btn btn-outline-secondary btn-sm" @click="incrementAdultWalk">+</button>
+            <button class="btn btn-outline-secondary btn-sm" @click="increment('adultWalk')">+</button>
           </div>
         </div>
 
-        <!-- Child (2.5KM WALK) with interactive ticket control -->
+        <!-- Child (2.5KM WALK) -->
         <div class="d-flex justify-content-between align-items-start border-bottom py-3">
           <div>
             <p class="fw-bold mb-1">Child (2.5KM WALK)</p>
@@ -94,20 +67,20 @@
           </div>
           <div class="d-flex align-items-center">
             <span class="me-2 text-primary fw-bold">AUD 25.00</span>
-            <button class="btn btn-outline-secondary btn-sm" @click="decrementChildWalk">-</button>
+            <button class="btn btn-outline-secondary btn-sm" @click="decrement('childWalk')">-</button>
             <input
               type="number"
-              v-model.number="tickets.childWalk"
+              v-model.number="ticketStore.ticketCounts.childWalk"
               min="0"
               class="form-control text-center mx-2"
               style="width: 60px;"
             />
-            <button class="btn btn-outline-secondary btn-sm" @click="incrementChildWalk">+</button>
+            <button class="btn btn-outline-secondary btn-sm" @click="increment('childWalk')">+</button>
           </div>
         </div>
       </div>
 
-      <!-- Submit Button -->
+      <!-- Submit button -->
       <div class="text-end mb-5">
         <button
           class="btn btn-primary px-4"
@@ -122,56 +95,35 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { useRouter } from "vue-router";
-import StepIndicator from "@/components/StepIndicator.vue";
-import navbar from "@/components/navbar.vue";
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useTicketStore } from '@/store/ticketStore'
+import StepIndicator from '@/components/StepIndicator.vue'
+import navbar from '@/components/navbar.vue'
 
-const router = useRouter();
-const tickets = ref({
-  childRun: 0,    // Ticket count for Child (5KM RUN)
-  adultWalk: 0,   // Ticket count for Adult (2.5KM WALK)
-  childWalk: 0,   // Ticket count for Child (2.5KM WALK)
-});
+const router = useRouter()
+const ticketStore = useTicketStore()
 
-// Compute total tickets count
+// Calculation of the total number of votes
 const totalTickets = computed(() => {
-  return tickets.value.childRun + tickets.value.adultWalk + tickets.value.childWalk;
-});
+  const counts = ticketStore.ticketCounts
+  return counts.childRun + counts.adultWalk + counts.childWalk
+})
 
-// Navigate to PersonalInfo page with ticket info via query parameters when "Next step" is clicked
+const increment = (type) => {
+  ticketStore.ticketCounts[type]++
+}
+const decrement = (type) => {
+  if (ticketStore.ticketCounts[type] > 0) {
+    ticketStore.ticketCounts[type]--
+  }
+}
+
 const nextStep = () => {
-  router.push({
-    name: "PersonalInfo",
-    query: {
-      childRun: tickets.value.childRun,
-      adultWalk: tickets.value.adultWalk,
-      childWalk: tickets.value.childWalk,
-    },
-  });
-};
-
-// Increment/Decrement logic for tickets
-const incrementChildRun = () => {
-  tickets.value.childRun++;
-};
-const decrementChildRun = () => {
-  if (tickets.value.childRun > 0) tickets.value.childRun--;
-};
-
-const incrementAdultWalk = () => {
-  tickets.value.adultWalk++;
-};
-const decrementAdultWalk = () => {
-  if (tickets.value.adultWalk > 0) tickets.value.adultWalk--;
-};
-
-const incrementChildWalk = () => {
-  tickets.value.childWalk++;
-};
-const decrementChildWalk = () => {
-  if (tickets.value.childWalk > 0) tickets.value.childWalk--;
-};
+  // Generate default ticket data based on the number of tickets selected
+  ticketStore.generateTickets()
+  router.push({ name: 'PersonalInfo' })
+}
 </script>
 
 <style scoped>

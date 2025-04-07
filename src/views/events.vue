@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div>
     <navbar />
     <div class="bg-custom">
@@ -68,7 +68,7 @@
             <!-- Use router-link instead of a tag -->
             <router-link :to="{ name: 'EventDetail', params: { id: event.id } }">
               <img
-                src="https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+                :src="event.banner"
                 class="card-img-top"
                 alt="img"
               />
@@ -104,7 +104,7 @@ import navbar from "@/components/navbar.vue";
 import FilterPopup from "@/components/FilterPopup.vue";
 import { ref, computed } from "vue";
 
-// Simulated event data
+// Event data
 const events = ref([
   {
     id: 5,
@@ -113,6 +113,7 @@ const events = ref([
     activity: "Sport",
     price: 120,
     startTime: "2025-05-10T09:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 6,
@@ -121,6 +122,7 @@ const events = ref([
     activity: "Music",
     price: 90,
     startTime: "2025-05-08T14:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 7,
@@ -129,6 +131,7 @@ const events = ref([
     activity: "Art",
     price: 130,
     startTime: "2025-05-12T11:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 8,
@@ -137,6 +140,7 @@ const events = ref([
     activity: "Food",
     price: 60,
     startTime: "2025-05-09T10:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 9,
@@ -145,6 +149,7 @@ const events = ref([
     activity: "Sport",
     price: 150,
     startTime: "2025-05-11T16:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 10,
@@ -153,6 +158,7 @@ const events = ref([
     activity: "Music",
     price: 200,
     startTime: "2025-05-07T13:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 11,
@@ -161,6 +167,7 @@ const events = ref([
     activity: "Art",
     price: 80,
     startTime: "2025-05-13T15:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 12,
@@ -169,6 +176,7 @@ const events = ref([
     activity: "Food",
     price: 100,
     startTime: "2025-05-06T08:30",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 13,
@@ -177,6 +185,7 @@ const events = ref([
     activity: "Sport",
     price: 120,
     startTime: "2025-05-14T10:30",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 14,
@@ -185,6 +194,7 @@ const events = ref([
     activity: "Music",
     price: 180,
     startTime: "2025-05-05T17:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 15,
@@ -193,6 +203,7 @@ const events = ref([
     activity: "Art",
     price: 250,
     startTime: "2025-05-15T09:30",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
   {
     id: 16,
@@ -201,7 +212,81 @@ const events = ref([
     activity: "Food",
     price: 30,
     startTime: "2025-05-04T12:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
   },
+
+  {
+    id: 17,
+    name: "Event 13",
+    description: "An exciting event featuring local sports and fun activities.",
+    activity: "Sport",
+    price: 110,
+    startTime: "2025-05-16T08:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  },
+  {
+    id: 18,
+    name: "Event 14",
+    description: "A vibrant music festival with live performances.",
+    activity: "Music",
+    price: 140,
+    startTime: "2025-05-17T19:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  },
+  {
+    id: 19,
+    name: "Event 15",
+    description: "An immersive art exhibition showcasing contemporary works.",
+    activity: "Art",
+    price: 95,
+    startTime: "2025-05-18T11:30",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  },
+  {
+    id: 20,
+    name: "Event 16",
+    description: "A delightful food festival with international cuisines.",
+    activity: "Food",
+    price: 85,
+    startTime: "2025-05-19T12:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  },
+  {
+    id: 21,
+    name: "Event 17",
+    description: "Join us for a fun run and community gathering.",
+    activity: "Sport",
+    price: 75,
+    startTime: "2025-05-20T07:30",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  },
+  {
+    id: 22,
+    name: "Event 18",
+    description: "A grand musical evening featuring renowned artists.",
+    activity: "Music",
+    price: 220,
+    startTime: "2025-05-21T20:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  },
+  {
+    id: 23,
+    name: "Event 19",
+    description: "An art fair showcasing local talents and creative exhibitions.",
+    activity: "Art",
+    price: 130,
+    startTime: "2025-05-22T14:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  },
+  {
+    id: 24,
+    name: "Event 20",
+    description: "A food truck rally with diverse culinary delights.",
+    activity: "Food",
+    price: 50,
+    startTime: "2025-05-23T11:00",
+    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+  }
 ]);
 
 // Text for the search box

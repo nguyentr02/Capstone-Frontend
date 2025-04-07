@@ -161,11 +161,11 @@ const router = useRouter()
 const ticketStore = useTicketStore()
 const teamOptionError = ref('')
 
-// 当前问卷编辑的票据索引
+// Index of tickets edited by the current questionnaire
 const currentTicketIndex = ref(0)
 const currentTicket = computed(() => ticketStore.ticketList[currentTicketIndex.value])
 
-// 判断某张票据的问卷是否完整（简易示例：检查必填字段是否为空）
+// Determining whether a questionnaire is complete for a particular ticket (simple example: checking if required fields are empty)
 const isTicketComplete = (ticket) => {
   const survey = ticket.survey || {}
   return survey.emergencyContactName?.trim() && survey.emergencyContactPhone?.trim() &&
@@ -174,7 +174,7 @@ const isTicketComplete = (ticket) => {
 
 const phonePattern = /^[0-9]{10,15}$/
 
-// 修改验证逻辑：遍历所有票据进行验证
+// Modify validation logic: iterate through all tickets for validation
 const validateQuestionnaire = () => {
   let valid = true
 
@@ -203,14 +203,14 @@ const validateQuestionnaire = () => {
     }
   })
 
-  // 验证全局活动问卷
+  // Validation of the Bureau-wide Activity Questionnaire
   ticketStore.eventSurvey.errors = {}
   if (!ticketStore.eventSurvey.source || ticketStore.eventSurvey.source.trim().length < 3) {
     ticketStore.eventSurvey.errors.source = 'Please specify how you heard about the event (at least 3 characters)'
     valid = false
   }
 
-  // 验证团队选项
+  // Verify Team Options
   if (!ticketStore.teamOption) {
     teamOptionError.value = 'Please select a team option'
     valid = false
@@ -233,7 +233,7 @@ const goBackToPersonal = () => {
   router.push({ name: 'PersonalInfo' })
 }
 
-// 示例：点击步骤指示器时跳转
+// Example: Jump when clicking on the step indicator
 const handleStepClick = (stepIndex) => {
   const routes = ["SelectCategory", "PersonalInfo", "Questionnaire", "Review", "Checkout"];
   const targetRoute = routes[stepIndex];
@@ -269,7 +269,7 @@ const handleStepClick = (stepIndex) => {
   margin-bottom: 1rem;
 }
 
-/* 简单样式：未完成问卷的按钮显示感叹号 */
+/* Simple style: buttons for uncompleted questionnaires show exclamation marks */
 .incomplete-badge {
   color: red;
   margin-left: 5px;

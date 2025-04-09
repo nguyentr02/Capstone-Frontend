@@ -1,8 +1,8 @@
-<template> 
+<!-- src/views/Checkout.vue -->
+<template>
   <div>
     <navbar />
-    <!-- Step indicator: Current step is 2 -->
-    <StepIndicator :steps="['Select Ticket', 'Complete Info', 'Checkout']" :currentStep="2" />
+    <StepIndicator :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']" :currentStep="4" />
 
     <div class="container mt-4">
       <h2 class="text-center mb-4">Checkout</h2>
@@ -11,8 +11,7 @@
         <div class="col-md-8">
           <div class="card p-4 mb-4">
             <h4 class="mb-3">Credit / Debit Card</h4>
-
-            <!-- Card Number -->
+            <!-- card number -->
             <div class="mb-3">
               <label class="form-label">Card number</label>
               <input
@@ -25,8 +24,7 @@
                 {{ errorMessages.cardNumber }}
               </div>
             </div>
-
-            <!-- Row: Card Type & Card Holder Name -->
+            <!-- Card Type & Cardholder Name -->
             <div class="row">
               <div class="col mb-3">
                 <label class="form-label">Card Type</label>
@@ -53,8 +51,7 @@
                 </div>
               </div>
             </div>
-
-            <!-- Row: Expiration Date & Security Code -->
+            <!-- Expiry time & CVV -->
             <div class="row">
               <div class="col mb-3">
                 <label class="form-label">Expiration Date</label>
@@ -81,8 +78,7 @@
                 </div>
               </div>
             </div>
-
-            <!-- Address -->
+            <!-- address -->
             <div class="mb-3">
               <label class="form-label">Address</label>
               <input
@@ -95,8 +91,7 @@
                 {{ errorMessages.address }}
               </div>
             </div>
-
-            <!-- Row: City, Suburb & Postcode -->
+            <!-- City, Suburb, Postcode -->
             <div class="row">
               <div class="col mb-3">
                 <label class="form-label">City</label>
@@ -135,7 +130,6 @@
                 </div>
               </div>
             </div>
-
             <!-- Save card information -->
             <div class="form-check mb-3">
               <input class="form-check-input" type="checkbox" id="saveCard" />
@@ -143,13 +137,11 @@
                 Save my credit card and billing information for future purchases
               </label>
             </div>
-
-            <!-- Privacy Tips -->
+            <!-- Privacy Notice -->
             <p class="small text-muted">
               By continuing, you agree to our <a href="#">Privacy Policy</a>
             </p>
-
-            <!-- Payment Authorization -->
+            <!-- Payment authorisation -->
             <div class="form-check mb-3">
               <input
                 class="form-check-input"
@@ -164,7 +156,6 @@
                 {{ errorMessages.paymentAllowed }}
               </div>
             </div>
-
             <!-- Submit button -->
             <div class="text-end">
               <button class="btn btn-success" @click="confirmOrder">
@@ -178,14 +169,15 @@
         <div class="col-md-4">
           <div class="card p-4 order-summary">
             <h4 class="mb-3">Order Summary</h4>
-            <p v-if="ticketList.length === 0" class="text-muted">No tickets selected</p>
-            <!-- Loop through each participant -->
+            <p v-if="ticketStore.ticketList.length === 0" class="text-muted">No tickets selected</p>
             <div
-              v-for="(ticket, index) in ticketList"
+              v-for="(ticket, index) in ticketStore.ticketList"
               :key="index"
               class="border-bottom pb-2 mb-3"
             >
-              <p class="mb-1"><strong>Name:</strong> {{ ticket.name }}</p>
+              <p class="mb-1">
+                <strong>Name:</strong> {{ ticket.firstName }} {{ ticket.lastName || '' }}
+              </p>
               <p class="mb-1">
                 <strong>Type:</strong> {{ ticketTypeLabel(ticket.type) }}
               </p>
@@ -206,30 +198,29 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, reactive } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import StepIndicator from "@/components/StepIndicator.vue";
-import navbar from "@/components/navbar.vue";
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useTicketStore } from '@/store/ticketStore'
+import StepIndicator from '@/components/StepIndicator.vue'
+import navbar from '@/components/navbar.vue'
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const ticketStore = useTicketStore()
 
-// Participant data passed from the Review page
-const ticketList = ref([]);
+// Payment form fields
+const cardNumber = ref("")
+const cardType = ref("")
+const cardHolderName = ref("")
+const expiry = ref("")
+const cvv = ref("")
+const address = ref("")
+const city = ref("")
+const suburb = ref("")
+const postcode = ref("")
+const paymentAllowed = ref(false)
 
-const cardNumber = ref("");
-const cardType = ref("");
-const cardHolderName = ref("");
-const expiry = ref("");
-const cvv = ref("");
-const address = ref("");
-const city = ref("");
-const suburb = ref("");
-const postcode = ref("");
-const paymentAllowed = ref(false);
-
-// Error messages for each field
-const errorMessages = reactive({
+// false
+const errorMessages = ref({
   cardNumber: "",
   cardType: "",
   cardHolderName: "",
@@ -240,148 +231,112 @@ const errorMessages = reactive({
   suburb: "",
   postcode: "",
   paymentAllowed: ""
-});
+})
 
-onMounted(() => {
-  if (route.query.tickets) {
-    try {
-      ticketList.value = JSON.parse(route.query.tickets);
-    } catch (error) {
-      console.error("Error parsing tickets:", error);
-    }
-  }
-});
-
-// Return the corresponding unit price according to the ticket type (example value)
+// Sample Fare Methods
 function getTicketPrice(type) {
   switch (type) {
-    case "adultWalk":
-      return 45;
-    case "childRun":
-      return 20;
-    case "childWalk":
-      return 25;
-    default:
-      return 0;
+    case "adultWalk": return 45
+    case "childRun": return 20
+    case "childWalk": return 25
+    default: return 0
   }
 }
 
-// Calculate the total amount (one ticket per participant)
+// Calculation of the total amount
 const totalCost = computed(() => {
-  return ticketList.value.reduce((sum, ticket) => {
-    return sum + getTicketPrice(ticket.type);
-  }, 0);
-});
-
-// Validate the payment form and confirm the order
-function confirmOrder() {
-  // Clear previous error messages
-  errorMessages.cardNumber = "";
-  errorMessages.cardType = "";
-  errorMessages.cardHolderName = "";
-  errorMessages.expiry = "";
-  errorMessages.cvv = "";
-  errorMessages.address = "";
-  errorMessages.city = "";
-  errorMessages.suburb = "";
-  errorMessages.postcode = "";
-  errorMessages.paymentAllowed = "";
-
-  let valid = true;
-
-  // Validate card number: remove spaces and ensure 16 digits
-  const cardNumClean = cardNumber.value.replace(/\s+/g, "");
-  if (!/^\d{16}$/.test(cardNumClean)) {
-    errorMessages.cardNumber = "Please enter a valid 16-digit card number.";
-    valid = false;
-  }
-
-  // Validate card type
-  if (cardType.value.trim() === "") {
-    errorMessages.cardType = "Card type is required.";
-    valid = false;
-  }
-
-  // Validate card holder name
-  if (cardHolderName.value.trim() === "") {
-    errorMessages.cardHolderName = "Card holder name is required.";
-    valid = false;
-  }
-
-  // Validate expiry date: must be in MM/YY format and not expired
-  if (!/^\d{2}\/\d{2}$/.test(expiry.value)) {
-    errorMessages.expiry = "Please enter a valid expiry date in MM/YY format.";
-    valid = false;
-  } else {
-    const [monthStr, yearStr] = expiry.value.split("/");
-    const month = parseInt(monthStr);
-    const year = parseInt(yearStr);
-    if (month < 1 || month > 12) {
-      errorMessages.expiry = "Expiry month must be between 01 and 12.";
-      valid = false;
-    } else {
-      const now = new Date();
-      const currentYear = now.getFullYear() % 100;
-      const currentMonth = now.getMonth() + 1;
-      if (year < currentYear || (year === currentYear && month < currentMonth)) {
-        errorMessages.expiry = "The card has expired.";
-        valid = false;
-      }
-    }
-  }
-
-  // Validate CVV: must be 3 or 4 digits
-  if (!/^\d{3,4}$/.test(cvv.value)) {
-    errorMessages.cvv = "Please enter a valid 3 or 4 digit CVV.";
-    valid = false;
-  }
-
-  // Validate address
-  if (address.value.trim() === "") {
-    errorMessages.address = "Address is required.";
-    valid = false;
-  }
-
-  // Validate city
-  if (city.value.trim() === "") {
-    errorMessages.city = "City is required.";
-    valid = false;
-  }
-
-  // Validate suburb
-  if (suburb.value.trim() === "") {
-    errorMessages.suburb = "Suburb is required.";
-    valid = false;
-  }
-
-  // Validate postcode: must be 4 or 5 digits
-  if (!/^\d{4,5}$/.test(postcode.value)) {
-    errorMessages.postcode = "Please enter a valid postcode (4 or 5 digits).";
-    valid = false;
-  }
-
-  // Validate payment authorization checkbox
-  if (!paymentAllowed.value) {
-    errorMessages.paymentAllowed = "You must authorize the payment to complete the order.";
-    valid = false;
-  }
-
-  if (valid) {
-    alert("Order Completed! Payment Successful.");
-    router.push({ name: "SelectCategory" });
-  }
-}
+  return ticketStore.ticketList.reduce((sum, ticket) => {
+    return sum + getTicketPrice(ticket.type)
+  }, 0)
+})
 
 function ticketTypeLabel(type) {
   switch (type) {
-    case "adultWalk":
-      return "2.5KM WALK Adult Ticket";
-    case "childRun":
-      return "5KM RUN Children's Tickets";
-    case "childWalk":
-      return "2.5KM WALK Children's Tickets";
-    default:
-      return "Unknown ticket type";
+    case "adultWalk": return "2.5KM WALK Adult Ticket"
+    case "childRun": return "5KM RUN Children's Ticket"
+    case "childWalk": return "2.5KM WALK Children's Ticket"
+    default: return "Unknown ticket type"
+  }
+}
+
+function confirmOrder() {
+  // Clearing Error Alerts
+  errorMessages.value = {
+    cardNumber: "",
+    cardType: "",
+    cardHolderName: "",
+    expiry: "",
+    cvv: "",
+    address: "",
+    city: "",
+    suburb: "",
+    postcode: "",
+    paymentAllowed: ""
+  }
+
+  let valid = true
+
+  const cardNumClean = cardNumber.value.replace(/\s+/g, "")
+  if (!/^\d{16}$/.test(cardNumClean)) {
+    errorMessages.value.cardNumber = "Please enter a valid 16-digit card number."
+    valid = false
+  }
+  if (cardType.value.trim() === "") {
+    errorMessages.value.cardType = "Card type is required."
+    valid = false
+  }
+  if (cardHolderName.value.trim() === "") {
+    errorMessages.value.cardHolderName = "Card holder name is required."
+    valid = false
+  }
+  if (!/^\d{2}\/\d{2}$/.test(expiry.value)) {
+    errorMessages.value.expiry = "Please enter a valid expiry date in MM/YY format."
+    valid = false
+  } else {
+    const [monthStr, yearStr] = expiry.value.split("/")
+    const month = parseInt(monthStr)
+    const year = parseInt(yearStr)
+    if (month < 1 || month > 12) {
+      errorMessages.value.expiry = "Expiry month must be between 01 and 12."
+      valid = false
+    } else {
+      const now = new Date()
+      const currentYear = now.getFullYear() % 100
+      const currentMonth = now.getMonth() + 1
+      if (year < currentYear || (year === currentYear && month < currentMonth)) {
+        errorMessages.value.expiry = "The card has expired."
+        valid = false
+      }
+    }
+  }
+  if (!/^\d{3,4}$/.test(cvv.value)) {
+    errorMessages.value.cvv = "Please enter a valid 3 or 4 digit CVV."
+    valid = false
+  }
+  if (address.value.trim() === "") {
+    errorMessages.value.address = "Address is required."
+    valid = false
+  }
+  if (city.value.trim() === "") {
+    errorMessages.value.city = "City is required."
+    valid = false
+  }
+  if (suburb.value.trim() === "") {
+    errorMessages.value.suburb = "Suburb is required."
+    valid = false
+  }
+  if (!/^\d{4,5}$/.test(postcode.value)) {
+    errorMessages.value.postcode = "Please enter a valid postcode (4 or 5 digits)."
+    valid = false
+  }
+  if (!paymentAllowed.value) {
+    errorMessages.value.paymentAllowed = "You must authorize the payment to complete the order."
+    valid = false
+  }
+
+  if (valid) {
+    alert("Order Completed! Payment Successful.")
+    router.push({ name: 'SelectCategory' })
   }
 }
 </script>
@@ -390,9 +345,6 @@ function ticketTypeLabel(type) {
 .card {
   border-radius: 6px;
   border: 1px solid #ccc;
-}
-.border-bottom {
-  border-bottom: 1px solid #eee;
 }
 .order-summary {
   position: sticky;

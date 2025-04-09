@@ -1,59 +1,81 @@
 <template>
   <div>
     <navbar />
-    <!-- Step indicator: current step is 2 (preview message) -->
-    <StepIndicator :steps="['Select Ticket', 'Complete Info', 'Checkout']" :currentStep="2" />
+    <StepIndicator
+      :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']"
+      :currentStep="3"
+    />
 
     <div class="container mt-4">
       <h4 class="section-title">Review Your Information</h4>
 
-      <div
-        v-for="(ticket, index) in ticketList"
-        :key="ticket.id"
-        class="card custom-card preview-card"
-      >
+      <!-- Ticket switch button area -->
+      <div class="ticket-tabs mb-3">
+        <button
+          v-for="(ticket, index) in ticketStore.ticketList"
+          :key="ticket.id || index"
+          @click="currentTicketIndex = index"
+          :class="['btn', currentTicketIndex === index ? 'btn-primary' : 'btn-outline-secondary', 'me-2']"
+        >
+          Participant #{{ index + 1 }}
+        </button>
+      </div>
+
+      <!-- Show preview of currently selected ticket only -->
+      <div class="card custom-card preview-card">
         <div class="d-flex justify-content-between align-items-center preview-header">
           <h5>
-            Participant #{{ index + 1 }}
-            <span class="ticket-type">({{ ticketTypeLabel(ticket.type) }})</span>
+            Participant #{{ currentTicketIndex + 1 }}
+            <span class="ticket-type">({{ ticketTypeLabel(currentTicket.type) }})</span>
           </h5>
         </div>
-
         <div class="row preview-row">
-          <div class="col-md-6"><strong>Email:</strong> {{ ticket.email }}</div>
-          <div class="col-md-6"><strong>Full Name:</strong> {{ ticket.name }}</div>
-          <div class="col-md-6"><strong>Gender:</strong> {{ ticket.gender }}</div>
-          <div class="col-md-6"><strong>Date of Birth:</strong> {{ ticket.dob }}</div>
-          <div class="col-md-6"><strong>Phone:</strong> {{ ticket.phone }}</div>
-          <div class="col-md-6"><strong>Country:</strong> {{ ticket.country }}</div>
-          <div class="col-md-12"><strong>Address:</strong> {{ ticket.address }}</div>
-          <div class="col-md-6"><strong>City:</strong> {{ ticket.city }}</div>
-          <div class="col-md-3"><strong>State:</strong> {{ ticket.state }}</div>
-          <div class="col-md-3"><strong>Zip:</strong> {{ ticket.zip }}</div>
-          <div class="col-md-12"><strong>ID/Passport:</strong> {{ ticket.idNumber }}</div>
+          <div class="col-md-6"><strong>Email:</strong> {{ currentTicket.email }}</div>
+          <div class="col-md-6">
+            <strong>Full Name:</strong> {{ currentTicket.firstName }} {{ currentTicket.lastName }}
+          </div>
+          <div class="col-md-6">
+            <strong>Date of Birth:</strong> {{ currentTicket.dateOfBirth }}
+          </div>
+          <div class="col-md-6">
+            <strong>Phone:</strong> {{ currentTicket.phoneNumber }}
+          </div>
+          <div class="col-md-6">
+            <strong>Country:</strong> {{ currentTicket.country }}
+          </div>
+          <div class="col-md-12">
+            <strong>Address:</strong> {{ currentTicket.address }}
+          </div>
+          <div class="col-md-6">
+            <strong>City:</strong> {{ currentTicket.city }}
+          </div>
+          <div class="col-md-3">
+            <strong>State:</strong> {{ currentTicket.state }}
+          </div>
+          <div class="col-md-3">
+            <strong>Zip Code:</strong> {{ currentTicket.zipCode }}
+          </div>
           <div
-            v-if="ticket.type === 'childRun' || ticket.type === 'childWalk'"
-            class="col-md-12"
+            v-if="currentTicket.type === 'childRun' || currentTicket.type === 'childWalk'"
+            class="col-md-12 mt-2"
           >
             <strong>Child ticket certificate:</strong>
-            {{ ticket.proof ? ticket.proof.name : "Not Uploaded" }}
+            {{ currentTicket.proof ? currentTicket.proof.name : 'Not Uploaded' }}
           </div>
-
-          <!-- Display questionnaire information, use default values to prevent undefined errors -->
           <div class="col-md-6 mt-3">
             <strong>Emergency Contact Name:</strong>
-            {{ ticket.survey.emergencyContactName || '' }}
+            {{ currentTicket.survey?.emergencyContactName || '' }}
           </div>
           <div class="col-md-6 mt-3">
             <strong>Emergency Contact Phone:</strong>
-            {{ ticket.survey.emergencyContactPhone || '' }}
+            {{ currentTicket.survey?.emergencyContactPhone || '' }}
           </div>
           <div class="col-md-6 mt-3">
             <strong>Medical Condition:</strong>
-            {{ ticket.survey.hasMedicalCondition || '' }}
+            {{ currentTicket.survey?.hasMedicalCondition || '' }}
           </div>
           <div class="col-md-12 mt-3">
-            <strong>Reason:</strong> {{ ticket.survey.reason || '' }}
+            <strong>Reason:</strong> {{ currentTicket.survey?.reason || '' }}
           </div>
         </div>
       </div>
@@ -77,93 +99,44 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import StepIndicator from '@/components/StepIndicator.vue';
-import navbar from '@/components/navbar.vue';
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useTicketStore } from '@/store/ticketStore'
+import StepIndicator from '@/components/StepIndicator.vue'
+import navbar from '@/components/navbar.vue'
 
-const router = useRouter();
-const route = useRoute();
+const router = useRouter()
+const ticketStore = useTicketStore()
 
-const ticketList = ref([]);
+// Index of tickets currently being previewed
+const currentTicketIndex = ref(0)
+const currentTicket = computed(() => ticketStore.ticketList[currentTicketIndex.value])
 
-// onMounted hook: parses the ticketList from the routing query parameters and ensures that each ticket has a survey object
-onMounted(() => {
-  if (route.query.tickets) {
-    try {
-      let parsedTickets = JSON.parse(route.query.tickets);
-      // Ensure that the survey attribute exists for each ticket, or assign a default value if it is missing.
-      parsedTickets = parsedTickets.map(ticket => {
-        if (!ticket.survey) {
-          ticket.survey = {
-            emergencyContactName: '',
-            emergencyContactPhone: '',
-            hasMedicalCondition: '',
-            reason: ''
-          };
-        }
-        return ticket;
-      });
-      ticketList.value = parsedTickets;
-    } catch (error) {
-      console.error('Error parsing tickets:', error);
-    }
-  } else {
-    router.push({ name: 'PersonalInfo' });
-  }
-});
-
-// sanitizeTickets function: filters out non-serialisable properties (e.g. File objects)
-const sanitizeTickets = (tickets) => {
-  return tickets.map(ticket => {
-    const { proof, ...rest } = ticket;
-    return {
-      ...rest,
-      proof: proof ? { name: proof.name } : null
-    };
-  });
-};
-
-// Navigation function to return to the Edit Questionnaire page
-const goBackToQuestionnaire = () => {
-  const sanitizedTickets = sanitizeTickets(ticketList.value);
-  router.push({
-    name: 'Questionnaire',
-    query: { tickets: JSON.stringify(sanitizedTickets) }
-  });
-};
-
-// Returns the navigation function of the Edit Profile page
-const goBackToPersonalInfo = () => {
-  const sanitizedTickets = sanitizeTickets(ticketList.value);
-  router.push({
-    name: 'PersonalInfo',
-    query: { tickets: JSON.stringify(sanitizedTickets) }
-  });
-};
-
-// Navigating functions to the Checkout page
-const goToCheckout = () => {
-  const sanitizedTickets = sanitizeTickets(ticketList.value);
-  router.push({
-    name: 'Checkout',
-    query: { tickets: JSON.stringify(sanitizedTickets) }
-  });
-};
-
-// Auxiliary function: returns the label corresponding to the ticket type
 const ticketTypeLabel = (type) => {
   switch (type) {
     case 'adultWalk':
-      return '2.5KM WALK Adult Ticket';
+      return '2.5KM WALK Adult Ticket'
     case 'childRun':
-      return "5KM RUN Children's Tickets";
+      return "5KM RUN Children's Ticket"
     case 'childWalk':
-      return "2.5KM WALK Children's Tickets";
+      return "2.5KM WALK Children's Ticket"
     default:
-      return 'Unknown ticket type';
+      return 'Unknown ticket type'
   }
-};
+}
+
+const goBackToQuestionnaire = () => {
+  router.push({ name: 'Questionnaire' })
+}
+
+const goBackToPersonalInfo = () => {
+  router.push({ name: 'PersonalInfo' })
+}
+
+const goToCheckout = () => {
+  // The ticketStore.ticketList can be filtered before submission.
+  router.push({ name: 'Checkout' })
+}
 </script>
 
 <style scoped>
@@ -190,5 +163,10 @@ const ticketTypeLabel = (type) => {
 .ticket-type {
   font-weight: 400;
   color: #888;
+}
+
+/* Ticket switch button area */
+.ticket-tabs {
+  margin-bottom: 1rem;
 }
 </style>

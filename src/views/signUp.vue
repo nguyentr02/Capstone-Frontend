@@ -125,13 +125,13 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 import navbar from "@/components/navbar.vue";
 import Footer from "@/components/footer.vue";
 import router from "@/router";
+import { useUserStore } from "@/store/user";
 
 export default {
   components: {
@@ -153,6 +153,8 @@ export default {
 
   methods: {
     async signUp() {
+
+      const userStore = useUserStore();
       this.errors = [];
       console.log(this.errors);
 
@@ -169,11 +171,6 @@ export default {
         check = special.test(this.lastName);
         if (!check) {
           this.errors.push("Name can only contain alphabet!");
-        } else {
-          check = special.test(this.lastName);
-          if (!check) {
-            this.errors.push("Name can only contain alphabet!");
-          }
         }
       }
 
@@ -206,13 +203,13 @@ export default {
       if (this.errors.length == 0) {
         // console.log("GOOD");
 
-        const data = {
-          email: this.email,
-          password: this.pwd,
-          firstName: this.firstName,
-          lastName: this.lastName,
-          phoneNo: this.phoneNo,
-        };
+        // const data = {
+        //   email: this.email,
+        //   password: this.pwd,
+        //   firstName: this.firstName,
+        //   lastName: this.lastName,
+        //   phoneNo: this.phoneNo,
+        // };
 
         const url = "http://localhost:3000/api/auth/register";
 
@@ -234,13 +231,22 @@ export default {
           .then((response) => {
             console.log("POST request successful:", response.json());
 
-            const accessToken = response.data.accessToken;
-            // return response.json();
-
-            // Save accessToken to cookie
+            return response.json();
           })
-          .then((data) => {
-            this.dt = data;
+          .then((responseData) => {
+            this.dt = responseData.data;
+
+            const accessToken = this.dt.accessToken;
+
+            // Store accessToken into storage
+
+            if (accessToken) {
+            userStore.setAccessToken(accessToken);
+            console.log("Successfully store token to Pinia: ",accessToken);
+            router.push("/");
+          } else {
+            window.alert("Login successfully but no token is store!");
+          }
           })
           .catch((error) => {
             this.err = error;

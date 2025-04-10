@@ -79,13 +79,22 @@ export default {
     };
   },
 
+  mounted() {
+    this.checkState();
+  },
+
   methods: {
+    // Prevent going to SignIn after login already
+    checkState() {
+      const userStore = useUserStore();
+      if (userStore.isAuthenticated) {
+        console.log("User state verified");
+        router.push("/");
+      }
+    },
+
     async signIn(email, pwd) {
       // Integration with BE
-      const data = {
-        email: email,
-        password: pwd,
-      };
 
       const userStore = useUserStore();
       const url = "http://localhost:3000/api/auth/login";
@@ -110,13 +119,11 @@ export default {
         })
         .then((responseData) => {
           this.dt = responseData.data;
-          // console.log(this.dt.accessToken)
           const accessToken = this.dt.accessToken;
-          console.log(accessToken);
 
+          // Store Toke retrieve from API
           if (accessToken) {
             userStore.setAccessToken(accessToken);
-            console.log("Successfully store token to Pinia: ",accessToken);
             router.push("/");
           } else {
             window.alert("Login successfully but no token is store!");
@@ -125,11 +132,6 @@ export default {
         .catch((error) => {
           this.err = error;
         });
-
-      // Store Toke retrieve from API
-
-      // console.log(accessToken);
-      // router.push("/");
     },
   },
 };

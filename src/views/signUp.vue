@@ -1,130 +1,130 @@
 <template>
-    <navbar />
-    <div class="h-90" style="background-color: #edece8">
-      <div class="container text-center w-100" style="width: 100%">
-        <div class="row align-items-center" style="height: 100vh">
-          <div class="col-3"></div>
-          <form
-            action=""
-            style="width: 50%; border-radius: 20px"
-            class="bg-white col-6 pb-3"
-          >
-            <img src="../assets/logo.png" alt="logo" height="80" width="80" />
-            <h1 style="font-family: 'Font'" class="text-warning">
-              Create an account
-            </h1>
-            <div class="mb-3 text-start input-group mt-4">
-              <div class="col-6 pe-2">
-                <label
-                  for="exampleInputEmail1"
-                  class="form-label"
-                  style="font-family: 'Font'"
-                  >First name</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  style="font-family: 'Font'; background-color: #fcfcfa"
-                  v-model="firstName"
-                  required
-                />
-              </div>
-              <div class="col-6">
-                <label
-                  for="exampleInputEmail1"
-                  class="form-label"
-                  style="font-family: 'Font'"
-                  >Last name</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleInputEmail1"
-                  style="font-family: 'Font'; background-color: #fcfcfa"
-                  v-model="lastName"
-                  required
-                />
-              </div>
-            </div>
-  
-            <div class="mb-3 text-start">
+  <navbar />
+  <div class="h-90" style="background-color: #edece8">
+    <div class="container text-center w-100" style="width: 100%">
+      <div class="row align-items-center" style="height: 100vh">
+        <div class="col-3"></div>
+        <form
+          action=""
+          style="width: 50%; border-radius: 20px"
+          class="bg-white col-6 pb-3"
+        >
+          <img src="../assets/logo.png" alt="logo" height="80" width="80" />
+          <h1 style="font-family: 'Font'" class="text-warning">
+            Create an account
+          </h1>
+          <div class="mb-3 text-start input-group mt-4">
+            <div class="col-6 pe-2">
               <label
                 for="exampleInputEmail1"
                 class="form-label"
                 style="font-family: 'Font'"
-                >Phone number</label
+                >First name</label
               >
               <input
-                type="string"
+                type="text"
                 class="form-control"
                 id="exampleInputEmail1"
                 style="font-family: 'Font'; background-color: #fcfcfa"
-                v-model="phoneNo"
+                v-model="firstName"
                 required
               />
             </div>
-  
-            <div class="mb-3 text-start">
+            <div class="col-6">
               <label
                 for="exampleInputEmail1"
                 class="form-label"
                 style="font-family: 'Font'"
-                >Email address</label
+                >Last name</label
               >
               <input
-                type="email"
+                type="text"
                 class="form-control"
                 id="exampleInputEmail1"
-                aria-describedby="emailHelp"
                 style="font-family: 'Font'; background-color: #fcfcfa"
-                v-model="email"
+                v-model="lastName"
                 required
               />
             </div>
-            <div class="mb-3 text-start">
-              <label
-                for="exampleInputPassword1"
-                class="form-label"
-                style="font-family: 'Font'"
-                >Password</label
-              >
-              <input
-                type="password"
-                class="form-control"
-                id="exampleInputPassword1"
-                style="background-color: #edece8"
-                v-model="pwd"
-                required
-              />
-            </div>
-            <div class="mb-3 text-start">
-              <label
-                for="exampleInputPassword1"
-                class="form-label"
-                style="font-family: 'Font'"
-                >Confirm password</label
-              >
-              <input
-                type="password"
-                class="form-control"
-                id="exampleInputPassword1"
-                style="background-color: #edece8"
-                v-model="confirmPwd"
-                required
-              />
-            </div>
-            <p v-if="errors.length" v-for="error in errors" class="text-danger">
-              {{ error }}
-            </p>
-            <button type="submit" class="btn btn-primary" @click.prevent="signUp">
-              Sign Up
-            </button>
-          </form>
-          <div class="col-4"></div>
-        </div>
+          </div>
+
+          <div class="mb-3 text-start">
+            <label
+              for="exampleInputEmail1"
+              class="form-label"
+              style="font-family: 'Font'"
+              >Phone number</label
+            >
+            <input
+              type="string"
+              class="form-control"
+              id="exampleInputEmail1"
+              style="font-family: 'Font'; background-color: #fcfcfa"
+              v-model="phoneNo"
+              required
+            />
+          </div>
+
+          <div class="mb-3 text-start">
+            <label
+              for="exampleInputEmail1"
+              class="form-label"
+              style="font-family: 'Font'"
+              >Email address</label
+            >
+            <input
+              type="email"
+              class="form-control"
+              id="exampleInputEmail1"
+              aria-describedby="emailHelp"
+              style="font-family: 'Font'; background-color: #fcfcfa"
+              v-model="email"
+              required
+            />
+          </div>
+          <div class="mb-3 text-start">
+            <label
+              for="exampleInputPassword1"
+              class="form-label"
+              style="font-family: 'Font'"
+              >Password</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="exampleInputPassword1"
+              style="background-color: #edece8"
+              v-model="pwd"
+              required
+            />
+          </div>
+          <div class="mb-3 text-start">
+            <label
+              for="exampleInputPassword1"
+              class="form-label"
+              style="font-family: 'Font'"
+              >Confirm password</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="exampleInputPassword1"
+              style="background-color: #edece8"
+              v-model="confirmPwd"
+              required
+            />
+          </div>
+          <p v-if="errors.length" v-for="error in errors" class="text-danger">
+            {{ error }}
+          </p>
+          <button type="submit" class="btn btn-primary" @click.prevent="signUp">
+            Sign Up
+          </button>
+        </form>
+        <div class="col-4"></div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -151,13 +151,23 @@ export default {
     };
   },
 
-  methods: {
-    async signUp() {
+  mounted() {
+    this.checkState();
+  },
 
+  methods: {
+    // Prevent going to SignUp after login already
+    checkState() {
+      const userStore = useUserStore();
+      if (userStore.isAuthenticated) {
+        console.log("User state verified");
+        router.push("/");
+      }
+    },
+
+    async signUp() {
       const userStore = useUserStore();
       this.errors = [];
-      console.log(this.errors);
-
       // check if First Name and Last name contain special character
       const special = /^[a-z,A-Z]+$/;
 
@@ -183,7 +193,9 @@ export default {
       const passwordCharacter = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
       const isPasswordValid = passwordCharacter.test(this.pwd);
       if (!isPasswordValid) {
-        this.errors.push("Password must contain at least one uppercase letter, one lowercase letter, and one number!");
+        this.errors.push(
+          "Password must contain at least one uppercase letter, one lowercase letter, and one number!"
+        );
       }
 
       // Check if confirmed Password is different from Password
@@ -201,19 +213,9 @@ export default {
 
       // Once there is no ERROR
       if (this.errors.length == 0) {
-        // console.log("GOOD");
-
-        // const data = {
-        //   email: this.email,
-        //   password: this.pwd,
-        //   firstName: this.firstName,
-        //   lastName: this.lastName,
-        //   phoneNo: this.phoneNo,
-        // };
-
         const url = "http://localhost:3000/api/auth/register";
 
-        fetch(url, {
+        await fetch(url, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -229,7 +231,7 @@ export default {
           }),
         })
           .then((response) => {
-            console.log("POST request successful:", response.json());
+            // console.log("POST request successful:", response.json());
 
             return response.json();
           })
@@ -237,16 +239,14 @@ export default {
             this.dt = responseData.data;
 
             const accessToken = this.dt.accessToken;
-
             // Store accessToken into storage
 
             if (accessToken) {
-            userStore.setAccessToken(accessToken);
-            console.log("Successfully store token to Pinia: ",accessToken);
-            router.push("/");
-          } else {
-            window.alert("Login successfully but no token is store!");
-          }
+              userStore.setAccessToken(accessToken);
+              router.push("/");
+            } else {
+              window.alert("Login successfully but no token is store!");
+            }
           })
           .catch((error) => {
             this.err = error;
@@ -254,8 +254,7 @@ export default {
       }
     },
   },
-  computed: {
-  },
+  computed: {},
 };
 </script>
 

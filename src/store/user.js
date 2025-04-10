@@ -17,4 +17,10 @@ export const useUserStore = defineStore("user", {
       this.accessToken = null;
     },
   },
+
+  persist: {
+    storage: localStorage,
+    key: 'accessToken',
+    paths: 'accessToken',
+  },
 });

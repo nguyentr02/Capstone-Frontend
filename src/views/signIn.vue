@@ -87,6 +87,7 @@ export default {
         password: pwd,
       };
 
+      const userStore = useUserStore();
       const url = "http://localhost:3000/api/auth/login";
       // Send data to dtb
 
@@ -113,14 +114,13 @@ export default {
           const accessToken = this.dt.accessToken;
           console.log(accessToken);
 
-          // if (accessToken) {
-          //   useUserStore.setAccessToken(accessToken);
-          //   console.log("Access token stored in Pinia:", accessToken);
-          //   router.push("/"); // Redirect to a protected route
-          // } else {
-          //   loginError.value =
-          //     "Login successful, but no access token received.";
-          // }
+          if (accessToken) {
+            userStore.setAccessToken(accessToken);
+            console.log("Successfully store token to Pinia: ",accessToken);
+            router.push("/");
+          } else {
+            window.alert("Login successfully but no token is store!");
+          }
         })
         .catch((error) => {
           this.err = error;

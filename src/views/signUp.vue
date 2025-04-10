@@ -131,6 +131,7 @@
 import navbar from "@/components/navbar.vue";
 import Footer from "@/components/footer.vue";
 import router from "@/router";
+import axios from "axios";
 
 export default {
   components: {
@@ -141,7 +142,7 @@ export default {
   data() {
     return {
       errors: [],
-      firstName : "",
+      firstName: "",
       lastName: "",
       phoneNo: "",
       email: null,
@@ -151,12 +152,12 @@ export default {
   },
 
   methods: {
-    signUp() {
+    async signUp() {
       this.errors = [];
       console.log(this.errors);
 
       // check if First Name and Last name contain special character
-      const special =  /^[a-z,A-Z]+$/;
+      const special = /^[a-z,A-Z]+$/;
 
       this.firstName = this.firstName.trim();
       this.lastName = this.lastName.trim();
@@ -176,6 +177,13 @@ export default {
         this.errors.push("Password need to have at least 10 letters!");
       }
 
+      // Check whether Password contains number, upcase letter and lowcase letter
+      const passwordCharacter = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+      const isPasswordValid = passwordCharacter.test(this.pwd);
+      if (!isPasswordValid) {
+        this.errors.push("Password must contain at least one uppercase letter, one lowercase letter, and one number!");
+      }
+
       // Check if confirmed Password is different from Password
       if (this.confirmPwd != this.pwd) {
         this.errors.push("Password and Confirmed password does not match!");
@@ -185,8 +193,6 @@ export default {
       const pattern = /^[0-9]+$/;
       this.phoneNo = this.phoneNo.trim();
       const isValid = pattern.test(this.phoneNo);
-      console.log(isValid);
-      console.log(this.phoneNo);
       if (!isValid) {
         this.errors.push("Phone number can only contain number!");
       }
@@ -194,9 +200,50 @@ export default {
       // Once there is no ERROR
       if (this.errors.length == 0) {
         // console.log("GOOD");
-        router.push("/signIn");
+
+        const data = {
+          email: this.email,
+          password: this.pwd,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          phoneNo: this.phoneNo,
+        };
+
+        const url = "http://localhost:3000/api/auth/register";
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            accept: "application/json",
+          },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.pwd,
+            firstName: this.firstName,
+            lastName: this.lastName,
+            phoneNo: this.phoneNo,
+          }),
+        })
+          .then((response) => {
+            console.log("POST request successful:", response.json());
+
+            const accessToken = response.data.accessToken;
+            // return response.json();
+
+            // Save accessToken to cookie
+          })
+          .then((data) => {
+            this.dt = data;
+          })
+          .catch((error) => {
+            this.err = error;
+          });
       }
     },
+  },
+  computed: {
   },
 };
 </script>

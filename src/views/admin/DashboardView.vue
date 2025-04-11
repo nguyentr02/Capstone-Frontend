@@ -2,125 +2,29 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import AdminLayout from '@/layouts/AdminLayout.vue'
+import { eventsMockData } from '@/mock/eventsMock.js'
+import { usersMockData } from '@/mock/usersMock.js'
+// 从单独的文件引入统计数据
+import { dashboardStatsMockData } from '@/mock/dashboardStatsMock.js'
 
-// Mock data for stats cards (更新了背景色为 Bootstrap 类)
-const statsData = ref([
-  { 
-    title: 'Total Events', 
-    value: '86', 
-    icon: 'pi pi-calendar', 
-    change: '+12%', 
-    changeType: 'increase',
-    bgColor: 'bg-primary'
-  },
-  { 
-    title: 'Active Events', 
-    value: '38', 
-    icon: 'pi pi-check-circle', 
-    change: '+5%', 
-    changeType: 'increase',
-    bgColor: 'bg-success'
-  },
-  { 
-    title: 'Total Users', 
-    value: '1,285', 
-    icon: 'pi pi-users', 
-    change: '+18%', 
-    changeType: 'increase',
-    bgColor: 'bg-info'
-  },
-  { 
-    title: 'Ticket Sales', 
-    value: '$34,590', 
-    icon: 'pi pi-ticket', 
-    change: '-4%', 
-    changeType: 'decrease',
-    bgColor: 'bg-warning'
-  }
-])
+// 统计卡数据，直接使用引入的 mock 数据
+const statsData = ref([...dashboardStatsMockData])
 
-// Mock data for recent events
-const recentEvents = ref([
-  { 
-    id: 1, 
-    name: 'Tech Conference 2025', 
-    date: '2025-01-15', 
-    location: 'San Francisco, CA', 
-    status: 'Active', 
-    ticketsSold: 450, 
-    revenue: '$13,500'
-  },
-  { 
-    id: 2, 
-    name: 'Summer Music Festival', 
-    date: '2025-06-22', 
-    location: 'Austin, TX', 
-    status: 'Upcoming', 
-    ticketsSold: 320, 
-    revenue: '$9,600'
-  },
-  { 
-    id: 3, 
-    name: 'Business Leadership Summit', 
-    date: '2025-03-10', 
-    location: 'Chicago, IL', 
-    status: 'Active', 
-    ticketsSold: 285, 
-    revenue: '$8,550'
-  },
-  { 
-    id: 4, 
-    name: 'Food & Wine Expo', 
-    date: '2025-04-05', 
-    location: 'New York, NY', 
-    status: 'Upcoming', 
-    ticketsSold: 210, 
-    revenue: '$6,300'
-  },
-  { 
-    id: 5, 
-    name: 'Charity Gala Dinner', 
-    date: '2025-02-28', 
-    location: 'Boston, MA', 
-    status: 'Active', 
-    ticketsSold: 180, 
-    revenue: '$18,000'
-  }
-])
+// 使用 eventsMockData 中的数据，取前 5 个
+const recentEvents = ref(eventsMockData.slice(0, 5))
 
-// Mock data for recent users
-const recentUsers = ref([
-  { 
-    id: 1, 
-    name: 'John Smith', 
-    email: 'john.smith@example.com', 
-    registeredDate: '2024-12-20', 
-    eventsAttended: 3
-  },
-  { 
-    id: 2, 
-    name: 'Sarah Johnson', 
-    email: 'sarah.j@example.com', 
-    registeredDate: '2024-12-18', 
-    eventsAttended: 5
-  },
-  { 
-    id: 3, 
-    name: 'Michael Brown', 
-    email: 'michael.b@example.com', 
-    registeredDate: '2024-12-15', 
-    eventsAttended: 2
-  },
-  { 
-    id: 4, 
-    name: 'Emily Davis', 
-    email: 'emily.d@example.com', 
-    registeredDate: '2024-12-10', 
-    eventsAttended: 1
-  }
-])
+// 使用 usersMockData 中的数据，取前 5 个并转换字段格式
+const recentUsers = ref(
+  usersMockData.slice(0, 5).map(user => ({
+    id: user.id,
+    name: user.first_name + ' ' + user.last_name,
+    email: user.email,
+    registeredDate: user.created_at,
+    eventsAttended: 0   // 此字段未在 mock 数据中提供，默认设置为 0
+  }))
+)
 
-// Chart data
+// 图表数据
 const salesChartData = ref(null)
 const salesChartOptions = ref({
   responsive: true,
@@ -147,7 +51,6 @@ const salesChartOptions = ref({
 })
 
 onMounted(() => {
-  // Initialize chart data
   salesChartData.value = {
     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     datasets: [
@@ -171,7 +74,6 @@ onMounted(() => {
   }
 })
 
-// Methods for status styling (转换为 Bootstrap 类)
 const getStatusClass = (status) => {
   switch (status) {
     case 'Active':
@@ -191,7 +93,7 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString('en-US', { 
     year: 'numeric', 
     month: 'short', 
-    day: 'numeric' 
+    day: 'numeric'
   })
 }
 </script>
@@ -225,7 +127,7 @@ const formatDate = (dateString) => {
           </div>
         </div>
       </div>
-      
+
       <!-- Charts Row -->
       <div class="row g-4 mb-4">
         <!-- Sales Chart -->
@@ -361,4 +263,11 @@ const formatDate = (dateString) => {
     </div>
   </AdminLayout>
 </template>
+
+<style scoped>
+.no-border-btn:hover {
+  background-color: #e9ecef;
+}
+</style>
+
 

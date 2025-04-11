@@ -1,8 +1,11 @@
-<!-- src/views/admin/EventFormView.vue -->
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
+
+import { ticketsMockData } from '@/mock/ticketsMockData'
+import { eventsMockData } from '@/mock/eventsMock.js'
+import { locationsMockData } from '@/mock/locationsMock.js'
 
 const route = useRoute()
 const router = useRouter()
@@ -13,7 +16,7 @@ const saving = ref(false)
 const activeTab = ref('basic')
 const questions = ref([])
 
-// Form state
+// Form state，默认初始化为空或默认值
 const eventForm = ref({
   name: '',
   description: '',
@@ -33,120 +36,72 @@ const eventForm = ref({
   features: ['', '', ''],
 })
 
-// Ticket types
-const ticketTypes = ref([
-  {
-    id: 1,
-    name: 'General Admission',
-    price: 30.0,
-    quantity: 800,
-    description: 'Standard entry to the event',
-  },
-])
-
-// Form validation
-const errors = ref({})
-
-// Locations list (for dropdown)
-const locations = [
-  'San Francisco Convention Center',
-  'Metropolitan Pavilion, New York',
-  'Riverside Park, Austin',
-  'Grand Hotel, Chicago',
-  'Ritz Carlton, Boston',
-  'Tech Hub, Seattle',
-  'Art Gallery, Los Angeles',
-  'Mountain Convention Center, Denver',
-  'Community Center, Portland',
-  'Exhibition Center, San Diego',
-]
+// 使用新的 tickets mock 数据来初始化票种
+const ticketTypes = ref([...ticketsMockData])
+// 使用 locationsMockData 的位置数据
+const locations = locationsMockData
 
 onMounted(() => {
   if (isEditMode.value) {
-    // Simulate API call to fetch event details for editing
+    // 模拟 API 调用，从 eventsMockData 中获取编辑模式下的 event 数据
     setTimeout(() => {
-      // In a real app, this would be an API call
-      eventForm.value = {
-        name: 'Tech Conference 2025',
-        description:
-          'Annual technology conference featuring the latest innovations in AI, blockchain, and cloud computing.',
-        date: '2025-01-15',
-        startTime: '09:00',
-        endTime: '18:00',
-        location: 'San Francisco Convention Center',
-        address: '747 Howard St',
-        city: 'San Francisco',
-        state: 'CA',
-        zipCode: '94103',
-        organizer: 'TechCorp Inc.',
-        organizerContact: 'events@techcorp.com',
-        status: 'Active',
-        capacity: 1000,
-        imageUrl: 'https://placehold.co/600x400/eee/ccc?text=Tech+Conference',
-        features: [
-          'Keynote speeches from industry leaders',
-          'Interactive workshops and hands-on sessions',
-          'Networking opportunities with tech professionals',
-        ],
+      const eventData = eventsMockData.find(e => e.id === eventId)
+      if (eventData) {
+        eventForm.value = {
+          name: eventData.name || '',
+          description: eventData.description || '',
+          date: eventData.date || '',
+          startTime: '',    // 若 eventsMockData 中未提供，可自行设置默认值
+          endTime: '',      // 同上
+          location: eventData.location || '',
+          // 对于地址信息，若 eventsMockData 中提供了 address，则使用，否则为空
+          address: eventData.address || '',
+          city: eventData.city || '',     // 若有，可使用；否则默认空字符串
+          state: eventData.state || '',
+          zipCode: eventData.zipCode || '',
+          organizer: eventData.organizer || '',
+          organizerContact: eventData.organizerContact || '',
+          capacity: eventData.capacity || 100,
+          status: eventData.status || 'Upcoming',
+          imageUrl: eventData.imageUrl || 'https://placehold.co/600x400/eee/ccc?text=Tech+Conference',
+          // 使用 eventData.features，如果存在且不为空，否则使用默认数组
+          features: (eventData.features && eventData.features.length > 0) ? eventData.features : ['', '', '']
+        }
       }
-
-      ticketTypes.value = [
-        {
-          id: 1,
-          name: 'General Admission',
-          price: 30.0,
-          quantity: 800,
-          description: 'Standard entry to the event',
-        },
-        {
-          id: 2,
-          name: 'VIP',
-          price: 100.0,
-          quantity: 200,
-          description: 'Premium experience with exclusive access',
-        },
-        {
-          id: 3,
-          name: 'Early Bird',
-          price: 20.0,
-          quantity: 50,
-          description: 'Limited availability discounted tickets',
-        },
-      ]
-
+      // 票种数据转换：将 ticketsMockData 中的 quantity_total 映射到 quantity 字段
+      ticketTypes.value = ticketsMockData.map(ticket => ({
+        id: ticket.id,
+        name: ticket.name,
+        price: ticket.price,
+        quantity: ticket.quantity_total, // 总票数
+        description: ticket.description,
+      }))
       loading.value = false
     }, 500)
   } else {
-    // Create mode - form is already initialized with defaults
+    // 创建模式 - 表单保持默认初始化，直接结束 loading
     loading.value = false
   }
 })
 
-// Validate form fields
+// 以下函数保持不变
 const validateForm = () => {
   errors.value = {}
-
   if (!eventForm.value.name) {
     errors.value.name = 'Event name is required'
   }
-
   if (!eventForm.value.date) {
     errors.value.date = 'Event date is required'
   }
-
   if (!eventForm.value.location) {
     errors.value.location = 'Location is required'
   }
-
   if (!eventForm.value.capacity || eventForm.value.capacity <= 0) {
     errors.value.capacity = 'Valid capacity is required'
   }
-
-  // Validate at least one ticket type
   if (ticketTypes.value.length === 0) {
     errors.value.tickets = 'At least one ticket type is required'
   }
-
   return Object.keys(errors.value).length === 0
 }
 
@@ -160,7 +115,7 @@ const removeFeature = (index) => {
 
 const addTicketType = () => {
   ticketTypes.value.push({
-    id: Date.now(), // Temporary ID for new ticket types
+    id: Date.now(), // 临时 ID
     name: '',
     price: 0.0,
     quantity: 0,
@@ -174,23 +129,16 @@ const removeTicketType = (index) => {
 
 const saveEvent = () => {
   if (!validateForm()) {
-    // Form has errors
     return
   }
-
   saving.value = true
-
-  // Simulate API call to save event
+  // 模拟 API 保存调用
   setTimeout(() => {
-    // In a real app, this would be an API call
     console.log('Event saved:', {
       event: eventForm.value,
       tickets: ticketTypes.value,
     })
-
     saving.value = false
-
-    // Navigate back to events list
     router.push('/admin/events')
   }, 1000)
 }
@@ -200,7 +148,6 @@ const cancelForm = () => {
 }
 
 const addQuestion = () => {
-  console.log('Adding new question')
   const newId = Date.now()
   questions.value.push({
     id: newId,
@@ -227,69 +174,58 @@ const removeOption = (question, optionIndex) => {
     question.options.splice(optionIndex, 1)
   }
 }
+
+const errors = ref({})
 </script>
 
 <template>
   <AdminLayout>
     <div class="p-4">
-      <!-- Loading state -->
+      <!-- Loading 状态 -->
       <div v-if="loading" class="d-flex justify-content-center align-items-center" style="height: 16rem;">
         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
           <span class="visually-hidden">Loading...</span>
         </div>
       </div>
-
+      
       <div v-else>
-        <!-- Form Header -->
+        <!-- 表单头部 -->
         <div class="mb-4">
           <h1 class="fs-2 fw-bold text-dark">
             {{ isEditMode ? 'Edit Event' : 'Create New Event' }}
           </h1>
           <p class="text-muted mt-1">
-            {{
-              isEditMode
-              ? 'Update the details of your event'
-              : 'Fill out the form to create a new event'
-            }}
+            {{ isEditMode ? 'Update the details of your event' : 'Fill out the form to create a new event' }}
           </p>
         </div>
-
-        <!-- Form Tabs -->
+        
+        <!-- 表单 Tab 导航 -->
         <div class="bg-white rounded shadow-sm mb-4">
           <div class="d-flex border-bottom overflow-auto">
-            <!-- Basic information -->
             <button @click="activeTab = 'basic'" type="button"
               class="px-3 py-2 fs-6 fw-semibold text-nowrap bg-light border-0 no-border-btn"
               :class="activeTab === 'basic' ? 'text-primary' : 'text-muted'">
               <i class="pi pi-info-circle me-1"></i>
               Basic Information
             </button>
-
-            <!-- Location -->
             <button @click="activeTab = 'location'" type="button"
               class="px-3 py-2 fs-6 fw-semibold text-nowrap bg-light border-0 no-border-btn"
               :class="activeTab === 'location' ? 'text-primary' : 'text-muted'">
               <i class="pi pi-map-marker me-1"></i>
               Location
             </button>
-
-            <!-- Tickets -->
             <button @click="activeTab = 'tickets'" type="button"
               class="px-3 py-2 fs-6 fw-semibold text-nowrap bg-light border-0 no-border-btn"
               :class="activeTab === 'tickets' ? 'text-primary' : 'text-muted'">
               <i class="pi pi-ticket me-1"></i>
               Tickets
             </button>
-
-            <!-- Features -->
             <button @click="activeTab = 'features'" type="button"
               class="px-3 py-2 fs-6 fw-semibold text-nowrap bg-light border-0 no-border-btn"
               :class="activeTab === 'features' ? 'text-primary' : 'text-muted'">
               <i class="pi pi-list me-1"></i>
               Features
             </button>
-
-            <!-- Questionnaire -->
             <button @click="activeTab = 'questionnaire'" type="button"
               class="px-3 py-2 fs-6 fw-semibold text-nowrap bg-light border-0 no-border-btn"
               :class="activeTab === 'questionnaire' ? 'text-primary' : 'text-muted'">
@@ -298,15 +234,13 @@ const removeOption = (question, optionIndex) => {
             </button>
           </div>
         </div>
-
-
-        <!-- Form Content -->
+        
+        <!-- 表单内容 -->
         <div class="bg-white rounded shadow-sm p-4">
           <form @submit.prevent="saveEvent">
             <!-- Basic Info Tab -->
             <div v-if="activeTab === 'basic'" class="mb-4">
               <div class="mb-3">
-                <!-- Event Name -->
                 <label class="form-label">
                   Event Name <span class="text-danger">*</span>
                 </label>
@@ -316,16 +250,12 @@ const removeOption = (question, optionIndex) => {
                   {{ errors.name }}
                 </div>
               </div>
-
               <div class="mb-3">
-                <!-- Event Description -->
                 <label class="form-label">Description</label>
                 <textarea v-model="eventForm.description" placeholder="Describe your event" rows="4"
                   class="form-control"></textarea>
               </div>
-
               <div class="row g-3">
-                <!-- Date -->
                 <div class="col-12 col-md-4">
                   <label class="form-label">
                     Date <span class="text-danger">*</span>
@@ -336,22 +266,16 @@ const removeOption = (question, optionIndex) => {
                     {{ errors.date }}
                   </div>
                 </div>
-
-                <!-- Start Time -->
                 <div class="col-12 col-md-4">
                   <label class="form-label">Start Time</label>
                   <input v-model="eventForm.startTime" type="time" class="form-control" />
                 </div>
-
-                <!-- End Time -->
                 <div class="col-12 col-md-4">
                   <label class="form-label">End Time</label>
                   <input v-model="eventForm.endTime" type="time" class="form-control" />
                 </div>
               </div>
-
               <div class="row g-3 mt-3">
-                <!-- Organizer Information -->
                 <div class="col-12 col-md-6">
                   <label class="form-label">Organizer</label>
                   <input v-model="eventForm.organizer" type="text" placeholder="Organizing company or person"
@@ -363,9 +287,7 @@ const removeOption = (question, optionIndex) => {
                     class="form-control" />
                 </div>
               </div>
-
               <div class="row g-3 mt-3">
-                <!-- Capacity -->
                 <div class="col-12 col-md-6">
                   <label class="form-label">
                     Capacity <span class="text-danger">*</span>
@@ -376,7 +298,6 @@ const removeOption = (question, optionIndex) => {
                     {{ errors.capacity }}
                   </div>
                 </div>
-                <!-- Status -->
                 <div class="col-12 col-md-6">
                   <label class="form-label">Status</label>
                   <select v-model="eventForm.status" class="form-select">
@@ -387,9 +308,7 @@ const removeOption = (question, optionIndex) => {
                   </select>
                 </div>
               </div>
-
               <div class="mb-3 mt-3">
-                <!-- Image URL -->
                 <label class="form-label">Image URL</label>
                 <input v-model="eventForm.imageUrl" type="text" placeholder="URL to event image" class="form-control" />
                 <div class="form-text">
@@ -397,28 +316,21 @@ const removeOption = (question, optionIndex) => {
                 </div>
               </div>
             </div>
-
+            
             <!-- Location Tab -->
             <div v-if="activeTab === 'location'" class="mb-4">
               <div class="mb-3">
-                <!-- Location Selection -->
                 <label class="form-label">
                   Venue <span class="text-danger">*</span>
                 </label>
                 <select v-model="eventForm.location" class="form-select" :class="{ 'is-invalid': errors.location }">
                   <option value="">Select a venue</option>
-                  <option v-for="location in locations" :key="location" :value="location">
-                    {{ location }}
-                  </option>
+                  <option v-for="loc in locations" :key="loc" :value="loc">{{ loc }}</option>
                   <option value="other">Other (specify below)</option>
                 </select>
-                <div v-if="errors.location" class="invalid-feedback">
-                  {{ errors.location }}
-                </div>
+                <div v-if="errors.location" class="invalid-feedback">{{ errors.location }}</div>
               </div>
-
               <div class="mb-3">
-                <!-- Address Details -->
                 <label class="form-label">Address</label>
                 <input v-model="eventForm.address" type="text" placeholder="Street address" class="form-control mb-3" />
                 <div class="row g-3">
@@ -433,21 +345,18 @@ const removeOption = (question, optionIndex) => {
                   </div>
                 </div>
               </div>
-
               <div class="mb-3">
                 <p class="small fst-italic text-muted">
-                  The address information helps attendees locate your event. It will be displayed on the event details
-                  page.
+                  The address information helps attendees locate your event. It will be displayed on the event details page.
                 </p>
               </div>
             </div>
-
+            
             <!-- Tickets Tab -->
             <div v-if="activeTab === 'tickets'" class="mb-4">
               <div v-if="errors.tickets" class="alert alert-danger">
                 {{ errors.tickets }}
               </div>
-
               <div v-for="(ticket, index) in ticketTypes" :key="ticket.id" class="bg-light p-3 rounded mb-3">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                   <h3 class="h6 mb-0">Ticket Type {{ index + 1 }}</h3>
@@ -456,7 +365,6 @@ const removeOption = (question, optionIndex) => {
                     <i class="pi pi-trash"></i>
                   </button>
                 </div>
-
                 <div class="row g-3 mb-3">
                   <div class="col-12 col-md-6">
                     <label class="form-label">Name</label>
@@ -464,11 +372,9 @@ const removeOption = (question, optionIndex) => {
                   </div>
                   <div class="col-12 col-md-6">
                     <label class="form-label">Description</label>
-                    <input v-model="ticket.description" type="text" placeholder="Brief description of this ticket type"
-                      class="form-control" />
+                    <input v-model="ticket.description" type="text" placeholder="Brief description of this ticket type" class="form-control" />
                   </div>
                 </div>
-
                 <div class="row g-3">
                   <div class="col-12 col-md-6">
                     <label class="form-label">Price ($)</label>
@@ -480,23 +386,20 @@ const removeOption = (question, optionIndex) => {
                   </div>
                 </div>
               </div>
-
               <div class="mb-3">
                 <button @click="addTicketType" type="button" class="btn btn-link text-primary">
                   <i class="pi pi-plus me-1"></i>
                   Add Another Ticket Type
                 </button>
               </div>
-
               <div class="alert alert-warning">
                 <h4 class="h6">Important Note</h4>
                 <p class="small">
-                  Make sure the total number of tickets available does not exceed the event capacity. Current capacity: {{
-                    eventForm.capacity }} attendees.
+                  Make sure the total number of tickets available does not exceed the event capacity. Current capacity: {{ eventForm.capacity }} attendees.
                 </p>
               </div>
             </div>
-
+            
             <!-- Features Tab -->
             <div v-if="activeTab === 'features'" class="mb-4">
               <div>
@@ -504,23 +407,19 @@ const removeOption = (question, optionIndex) => {
                 <p class="small text-muted mb-3">
                   List the key features or highlights of your event that would attract attendees.
                 </p>
-
                 <div v-for="(feature, index) in eventForm.features" :key="index" class="d-flex align-items-center mb-3">
-                  <input v-model="eventForm.features[index]" type="text"
-                    placeholder="e.g. Networking opportunities, Free refreshments, etc." class="form-control" />
-                  <button @click="removeFeature(index)" type="button" class="btn btn-link text-danger ms-2"
-                    :disabled="eventForm.features.length <= 1">
+                  <input v-model="eventForm.features[index]" type="text" placeholder="e.g. Networking opportunities, Free refreshments, etc." class="form-control" />
+                  <button @click="removeFeature(index)" type="button" class="btn btn-link text-danger ms-2" :disabled="eventForm.features.length <= 1">
                     <i class="pi pi-times"></i>
                   </button>
                 </div>
-
                 <button @click="addFeature" type="button" class="btn btn-link text-primary mt-2">
                   <i class="pi pi-plus me-1"></i>
                   Add Another Feature
                 </button>
               </div>
             </div>
-
+            
             <!-- Questionnaire Tab -->
             <div v-if="activeTab === 'questionnaire'" class="mb-4">
               <div class="d-flex justify-content-between align-items-center mb-3">
@@ -535,7 +434,6 @@ const removeOption = (question, optionIndex) => {
                   Add Question
                 </button>
               </div>
-
               <div v-if="!questions.length" class="alert alert-light text-center">
                 <div class="text-muted mb-2">
                   <i class="pi pi-list-alt"></i>
@@ -549,10 +447,8 @@ const removeOption = (question, optionIndex) => {
                   Add First Question
                 </button>
               </div>
-
               <div v-else class="mb-4">
-                <div v-for="(question, index) in questions" :key="question.id"
-                  class="bg-white border rounded overflow-hidden mb-3">
+                <div v-for="(question, index) in questions" :key="question.id" class="bg-white border rounded overflow-hidden mb-3">
                   <!-- Question header -->
                   <div class="bg-light px-3 py-2 d-flex justify-content-between align-items-center border-bottom">
                     <div class="d-flex align-items-center">
@@ -571,14 +467,12 @@ const removeOption = (question, optionIndex) => {
                       </button>
                     </div>
                   </div>
-
                   <!-- Question content -->
                   <div class="p-3">
                     <div class="mb-3">
                       <label class="form-label">Question Text</label>
                       <input v-model="question.text" type="text" placeholder="Enter your question" class="form-control" />
                     </div>
-
                     <div class="mb-3">
                       <label class="form-label">Question Type</label>
                       <select v-model="question.type" class="form-select">
@@ -593,42 +487,33 @@ const removeOption = (question, optionIndex) => {
                       </select>
                     </div>
                   </div>
-
                   <!-- Options for select, radio or checkbox types -->
                   <div v-if="['select', 'radio', 'checkbox'].includes(question.type)" class="mb-3 p-3">
                     <label class="form-label mb-2">Options</label>
-                    <div v-for="(option, optionIndex) in question.options" :key="optionIndex"
-                      class="d-flex align-items-center mb-2">
-                      <input v-model="question.options[optionIndex]" type="text" placeholder="Option text"
-                        class="form-control" />
-                      <button @click="removeOption(question, optionIndex)" type="button"
-                        class="btn btn-link text-danger ms-2" :disabled="question.options.length <= 1">
+                    <div v-for="(option, optionIndex) in question.options" :key="optionIndex" class="d-flex align-items-center mb-2">
+                      <input v-model="question.options[optionIndex]" type="text" placeholder="Option text" class="form-control" />
+                      <button @click="removeOption(question, optionIndex)" type="button" class="btn btn-link text-danger ms-2" :disabled="question.options.length <= 1">
                         <i class="pi pi-times"></i>
                       </button>
                     </div>
-
                     <button @click="addOption(question)" type="button" class="btn btn-link text-primary mt-2 small">
                       <i class="pi pi-plus me-1"></i>
                       Add Option
                     </button>
                   </div>
-
                   <!-- Additional settings -->
                   <div class="d-flex align-items-center gap-3">
                     <label class="d-flex align-items-center mb-0">
                       <input v-model="question.required" type="checkbox" class="form-check-input me-2" />
                       <span class="small text-dark">Required</span>
                     </label>
-
-                    <label v-if="question.type === 'text' || question.type === 'textarea'"
-                      class="d-flex align-items-center mb-0">
+                    <label v-if="question.type === 'text' || question.type === 'textarea'" class="d-flex align-items-center mb-0">
                       <input v-model="question.hasMaxLength" type="checkbox" class="form-check-input me-2" />
                       <span class="small text-dark">Set max length</span>
                     </label>
                   </div>
                 </div>
               </div>
-
               <div class="alert alert-info">
                 <h4 class="h6 fw-semibold mb-1">Tips for Creating Questions</h4>
                 <ul class="list-disc list-inside small text-info">
@@ -639,13 +524,10 @@ const removeOption = (question, optionIndex) => {
                 </ul>
               </div>
             </div>
-
+            
             <!-- Form Actions -->
             <div class="mt-4 pt-3 border-top d-flex justify-content-end gap-3">
-              <button @click="cancelForm" type="button" class="btn btn-outline-secondary">
-                Cancel
-              </button>
-
+              <button @click="cancelForm" type="button" class="btn btn-outline-secondary">Cancel</button>
               <button type="submit" class="btn btn-primary d-flex align-items-center" :disabled="saving">
                 <span v-if="!saving">{{ isEditMode ? 'Update Event' : 'Create Event' }}</span>
                 <span v-else class="d-flex align-items-center">
@@ -666,3 +548,5 @@ const removeOption = (question, optionIndex) => {
   background-color: #e9ecef;
 }
 </style>
+
+

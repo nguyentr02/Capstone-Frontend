@@ -11,7 +11,7 @@ const router = useRouter()
 const route = useRoute()
 
 // 获取当前活动 id
-const eventId = parseInt(route.params.eventId)
+const eventId = parseInt(route.params.id)
 
 const loading = ref(true)
 const activeTab = ref('ticketTypes')
@@ -107,11 +107,6 @@ onMounted(() => {
   }, 500)
 })
 
-// 方法：跳转到活动详情页面
-const viewEventDetails = (eventId) => {
-  router.push(`/admin/events/${eventId}`)
-}
-
 // 方法：票务管理按钮，点击后跳转到票务管理详情页面，传入当前 event 的 id
 const manageTickets = (eventId) => {
   // 请确保票务管理详情页面路由配置为 /admin/tickets/ticketsView/:id
@@ -200,7 +195,6 @@ const getStatusClass = (status) => {
                     <i v-if="sortBy === 'tickets'" :class="sortOrder === 'asc' ? 'pi pi-sort-up' : 'pi pi-sort-down'" class="ms-1"></i>
                   </div>
                 </th>
-                <!-- 去掉 Revenue 列 -->
                 <th class="px-3 py-2 text-center fs-6 text-muted">Actions</th>
               </tr>
             </thead>
@@ -227,15 +221,10 @@ const getStatusClass = (status) => {
                   </div>
                 </td>
                 <td class="px-3 py-2 text-center">
-                  <div class="d-flex justify-content-center gap-2">
                     <!-- 查看详情与票务管理（编辑）按钮 -->
-                    <button @click="viewEventDetails(event.id)" class="btn btn-link text-primary p-0" title="View Details">
-                      <i class="pi pi-eye"></i>
+                    <button @click="manageTickets(event.id)" class="btn btn-link text-primary p-0" title="Manage Tickets">
+                      <i class="pi pi-pencil"></i>
                     </button>
-                    <button @click="manageTickets(event.id)" class="btn btn-link text-success p-0" title="Manage Tickets">
-                      <i class="pi pi-pencil fs-5"></i>
-                    </button>
-                  </div>
                 </td>
               </tr>
               <tr v-if="filteredEvents.length === 0">

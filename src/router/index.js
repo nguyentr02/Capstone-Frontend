@@ -150,6 +150,11 @@ const routes = [{
     path: "/admin/tickets/edit/:id",
     name: "Ticketedit",
     component: () => import("@/views/admin/Tickets/TicketTypeEdit.vue")
+  },
+  {
+    path: "/admin/Questionnaire",
+    name: "QuestionnaireView",
+    component: () => import("@/views/admin/Questionnaire/QuestionnaireView.vue")
   }
   /*
   {

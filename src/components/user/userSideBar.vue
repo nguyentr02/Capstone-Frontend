@@ -17,11 +17,11 @@ const activeItem = ref('dashboard')
 // Menu structure
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: 'pi pi-home', route: '/user/profile' },
-  { id: 'events', label: 'Events', icon: 'pi pi-calendar', route: '/admin/events' },
-  { id: 'users', label: 'Users', icon: 'pi pi-users', route: '/admin/users' },
-  { id: 'tickets', label: 'Tickets', icon: 'pi pi-ticket', route: '/admin/tickets' },
-  { id: 'reports', label: 'Reports', icon: 'pi pi-chart-bar', route: '/admin/reports' },
-  { id: 'settings', label: 'Settings', icon: 'pi pi-cog', route: '/admin/settings' }
+  { id: 'events', label: 'Events', icon: 'pi pi-calendar', route: '/user/events' },
+  { id: 'users', label: 'Information', icon: 'pi pi-users', route: '/user/management' },
+  // { id: 'tickets', label: 'Tickets', icon: 'pi pi-ticket', route: '/admin/tickets' },
+  // { id: 'reports', label: 'Reports', icon: 'pi pi-chart-bar', route: '/admin/reports' },
+  // { id: 'settings', label: 'Settings', icon: 'pi pi-cog', route: '/admin/settings' }
 ]
 
 const sidebarClass = computed(() => {

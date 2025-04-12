@@ -9,6 +9,8 @@ import Questionnaire from '@/views/Questionnaire.vue';
 import Review from '@/views/Review.vue';
 import Checkout from '@/views/Checkout.vue';
 import UserProfileView from "@/views/UserProfileView.vue";
+import UserManagementView from "@/views/userManagementView.vue";
+import userEventView from "@/views/userEventView.vue";
 
 const routes = [
   { path: "/", component: Home },
@@ -46,6 +48,18 @@ const routes = [
     component: Checkout,
   },
   { path: "/user/profile", component: UserProfileView},
+
+  {
+    path: '/user/management',
+    name: "userManagement",
+    component: UserManagementView
+  },
+
+  {
+    path: '/user/events',
+    name: "userEvents",
+    component: userEventView
+  }
 ];
 
 const router = createRouter({

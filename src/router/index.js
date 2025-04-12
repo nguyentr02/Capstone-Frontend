@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "@/views/home.vue";
-import UserManagementView from "@/views/userManagementView.vue";
-import userEventView from "@/views/userEventView.vue";
+import UserManagementView from "@/views/user/userManagementView.vue";
+import userEventView from "@/views/user/userEventView.vue";
 import Events from "@/views/event/events.vue";
 import SignIn from "@/views/auth/signIn.vue";
 import SignUp from "@/views/auth/signUp.vue";

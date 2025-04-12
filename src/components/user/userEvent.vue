@@ -107,7 +107,7 @@ const getStatusClass = (status) => {
 </script>
 
 <template>
-    <div class="p-4">
+    <div class="container">
       <div class="mb-4">
         <h1 class="h3 text-gray-800">Event Management</h1>
         <p class="text-gray-600 mt-1">Create, edit and manage your events</p>
@@ -120,10 +120,9 @@ const getStatusClass = (status) => {
               <input
                 v-model="searchQuery"
                 type="text"
-                placeholder="Search events..."
-                class="form-control ps-5"
+                placeholder="Search events"
+                class="form-control ps-2"
               />
-              <i class="bi bi-search position-absolute top-50 translate-middle-y ms-3 text-gray-400"></i>
             </div>
 
             <select
@@ -148,7 +147,7 @@ const getStatusClass = (status) => {
         </div>
       </div>
 
-      <div class=" rounded overflow-hidden">
+
           <!-- <table class="table table-striped table-hover table-responsive">
             <thead>
               <tr class="bg-light border-bottom">
@@ -192,135 +191,69 @@ const getStatusClass = (status) => {
                 </th>
                 <th class="py-3 text-center">Actions</th>
               </tr>
-            </thead>
+            </thead> -->
 
-            <tbody>
-              <tr
-                v-for="event in filteredEvents"
-                :key="event.id"
-                class="hover:bg-light transition-colors"
-              >
-                <td class="py-2">
-                  <div class="fw-semibold text-gray-800">{{ event.name }}</div>
-                  <div class="text-sm text-gray-500">{{ event.organizer }}</div>
-                </td>
-                <td class="py-2">
-                  <div class="text-gray-800">{{ formatDate(event.date) }}</div>
-                  <div class="text-sm text-gray-500">{{ event.time }}</div>
-                </td>
-                <td class="py-2 text-gray-800">{{ event.location }}</td>
-                <td class="py-2">
-                  <span
-                    :class="getStatusClass(event.status)"
-                    class="badge rounded-pill"
-                  >
-                    {{ event.status }}
-                  </span>
-                </td>
-                <td class="py-2 text-gray-800">
-                  {{ event.ticketsSold }} / {{ event.capacity }}
-                  <div class="progress mt-1">
-                    <div
-                      class="progress-bar bg-primary"
-                      role="progressbar"
-                      :style="{ width: `${(event.ticketsSold / event.capacity) * 100}%` }"
-                      :aria-valuenow="(event.ticketsSold / event.capacity) * 100"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                </td>
-                <td class="py-2 text-gray-800">{{ event.revenue }}</td>
-                <td class="py-2 text-center">
+
+          <div
+          v-for="(event, index) in filteredEvents"
+          :key="event.id"
+          class="mt-2 mb-2 rounded bg-white p-3  eventCard"
+          :style="{ 'animation-delay': `${index * 0.1}s` }"
+          :class="{ 
+            'fadeInLeft-animation': true,
+          }"
+          @animationend="$event.target.classList.add('animated')"
+          >
+            <div class="row">
+              <div class="col-xl-3 col-sm-6">
+                <div class="fw-semibold text-gray-800">{{ event.name }}</div>
+                <div class="text-sm text-gray-500">{{ event.organizer }}</div>
+              </div>
+              <div class="col-xl-2 col-sm-6">
+                <div class="text-gray-800">{{ formatDate(event.date) }}</div>
+                <div class="text-sm text-gray-500">{{ event.time }}</div>
+              </div>
+              <div class="col-xl-3 col-sm-6 col-xs-12">
+                <div class="py-2 text-gray-800">{{ event.location }}</div>
+              </div>
+              <div class="col-xl-1 col-sm-3 col-xs-6"> 
+                <span
+                  :class="getStatusClass(event.status)"
+                  class="badge rounded-pill"
+                >
+                  {{ event.status }}
+                </span>
+              </div>
+              <div class="col-xl-1 col-sm-3 col-xs-6">
+                <span class="py-2 fw-semibold text-gray-800">{{ event.revenue }}</span>
+              </div>
+              <div class="col">
+                <div class="py-2 text-center">
                   <div class="d-flex justify-content-center gap-2">
                     <button
                       @click="viewEventDetails(event.id)"
                       class="btn btn-sm btn-outline-primary"
                       title="View Details"
                     >
-                      <i class="bi bi-eye-fill"></i>
+                      <i class="pi pi-eye"></i>
                     </button>
                     <button
                       @click="editEvent(event.id)"
                       class="btn btn-sm btn-outline-success"
                       title="Edit Event"
                     >
-                      <i class="bi bi-pencil-fill"></i>
+                      <i class="pi pi-pencil"></i>
                     </button>
                     <button
                       @click="deleteEvent(event.id)"
                       class="btn btn-sm btn-outline-danger"
                       title="Delete Event"
                     >
-                      <i class="bi bi-trash-fill"></i>
+                      <i class="pi pi-trash"></i>
                     </button>
                   </div>
-                </td>
-              </tr>
-
-              <tr v-if="filteredEvents.length === 0">
-                <td colspan="7" class="py-4 text-center text-gray-500">
-                  <div class="d-flex flex-column align-items-center">
-                    <i class="bi bi-calendar-x-fill text-4xl mb-2"></i>
-                    <p class="fw-semibold">No events found</p>
-                    <p class="text-sm mt-1">Try adjusting your filters or create a new event</p>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table> -->
-
-          <div v-for="event in filteredEvents":key="event.id"  class = "mt-2 mb-2 rounded bg-white p-3 shadow">
-            <div class = "row">
-                <div class = "col-3">
-                    <div class="fw-semibold text-gray-800">{{ event.name }}</div>
-                    <div class="text-sm text-gray-500">{{ event.organizer }}</div>
                 </div>
-                <div class = "col-2">
-                    <div class="text-gray-800">{{ formatDate(event.date) }}</div>
-                    <div class="text-sm text-gray-500">{{ event.time }}</div>
-                </div>
-                <div class = "col-3">
-                    <div class="py-2 text-gray-800">{{ event.location }}</div>
-                </div>
-                <div class = "col-1">
-                    <span
-                        :class="getStatusClass(event.status)"
-                        class="badge rounded-pill"
-                    >
-                        {{ event.status }}
-                    </span>
-                </div>
-                <div class = "col-1">
-                    <span class="py-2 text-gray-800">{{ event.revenue }}</span>
-                </div>
-                <div class = "col">
-                    <div class="py-2 text-center">
-                    <div class="d-flex justify-content-center gap-2">
-                        <button
-                        @click="viewEventDetails(event.id)"
-                        class="btn btn-sm btn-outline-primary"
-                        title="View Details"
-                        >
-                        <i class="bi bi-eye-fill"></i>
-                        </button>
-                        <button
-                        @click="editEvent(event.id)"
-                        class="btn btn-sm btn-outline-success"
-                        title="Edit Event"
-                        >
-                        <i class="bi bi-pencil-fill"></i>
-                        </button>
-                        <button
-                        @click="deleteEvent(event.id)"
-                        class="btn btn-sm btn-outline-danger"
-                        title="Delete Event"
-                        >
-                        <i class="bi bi-trash-fill"></i>
-                        </button>
-                    </div>
-                    </div>
-                </div>
+              </div>
             </div>
           </div>
 
@@ -343,11 +276,36 @@ const getStatusClass = (status) => {
               Next
             </button>
           </div>
-        </div>
+
       </div>
     </div>
 </template>
 
 <style scoped>
-/* Any custom styles can be added here */
+.eventCard {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  transform: translateX(-50px);
+}
+
+.eventCard:hover {
+  transform: scale(1.02) translateX(0) !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  opacity: 1; 
+}
+
+@keyframes fadeInLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  100% {
+    opacity: 1;
+    transform: none; /* Change this to 'none' instead of translateX(0) */
+  }
+}
+
+.eventCard.fadeInLeft-animation {
+  animation: 0.75s fadeInLeft forwards;
+}
 </style>

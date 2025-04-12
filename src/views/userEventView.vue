@@ -56,12 +56,12 @@ onUnmounted(() => {
 
     <main
       :style="{ marginLeft: sidebarCollapsed ? '64px' : '240px' }"
-      style="background-color: #f5f7f1;"
+      style="background-color: #f8f9fa;"
       class="main-content transition-all duration-300"
       :class="{ 'content-dimmed': showSidebarOverlay }"
     >
       <userNavBar @toggle-sidebar="toggleSidebar"/>
-      <userEvent />
+      <userEvent  class = "mt-4"/>
       <router-view />
     </main>
   </div>

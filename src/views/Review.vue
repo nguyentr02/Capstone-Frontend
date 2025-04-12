@@ -3,7 +3,8 @@
     <navbar />
     <StepIndicator
       :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']"
-      :currentStep="3"
+      :currentStep="currentStep"
+      @step-clicked="handleStepClick"
     />
 
     <div class="container mt-4">
@@ -108,7 +109,32 @@ import navbar from '@/components/navbar.vue'
 const router = useRouter()
 const ticketStore = useTicketStore()
 
-// Index of tickets currently being previewed
+// Steps completed on the current page (this page is a Review page with step index 3)
+// Only allow users to click on completed steps that are smaller than currentStep
+const currentStep = 3
+
+// Harmonized step-by-step route mapping, adjusted to project realities
+const stepRoutes = {
+  0: 'SelectCategory',
+  1: 'PersonalInfo',
+  2: 'Questionnaire',
+  3: 'Review',
+  4: 'Checkout'
+}
+
+// Handling of step click events: jumps are allowed only if the clicked step index is less than currentStep
+const handleStepClick = (stepIndex) => {
+  if (stepIndex < currentStep) {
+    const targetRoute = stepRoutes[stepIndex]
+    if (targetRoute) {
+      router.push({ name: targetRoute })
+    } else {
+      console.warn(`No route defined for step ${stepIndex}`)
+    }
+  }
+}
+
+// Ticket index for the current preview
 const currentTicketIndex = ref(0)
 const currentTicket = computed(() => ticketStore.ticketList[currentTicketIndex.value])
 
@@ -134,7 +160,7 @@ const goBackToPersonalInfo = () => {
 }
 
 const goToCheckout = () => {
-  // The ticketStore.ticketList can be filtered before submission.
+  // The ticketStore.ticketList can be filtered or processed for submission here
   router.push({ name: 'Checkout' })
 }
 </script>

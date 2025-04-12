@@ -3,7 +3,7 @@
     <navbar />
     <StepIndicator
       :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']"
-      :currentStep="1"
+      :currentStep="currentStep"
       @step-clicked="handleStepClick"
     />
 
@@ -176,11 +176,37 @@ import navbar from '@/components/navbar.vue'
 const router = useRouter()
 const ticketStore = useTicketStore()
 
-// Index of tickets currently being edited
+// Steps completed on the current page (this page is a Complete Info page, step index is 1)
+// Only allow the user to click on steps smaller than currentStep (e.g. to return to the ticket selection page)
+const currentStep = 1
+
+// Define step index and route name mapping, please adjust according to the actual project routing configuration
+const stepRoutes = {
+  0: 'SelectCategory',
+  1: 'CompleteInfo',    
+  2: 'Questionnaire',
+  3: 'Review',
+  4: 'Checkout'
+}
+
+// Step Indicator Click Handler Function
+const handleStepClick = (clickedStep) => {
+  // Allows to return the completed step only if the clicked step index is less than the currentStep of the current page
+  if (clickedStep < currentStep) {
+    const routeName = stepRoutes[clickedStep]
+    if (routeName) {
+      router.push({ name: routeName })
+    } else {
+      console.warn(`未找到步骤 ${clickedStep} 对应的路由名称`)
+    }
+  }
+}
+
+// Index of currently edited tickets
 const currentTicketIndex = ref(0)
 const currentTicket = computed(() => ticketStore.ticketList[currentTicketIndex.value])
 
-// Determine whether a ticket is fully filled out (simple judgement of the presence of required fields only)
+// Determine if ticket information is completely filled out (only simple determination of whether required fields exist)
 const isTicketComplete = (ticket) => {
   return (
     ticket.email?.trim() &&
@@ -201,7 +227,7 @@ const goBack = () => {
   router.push({ name: 'SelectCategory' })
 }
 
-// Verify that all ticket information is completely filled out
+// Verify that all ticket form information is complete
 const validateForm = () => {
   let isValid = true
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -215,12 +241,20 @@ const validateForm = () => {
       ticket.errors.email = 'Incorrect mailbox format'
       isValid = false
     }
+    
     if (!ticket.firstName.trim()) {
       ticket.errors.firstName = 'First name cannot be empty'
       isValid = false
+    } else if (/^\d+$/.test(ticket.firstName.trim())) {
+      ticket.errors.firstName = 'First name cannot consist solely of digits'
+      isValid = false
     }
+    
     if (!ticket.lastName.trim()) {
       ticket.errors.lastName = 'Last name cannot be empty'
+      isValid = false
+    } else if (/^\d+$/.test(ticket.lastName.trim())) {
+      ticket.errors.lastName = 'Last name cannot consist solely of digits'
       isValid = false
     }
     if (!phonePattern.test(ticket.phoneNumber)) {

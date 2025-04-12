@@ -5,6 +5,7 @@
       :key="index"
       class="step"
       :class="{ active: index === currentStep }"
+      @click="onStepClick(index)"
     >
       <span class="step-number">{{ index + 1 }}</span>
       <span class="step-label">{{ step }}</span>
@@ -13,12 +14,28 @@
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, defineEmits } from "vue";
 
-defineProps({
-  steps: Array,
-  currentStep: Number,
+const props = defineProps({
+  steps: {
+    type: Array,
+    required: true,
+  },
+  currentStep: {
+    type: Number,
+    required: true,
+  },
 });
+
+const emit = defineEmits(["step-clicked"]);
+
+/**
+ * Sends an event to the parent component when a step is clicked
+ * @param {Number} index Index of clicked steps
+ */
+const onStepClick = (index) => {
+  emit("step-clicked", index);
+};
 </script>
 
 <style scoped>
@@ -37,6 +54,7 @@ defineProps({
   padding: 8px 15px;
   border-radius: 20px;
   background-color: #ddd;
+  cursor: pointer;
 }
 
 .step.active {

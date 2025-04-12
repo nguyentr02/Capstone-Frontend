@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div>
     <navbar />
     <div class="bg-custom">
@@ -58,20 +58,73 @@
           </button>
         </div>
 
-        <h4 class="fw-bold pt-5 ms-5 font-custom">Events</h4>
+        <div class="container-fluid d-flex justify-content-between mb-3">
+          <h4 class="fw-bold pt-5 ms-5 font-custom">Events</h4>
+          <div class="btn-group">
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              style=""
+              :class="{ active: viewMode === 'grid' }"
+              @click="setViewMode('grid')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-grid"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"
+                ></path>
+              </svg>
+              <span class="visually-hidden">Button</span>
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary"
+              :class="{ active: viewMode === 'list' }"
+              @click="setViewMode('list')"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-list-task"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"
+                ></path>
+                <path
+                  d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"
+                ></path>
+                <path
+                  fill-rule="evenodd"
+                  d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"
+                ></path>
+              </svg>
+              <span class="visually-hidden">Button</span>
+            </button>
+          </div>
+        </div>
+
         <div class="row justify-content-center">
           <div
             class="card col-4 m-3 card-fixed-width"
             v-for="event in sortedEvents"
             :key="event.id"
+            v-if="viewMode === 'grid'"
           >
             <!-- Use router-link instead of a tag -->
-            <router-link :to="{ name: 'EventDetail', params: { id: event.id } }">
-              <img
-                :src="event.banner"
-                class="card-img-top"
-                alt="img"
-              />
+            <router-link
+              :to="{ name: 'EventDetail', params: { id: event.id } }"
+            >
+              <img :src="event.banner" class="card-img-top" alt="img" />
             </router-link>
             <div class="card-body">
               <router-link
@@ -86,6 +139,31 @@
               <p class="card-text">Price: ${{ event.price }}</p>
             </div>
           </div>
+
+          <table class="table" v-if="viewMode === 'list'">
+            <!-- Use router-link instead of a tag -->
+            <thead>
+              <tr>
+                <th scope="col">Event name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Activity</th>
+                <th scope="col">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="event in sortedEvents"
+                :key="event.id"
+                style="cursor: pointer"
+                @click="navigateToDetails(event.id)"
+              >
+                <th scope="row">{{ event.name }}</th>
+                <td>{{ event.description }}</td>
+                <td>{{ event.activity }}</td>
+                <td>{{ event.price }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -102,7 +180,20 @@
 <script setup>
 import navbar from "@/components/navbar.vue";
 import FilterPopup from "@/components/FilterPopup.vue";
+import { useRouter } from 'vue-router';
 import { ref, computed } from "vue";
+
+const viewMode = ref("grid");
+const router = useRouter();
+
+function setViewMode(mode) {
+  viewMode.value = mode;
+  console.log(viewMode.value);
+}
+
+function navigateToDetails(itemId) {
+  router.push({ name: "EventDetail", params: { id: itemId } });
+}
 
 // Event data
 const events = ref([
@@ -113,7 +204,8 @@ const events = ref([
     activity: "Sport",
     price: 120,
     startTime: "2025-05-10T09:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 6,
@@ -122,7 +214,8 @@ const events = ref([
     activity: "Music",
     price: 90,
     startTime: "2025-05-08T14:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 7,
@@ -131,7 +224,8 @@ const events = ref([
     activity: "Art",
     price: 130,
     startTime: "2025-05-12T11:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 8,
@@ -140,7 +234,8 @@ const events = ref([
     activity: "Food",
     price: 60,
     startTime: "2025-05-09T10:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 9,
@@ -149,7 +244,8 @@ const events = ref([
     activity: "Sport",
     price: 150,
     startTime: "2025-05-11T16:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 10,
@@ -158,7 +254,8 @@ const events = ref([
     activity: "Music",
     price: 200,
     startTime: "2025-05-07T13:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 11,
@@ -167,7 +264,8 @@ const events = ref([
     activity: "Art",
     price: 80,
     startTime: "2025-05-13T15:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 12,
@@ -176,7 +274,8 @@ const events = ref([
     activity: "Food",
     price: 100,
     startTime: "2025-05-06T08:30",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 13,
@@ -185,7 +284,8 @@ const events = ref([
     activity: "Sport",
     price: 120,
     startTime: "2025-05-14T10:30",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 14,
@@ -194,7 +294,8 @@ const events = ref([
     activity: "Music",
     price: 180,
     startTime: "2025-05-05T17:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 15,
@@ -203,7 +304,8 @@ const events = ref([
     activity: "Art",
     price: 250,
     startTime: "2025-05-15T09:30",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 16,
@@ -212,7 +314,8 @@ const events = ref([
     activity: "Food",
     price: 30,
     startTime: "2025-05-04T12:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
 
   {
@@ -222,7 +325,8 @@ const events = ref([
     activity: "Sport",
     price: 110,
     startTime: "2025-05-16T08:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 18,
@@ -231,7 +335,8 @@ const events = ref([
     activity: "Music",
     price: 140,
     startTime: "2025-05-17T19:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 19,
@@ -240,7 +345,8 @@ const events = ref([
     activity: "Art",
     price: 95,
     startTime: "2025-05-18T11:30",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 20,
@@ -249,7 +355,8 @@ const events = ref([
     activity: "Food",
     price: 85,
     startTime: "2025-05-19T12:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 21,
@@ -258,7 +365,8 @@ const events = ref([
     activity: "Sport",
     price: 75,
     startTime: "2025-05-20T07:30",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 22,
@@ -267,16 +375,19 @@ const events = ref([
     activity: "Music",
     price: 220,
     startTime: "2025-05-21T20:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 23,
     name: "Event 19",
-    description: "An art fair showcasing local talents and creative exhibitions.",
+    description:
+      "An art fair showcasing local talents and creative exhibitions.",
     activity: "Art",
     price: 130,
     startTime: "2025-05-22T14:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
   },
   {
     id: 24,
@@ -285,8 +396,9 @@ const events = ref([
     activity: "Food",
     price: 50,
     startTime: "2025-05-23T11:00",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp"
-  }
+    banner:
+      "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
+  },
 ]);
 
 // Text for the search box
@@ -319,8 +431,7 @@ const filteredEvents = computed(() => {
           .includes(searchText.value.trim().toLowerCase());
     }
     if (filterCriteria.value.selectedActivity) {
-      match =
-        match && event.activity === filterCriteria.value.selectedActivity;
+      match = match && event.activity === filterCriteria.value.selectedActivity;
     }
     match =
       match &&
@@ -367,7 +478,7 @@ const handleApplyFilter = (criteria) => {
 
 /* Custom font */
 .font-custom {
-  font-family: 'Font';
+  font-family: "Font";
 }
 
 /* Custom left padding */
@@ -378,5 +489,10 @@ const handleApplyFilter = (criteria) => {
 /* Card fixed width */
 .card-fixed-width {
   width: 18rem;
+}
+
+.btn.active {
+  background-color: #007bff;
+  color: white;
 }
 </style>

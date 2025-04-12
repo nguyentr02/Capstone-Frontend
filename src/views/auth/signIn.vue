@@ -9,7 +9,7 @@
           style="width: 50%; border-radius: 20px"
           class="bg-white col-6 pb-3"
         >
-          <img src="../assets/logo.png" alt="logo" height="80" width="80" />
+          <img src="../../assets/logo.png" alt="logo" height="80" width="80" />
           <h1 style="font-family: 'Font'" class="text-warning">Log In</h1>
           <div class="mb-3 text-start">
             <label
@@ -113,8 +113,6 @@ export default {
         }),
       })
         .then((response) => {
-          // console.log("POST request successful:", response.json());
-
           return response.json();
         })
         .then((responseData) => {

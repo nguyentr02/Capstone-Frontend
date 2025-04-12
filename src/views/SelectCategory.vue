@@ -1,10 +1,11 @@
-<!-- src/views/SelectCategory.vue -->
 <template>
   <div>
     <navbar />
+
     <StepIndicator
       :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']"
-      :currentStep="0"
+      :currentStep="currentStep"
+      @step-clicked="handleStepClick"
     />
 
     <div class="container mt-5">
@@ -104,6 +105,32 @@ import navbar from '@/components/navbar.vue'
 const router = useRouter()
 const ticketStore = useTicketStore()
 
+// Steps that have been completed on the current page, ensuring that users cannot click ahead to future steps.
+// For this page, assume currentStep is 0 (i.e., no previous step has been completed and the user cannot go back to the previous step).
+const currentStep = 0
+
+// Define the mapping of step indexes and route names, adapted to the actual project routing configuration
+const stepRoutes = {
+  0: 'SelectCategory', 
+  1: 'PersonalInfo',
+  2: 'Questionnaire',
+  3: 'Review',
+  4: 'Checkout'
+}
+
+// When the step indicator is clicked
+const handleStepClick = (clickedStep) => {
+  // Allows to return the completed step only if the clicked step index is less than the currentStep of the current page
+  if (clickedStep < currentStep) {
+    const routeName = stepRoutes[clickedStep]
+    if (routeName) {
+      router.push({ name: routeName })
+    } else {
+      console.warn(`未找到步骤 ${clickedStep} 对应的路由名称`)
+    }
+  }
+}
+
 // Calculation of the total number of votes
 const totalTickets = computed(() => {
   const counts = ticketStore.ticketCounts
@@ -120,7 +147,7 @@ const decrement = (type) => {
 }
 
 const nextStep = () => {
-  // Generate default ticket data based on the number of tickets selected
+  // Generate default ticket data and jump to the next page
   ticketStore.generateTickets()
   router.push({ name: 'PersonalInfo' })
 }

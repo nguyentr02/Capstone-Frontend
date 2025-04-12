@@ -2,7 +2,11 @@
 <template>
   <div>
     <navbar />
-    <StepIndicator :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']" :currentStep="4" />
+    <StepIndicator
+      :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']"
+      :currentStep="currentStep"
+      @step-clicked="handleStepClick"
+    />
 
     <div class="container mt-4">
       <h2 class="text-center mb-4">Checkout</h2>
@@ -207,6 +211,31 @@ import navbar from '@/components/navbar.vue'
 const router = useRouter()
 const ticketStore = useTicketStore()
 
+// step completed on the current page (step index 4 on the Checkout page)
+// Only allow users to click on completed steps that are smaller than the current page.
+const currentStep = 4
+
+// Unified step routing mapping, adjusted according to the actual project routing configuration
+const stepRoutes = {
+  0: 'SelectCategory',
+  1: 'PersonalInfo',
+  2: 'Questionnaire',
+  3: 'Review',
+  4: 'Checkout'
+}
+
+// Handling step click events: jumps are performed only if the step index clicked is less than currentStep
+const handleStepClick = (stepIndex) => {
+  if (stepIndex < currentStep) {
+    const targetRoute = stepRoutes[stepIndex]
+    if (targetRoute) {
+      router.push({ name: targetRoute })
+    } else {
+      console.warn(`No route defined for step ${stepIndex}`)
+    }
+  }
+}
+
 // Payment form fields
 const cardNumber = ref("")
 const cardType = ref("")
@@ -219,7 +248,7 @@ const suburb = ref("")
 const postcode = ref("")
 const paymentAllowed = ref(false)
 
-// false
+// error message object (computing)
 const errorMessages = ref({
   cardNumber: "",
   cardType: "",
@@ -233,7 +262,7 @@ const errorMessages = ref({
   paymentAllowed: ""
 })
 
-// Sample Fare Methods
+// Example fare method
 function getTicketPrice(type) {
   switch (type) {
     case "adultWalk": return 45
@@ -260,7 +289,7 @@ function ticketTypeLabel(type) {
 }
 
 function confirmOrder() {
-  // Clearing Error Alerts
+  // Clear the error message
   errorMessages.value = {
     cardNumber: "",
     cardType: "",
@@ -287,6 +316,9 @@ function confirmOrder() {
   }
   if (cardHolderName.value.trim() === "") {
     errorMessages.value.cardHolderName = "Card holder name is required."
+    valid = false
+  } else if (/^\d+$/.test(cardHolderName.value.trim())) {
+    errorMessages.value.cardHolderName = "Card holder name cannot consist solely of digits."
     valid = false
   }
   if (!/^\d{2}\/\d{2}$/.test(expiry.value)) {
@@ -320,9 +352,15 @@ function confirmOrder() {
   if (city.value.trim() === "") {
     errorMessages.value.city = "City is required."
     valid = false
+  } else if (/^\d+$/.test(city.value.trim())) {
+    errorMessages.value.city = "City cannot consist solely of digits."
+    valid = false
   }
   if (suburb.value.trim() === "") {
     errorMessages.value.suburb = "Suburb is required."
+    valid = false
+  } else if (/^\d+$/.test(suburb.value.trim())) {
+    errorMessages.value.suburb = "Suburb cannot consist solely of digits."
     valid = false
   }
   if (!/^\d{4,5}$/.test(postcode.value)) {

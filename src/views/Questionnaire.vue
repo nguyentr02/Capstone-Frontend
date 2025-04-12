@@ -3,7 +3,7 @@
     <navbar />
     <StepIndicator
       :steps="['Select Ticket', 'Complete Info', 'Questionnaire', 'Review', 'Checkout']"
-      :currentStep="2"
+      :currentStep="currentStep"
       @step-clicked="handleStepClick"
     />
 
@@ -161,20 +161,28 @@ const router = useRouter()
 const ticketStore = useTicketStore()
 const teamOptionError = ref('')
 
-// Index of tickets edited by the current questionnaire
+// Steps completed on the current page (this page is Questionnaire, step index is 2)
+// Only switch to the corresponding page if the step index of the clicked step is less than currentStep.
+const currentStep = 2
+
+// Index of currently edited tickets
 const currentTicketIndex = ref(0)
 const currentTicket = computed(() => ticketStore.ticketList[currentTicketIndex.value])
 
-// Determining whether a questionnaire is complete for a particular ticket (simple example: checking if required fields are empty)
+// Determine whether the questionnaire is complete (example: detect required fields)
 const isTicketComplete = (ticket) => {
   const survey = ticket.survey || {}
-  return survey.emergencyContactName?.trim() && survey.emergencyContactPhone?.trim() &&
-         survey.hasMedicalCondition && survey.reason?.trim().length >= 10
+  return (
+    survey.emergencyContactName?.trim() &&
+    survey.emergencyContactPhone?.trim() &&
+    survey.hasMedicalCondition &&
+    survey.reason?.trim().length >= 10
+  )
 }
 
 const phonePattern = /^[0-9]{10,15}$/
 
-// Modify validation logic: iterate through all tickets for validation
+// Validate questionnaire information (includes global questionnaire and team options)
 const validateQuestionnaire = () => {
   let valid = true
 
@@ -185,6 +193,10 @@ const validateQuestionnaire = () => {
     if (!ticket.survey.emergencyContactName || ticket.survey.emergencyContactName.trim().length < 2) {
       ticket.survey.errors.emergencyContactName =
         'Emergency contact name is required and must be at least 2 characters'
+      valid = false
+    } else if (/^\d+$/.test(ticket.survey.emergencyContactName.trim())) {
+      ticket.survey.errors.emergencyContactName =
+        'Emergency contact name cannot consist solely of digits'
       valid = false
     }
     if (!ticket.survey.emergencyContactPhone || !phonePattern.test(ticket.survey.emergencyContactPhone)) {
@@ -203,14 +215,14 @@ const validateQuestionnaire = () => {
     }
   })
 
-  // Validation of the Bureau-wide Activity Questionnaire
+  // Global Questionnaire Information Validation
   ticketStore.eventSurvey.errors = {}
   if (!ticketStore.eventSurvey.source || ticketStore.eventSurvey.source.trim().length < 3) {
     ticketStore.eventSurvey.errors.source = 'Please specify how you heard about the event (at least 3 characters)'
     valid = false
   }
 
-  // Verify Team Options
+  // Team Options Validation
   if (!ticketStore.teamOption) {
     teamOptionError.value = 'Please select a team option'
     valid = false
@@ -233,12 +245,23 @@ const goBackToPersonal = () => {
   router.push({ name: 'PersonalInfo' })
 }
 
-// Example: Jump when clicking on the step indicator
+// Handling of step click events: jumps are only allowed if the clicked step index is less than currentStep
+const stepRoutes = {
+  0: 'SelectCategory',
+  1: 'PersonalInfo',
+  2: 'Questionnaire',
+  3: 'Review',
+  4: 'Checkout'
+}
+
 const handleStepClick = (stepIndex) => {
-  const routes = ["SelectCategory", "PersonalInfo", "Questionnaire", "Review", "Checkout"];
-  const targetRoute = routes[stepIndex];
-  if (targetRoute) {
-    router.push({ name: targetRoute });
+  if (stepIndex < currentStep) {
+    const targetRoute = stepRoutes[stepIndex]
+    if (targetRoute) {
+      router.push({ name: targetRoute })
+    } else {
+      console.warn(`No route defined for step ${stepIndex}`)
+    }
   }
 }
 </script>
@@ -269,7 +292,6 @@ const handleStepClick = (stepIndex) => {
   margin-bottom: 1rem;
 }
 
-/* Simple style: buttons for uncompleted questionnaires show exclamation marks */
 .incomplete-badge {
   color: red;
   margin-left: 5px;

@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import userSideBar from "@/components/user/userSideBar.vue"
 import userNavBar from "@/components/user/userNavBar.vue";
 import Footer from "@/components/Footer.vue";
-import Profile from "@/components/user/Profile.vue"
+import userEvent from "@/components/user/userEvent.vue"
 
 const sidebarCollapsed = ref(false);
 const showSidebarOverlay = ref(false); // State for mobile overlay
@@ -56,12 +56,12 @@ onUnmounted(() => {
 
     <main
       :style="{ marginLeft: sidebarCollapsed ? '64px' : '240px' }"
-      style="background-color: #f5f7f1;"
+      style="background-color: #f8f9fa;"
       class="main-content transition-all duration-300"
       :class="{ 'content-dimmed': showSidebarOverlay }"
     >
       <userNavBar @toggle-sidebar="toggleSidebar"/>
-      <Profile />
+      <userEvent  class = "mt-4"/>
       <router-view />
     </main>
   </div>

@@ -17,8 +17,8 @@ const activeItem = ref('dashboard')
 // Menu structure
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: 'pi pi-home', route: '/user/profile' },
-  // { id: 'events', label: 'Events', icon: 'pi pi-calendar', route: '/admin/events' },
-  // { id: 'users', label: 'Users', icon: 'pi pi-users', route: '/admin/users' },
+  { id: 'events', label: 'Events', icon: 'pi pi-calendar', route: '/user/events' },
+  { id: 'users', label: 'Information', icon: 'pi pi-users', route: '/user/management' },
   // { id: 'tickets', label: 'Tickets', icon: 'pi pi-ticket', route: '/admin/tickets' },
   // { id: 'reports', label: 'Reports', icon: 'pi pi-chart-bar', route: '/admin/reports' },
   // { id: 'settings', label: 'Settings', icon: 'pi pi-cog', route: '/admin/settings' }
@@ -48,22 +48,18 @@ const toggleSidebar = () => {
     <div class="logo p-4 d-flex align-items-center justify-content-between border-bottom border-secondary">
       <img
           v-if="collapsed"
-          src="../../assets/cat.jpeg"
-          alt="RegiMaster"
-          class="h-8"
+          src="@/assets/logo.png"
+          class="img-fluid"
       />
-      <a class="navbar-brand" href="/">
+      <a v-else class="navbar-brand text-xl font-bold" href="/">
         <h2 style="font-family: 'LogoFont';" class="text-light pt-3">Teket</h2>
-        <span class="text-dark fw-bold" id="brandName">Teket</span>
       </a>
       <!-- Toggle button inside sidebar - shows only when sidebar is collapsed -->
-      <button
-          v-if="collapsed"
-          @click="toggleSidebar"
-          class="btn btn-link text-white p-1"
-      >
-        <i class="pi pi-chevron-right"></i>
-      </button>
+      <!-- <button 
+        @click="$emit('toggle-sidebar')" 
+        class="btn btn-link text-dark me-2">
+          <i class="pi pi-bars"></i>
+      </button> -->
     </div>
 
     <!-- Navigation Menu -->
@@ -82,7 +78,7 @@ const toggleSidebar = () => {
       </ul>
     </nav>
 
-    <div v-if="!collapsed" class="position-absolute bottom-0 end-0 p-3">
+    <div class="position-absolute bottom-0 p-3">
       <button
           @click="toggleSidebar"
           class="btn btn-secondary rounded-circle p-2"

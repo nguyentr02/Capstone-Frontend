@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Home from "@/views/home.vue";
+import UserManagementView from "@/views/userManagementView.vue";
+import userEventView from "@/views/userEventView.vue";
 import Events from "@/views/event/events.vue";
 import SignIn from "@/views/auth/signIn.vue";
 import SignUp from "@/views/auth/signUp.vue";
@@ -46,6 +48,18 @@ const routes = [
     component: Checkout,
   },
   { path: "/user/profile", component: UserProfileView},
+
+  {
+    path: '/user/management',
+    name: "userManagement",
+    component: UserManagementView
+  },
+
+  {
+    path: '/user/events',
+    name: "userEvents",
+    component: userEventView
+  }
 ];
 
 const router = createRouter({

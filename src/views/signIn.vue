@@ -113,8 +113,6 @@ export default {
         }),
       })
         .then((response) => {
-          // console.log("POST request successful:", response.json());
-
           return response.json();
         })
         .then((responseData) => {

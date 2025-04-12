@@ -1,38 +1,45 @@
-<!-- src/views/EventDetail.vue -->
 <template>
   <div>
     <navbar />
     <div class="container mt-3 mb-5">
-      <div class="row">
+      <div v-if="loading" class="text-center mt-5">Data loading...</div>
+      <div v-else-if="error" class="text-center mt-5 text-danger">
+        Data loading failed, please try again later!
+      </div>
+      <div v-else class="row">
         <div class="col-7">
-          <img :src="eventDetail.banner" alt="img" class="img-fluid" />
+          <img :src="eventDetail.banner || defaultBanner" alt="img" class="img-fluid" />
           <h4 class="fw-semibold mt-4">Description</h4>
-          <p class="mt-3">
-            {{ eventDetail.description }}
-          </p>
+          <p class="mt-3">{{ eventDetail.description }}</p>
           <h5>📅 Date & Time:</h5>
           <ul>
             <li>
               <strong>When:</strong>
-              {{ eventDetail.when }}
+              {{ formatDate(eventDetail.startDateTime) }} - {{ formatDate(eventDetail.endDateTime) }}
             </li>
             <li>
-              <strong>Where:</strong> {{ eventDetail.where }}
+              <strong>Where:</strong> {{ eventDetail.location }}
             </li>
           </ul>
         </div>
         <div class="col-5 text-start align-item-center">
           <h1 class="fw-bold">{{ eventDetail.name }}</h1>
-          <p class="text-warning fw-semibold">{{ eventDetail.timeAndDate }}</p>
+          <p class="text-warning fw-semibold">
+            {{ formatDate(eventDetail.startDateTime) }} - {{ formatDate(eventDetail.endDateTime) }}
+          </p>
           <h3 class="fw-bold">Location</h3>
-          <p class="text-secondary" style="margin-top: -2%">{{ eventDetail.mode }}</p>
-          <p class="fw-semibold" style="margin-top: -1%">{{ eventDetail.address }}</p>
+          <p class="text-secondary" style="margin-top: -2%">
+            Type: {{ eventDetail.eventType }}
+          </p>
+          <p class="fw-semibold" style="margin-top: -1%">
+            Venue: {{ eventDetail.location }}
+          </p>
           <div class="mapouter">
             <div class="gmap_canvas">
               <iframe
                 width="400"
                 height="400"
-                :src="eventDetail.mapSrc"
+                :src="mapUrl"
                 frameborder="0"
                 scrolling="no"
                 marginheight="0"
@@ -62,34 +69,58 @@
 
 <script setup>
 import navbar from '@/components/navbar.vue'
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useUserStore } from '@/store/user'
 
 const route = useRoute()
 const eventId = route.params.id
 
-const events = [
-  {
-    id: "5",
-    name: "Event Name (March)",
-    banner: "https://stevent-wattle.s3.ap-southeast-4.amazonaws.com/event/01JNYJ0YW43Z2JGRBK3FF66RTG/banner/01JNYJ0YW5E0M5GE2TZZ5M7WW6.webp",
-    description:
-      "Come along to our wedding and planting event at the Melbourne Girls' College native Myrnong planting site beside the Birrarung (Yarra River).",
-    when: "15th March, 9:00am - 11:15am",
-    where: "Somewhere in Melbourne",
-    timeAndDate: "9:00am - 11:15am, 15 Mar 2025",
-    mode: "Offline",
-    address: "Melbourne Girls College, 55 Yarra Blvd, Richmond, VIC, 3121",
-    mapSrc: "https://maps.google.com/maps?q=melbourne&t=&z=13&ie=UTF8&iwloc=&output=embed"
-  },
-  
-]
-
 const eventDetail = ref({})
+const loading = ref(true)
+const error = ref(null)
+const defaultBanner = 'https://via.placeholder.com/800x400?text=Event+Banner'
 
-onMounted(() => {
-  const found = events.find(e => e.id === eventId) || events[0]
-  eventDetail.value = found
+// Generate a map URL based on location
+const mapUrl = computed(() => {
+  if (eventDetail.value.location) {
+    const encoded = encodeURIComponent(eventDetail.value.location)
+    return `https://maps.google.com/maps?q=${encoded}&t=&z=13&ie=UTF8&iwloc=&output=embed`
+  }
+  return ''
+})
+
+// Formatting a Date String
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  return new Date(dateStr).toLocaleString()
+}
+
+onMounted(async () => {
+  try {
+    const userStore = useUserStore()
+    // Prioritize getting tokens from the store
+    const token = userStore.accessToken || localStorage.getItem("accessToken")
+    const res = await fetch(`http://localhost:3000/api/events/${eventId}`, {
+      headers: token
+        ? {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        : { "Content-Type": "application/json" }
+    })
+    if (!res.ok) {
+      throw new Error(`Request failed with status code：${res.status}`)
+    }
+    const json = await res.json()
+    // { success: true, data: { ... } }
+    eventDetail.value = json.data
+  } catch (err) {
+    console.error("Get Event Details Error：", err)
+    error.value = err.message || 'make a mistake'
+  } finally {
+    loading.value = false
+  }
 })
 </script>
 

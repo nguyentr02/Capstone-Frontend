@@ -4,9 +4,9 @@ export const questionsMockData = [
       id: 1,
       questionnaire_id: 1,
       question_text: 'How would you rate the conference overall?',
-      question_type: 'radio',  // 例如 'text', 'textarea', 'select', 'radio', 'checkbox' 等
-      category: 'feedback',     // 自定义分类，例如 'feedback', 'suggestion', 'demographic' 等
-      validation_rules: JSON.stringify({ required: true }), // 以JSON字符串存储验证规则
+      question_type: 'radio',
+      category: 'feedback', 
+      validation_rules: JSON.stringify({ required: true }),
       created_at: '2025-01-02T09:00:00Z',
       updated_at: '2025-01-02T09:00:00Z'
     },

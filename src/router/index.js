@@ -84,7 +84,7 @@ const routes = [{
   {
     path: '/admin/events',
     name: 'events',
-    component: () => import('../views/admin/Event/EventsView.vue')
+    component: () => import('../views/admin/Event/EventsList.vue')
   },
   {
     path: '/admin/events/create',
@@ -104,7 +104,7 @@ const routes = [{
   {
     path: '/admin/users',
     name: 'users',
-    component: () => import('../views/admin/User/UsersView.vue')
+    component: () => import('../views/admin/User/UserList.vue')
   },
   {
     path: '/admin/users/create',
@@ -124,7 +124,7 @@ const routes = [{
   {
     path: "/admin/tickets",
     name: "TicketsView",
-    component: () => import("@/views/admin/Tickets/TicketsView.vue")
+    component: () => import("@/views/admin/Tickets/TicketsList.vue")
   },
   {
     path: "/admin/tickets/:eventId",
@@ -153,8 +153,13 @@ const routes = [{
   },
   {
     path: "/admin/Questionnaire",
-    name: "QuestionnaireView",
-    component: () => import("@/views/admin/Questionnaire/QuestionnaireView.vue")
+    name: "QuestionnaireList",
+    component: () => import("@/views/admin/Questionnaire/QuestionnaireList.vue")
+  },
+  {
+    path: "/admin/questionnaire/view/:eventId",
+    name: "ViewQuestionnaire",
+    component: () => import("@/views/admin/Questionnaire/ViewQuestionnaire.vue")
   }
   /*
   {

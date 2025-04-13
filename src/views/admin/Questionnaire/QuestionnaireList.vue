@@ -1,4 +1,3 @@
-<!-- src/views/admin/QuestionnaireView.vue -->
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
@@ -69,9 +68,9 @@ const formatDate = (dateString) => {
   })
 }
 
-// 点击操作：进入对应事件的问卷编辑页面
-const editQuestionnaire = (eventId) => {
-  router.push(`/admin/questionnaire/edit/${eventId}`)
+// 点击操作：进入对应事件的问卷查看页面
+const viewQuestionnaire = (eventId) => {
+  router.push(`/admin/questionnaire/view/${eventId}`)
 }
 </script>
 
@@ -107,14 +106,14 @@ const editQuestionnaire = (eventId) => {
           <table class="table table-fixed table-hover mb-0" style="table-layout: fixed; width: 100%;">
             <thead>
               <tr class="bg-light border-bottom">
-                <!-- Event Name 列（40%宽度，左对齐，添加最大宽度处理） -->
+                <!-- Event Name 列（40%宽度） -->
                 <th class="px-3 py-2 text-start fs-6 text-muted" style="width: 40%;">
                   <div style="cursor: pointer;" class="d-flex align-items-center" @click="sortBy = 'name'; toggleSortOrder()">
                     Event Name
                     <i v-if="sortBy === 'name'" :class="sortOrder === 'asc' ? 'pi pi-sort-up' : 'pi pi-sort-down'" class="ms-1"></i>
                   </div>
                 </th>
-                <!-- Date 列（20%宽度，左对齐） -->
+                <!-- Date 列（20%宽度） -->
                 <th class="px-3 py-2 text-start fs-6 text-muted" style="width: 20%;">
                   <div style="cursor: pointer;" class="d-flex align-items-center" @click="sortBy = 'date'; toggleSortOrder()">
                     Date
@@ -123,7 +122,7 @@ const editQuestionnaire = (eventId) => {
                 </th>
                 <!-- Location 列（30%宽度） -->
                 <th class="px-3 py-2 text-start fs-6 text-muted" style="width: 30%;">Location</th>
-                <!-- Actions 列（10%宽度，居中） -->
+                <!-- Actions 列（10%宽度） -->
                 <th class="px-3 py-2 text-center fs-6 text-muted" style="width: 10%;">Actions</th>
               </tr>
             </thead>
@@ -137,9 +136,12 @@ const editQuestionnaire = (eventId) => {
                 </td>
                 <td class="px-3 py-2 text-dark">{{ ev.location }}</td>
                 <td class="px-3 py-2 text-center">
-                  <button @click="editQuestionnaire(ev.id)" class="btn btn-link text-primary p-0" title="Edit Questionnaire">
-                    <i class="pi pi-pencil"></i>
-                  </button>
+                  <div class="d-flex justify-content-center gap-2">
+                    <!-- 查看问卷按钮 -->
+                    <button @click="viewQuestionnaire(ev.id)" class="btn btn-link text-primary p-0" title="View Questionnaire">
+                      <i class="pi pi-eye"></i>
+                    </button>
+                  </div>
                 </td>
               </tr>
               <tr v-if="pagedEvents.length === 0">
@@ -175,6 +177,3 @@ const editQuestionnaire = (eventId) => {
   width: 100%;
 }
 </style>
-
-
-

@@ -1,53 +1,65 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import UserLogin from "@/views/Login.vue";
-import SignUp from "@/views/SignUp.vue";
-import EventList from "@/views/EventList.vue";
-import EventDetails from "@/views/EventDetails.vue";
-import TicketSelectionPage from "@/views/TicketSelectionPage.vue"; // Importing the TicketSelectionPage Component
-import CompleteFormPage from '@/views/CompleteFormPage.vue'; // Introducing the form page here
-import PaymentPage from '@/views/PaymentPage.vue'; // Introducing a payment page
-import BookingConfirmationPage from '@/views/BookingConfirmationPage.vue'; // confirmation page
-import ResetPassword from "@/views/ResetPassword.vue";
-import TicketsPage from '../views/TicketsPage.vue';
-  
-// import Homepage from '@/views/HomeView.vue'
-import AdminHomeView from "@/views/AdminHomeView.vue";
-import AdminReportView from "@/views/AdminReportView.vue";
-import AdminQuestionaireManagementView from "@/views/AdminQuestionaireManagementView.vue"
-import AdminPaymentManagementView from "@/views/AdminPaymentManagementView.vue"
-import AdminRegistrationManagementView from "@/views/AdminRegistrationManagementView.vue"
-
-import Create_questionnaire_view from "@/views/CreateQuestionnaireView.vue"
-import Event_Information_Edit from "@/views/EventEditView.vue"
-import AdminEventManagementView from "@/views/AdminEventManagementView.vue"
-
+import Home from "@/views/home.vue";
+import UserManagementView from "@/views/user/userManagementView.vue";
+import userEventView from "@/views/user/userEventView.vue";
+import Events from "@/views/event/events.vue";
+import SignIn from "@/views/auth/signIn.vue";
+import SignUp from "@/views/auth/signUp.vue";
+import SelectCategory from '@/views/questionare/SelectCategory.vue';
+import Questionnaire from '@/views/questionare/Questionnaire.vue';
+import Review from '@/views/questionare/Review.vue';
+import Checkout from '@/views/questionare/Checkout.vue';
+import UserProfileView from "@/views/user/UserProfileView.vue";
 
 const routes = [
-  
-  { path: "/", component: EventList },
-  { path: "/events/:id", component: EventDetails, props: true },
-  { path: "/login", component: UserLogin },
-  { path: "/signup", component: SignUp },
-  { path: "/ticket-selection", component: TicketSelectionPage },  // Ticket selection page routing
-  { path: '/complete-form', component: CompleteFormPage }, // Form page routing
-  { path: '/payment', component: PaymentPage }, // Payment page routing
-  { path: '/booking-confirmation', component: BookingConfirmationPage }, // Confirm page routing
-  { path: "/reset-password", component: ResetPassword },
-  { path: '/tickets',name: 'Tickets', component: TicketsPage },
-    
-//   { path: "/", component: Homepage },
-  { path: "/admin", component : AdminHomeView},
-  { path: "/admin/report", component : AdminReportView},
-  { path: "/admin/questionaire", component : AdminQuestionaireManagementView},
-  { path: "/admin/payment", component : AdminPaymentManagementView},
-  { path: "/admin/registration", component : AdminRegistrationManagementView},
+  { path: "/", component: Home },
+  { path: "/events", component: Events },
+  { path: "/signIn", component: SignIn },
+  { path: "/signUp", component: SignUp },  
+  {
+    path: '/eventDetail/:id',
+    name: 'EventDetail',
+    component: () => import('@/views/event/eventDetail.vue'),
+  },
+  {
+    path: '/select-category',
+    name: 'SelectCategory',
+    component: SelectCategory,
+  },
+  {
+    path: '/personalInfo',
+    name: 'PersonalInfo',
+    component: () => import('@/views/questionare/PersonalInfo.vue'),
+  },  
+  {
+    path: '/complete-form/questionnaire',
+    name: 'Questionnaire',
+    component: Questionnaire,
+  },
+  {
+    path: '/complete-form/review',
+    name: 'Review',
+    component: Review,
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: Checkout,
+  },
+  { path: "/user/profile", component: UserProfileView},
 
-  { path: "/admin/Create_questionnaire", component : Create_questionnaire_view},
-  { path: "/admin/Event_creation", component : Event_Information_Edit},
+  {
+    path: '/user/management',
+    name: "userManagement",
+    component: UserManagementView
+  },
 
-  { path: "/admin/event", component : AdminEventManagementView},
-
+  {
+    path: '/user/events',
+    name: "userEvents",
+    component: userEventView
+  }
 ];
 
 const router = createRouter({

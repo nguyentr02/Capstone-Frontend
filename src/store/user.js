@@ -6,21 +6,24 @@ export const useUserStore = defineStore("user", {
   }),
 
   getters: {
-    isAuthenticated: (state) => !!state.accessToken,
+    isAuthenticated: () => {
+      if (localStorage.getItem('accessToken') == null) {
+        return false;
+      } else {
+        return true;
+      }
+    },
   },
 
   actions: {
     setAccessToken(token) {
       this.accessToken = token;
+      localStorage.setItem('accessToken',token);
     },
     clearAccessToken() {
       this.accessToken = null;
+      localStorage.clear();
     },
   },
 
-  persist: {
-    storage: localStorage,
-    key: 'accessToken',
-    paths: 'accessToken',
-  },
 });

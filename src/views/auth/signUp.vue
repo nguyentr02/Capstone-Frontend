@@ -237,15 +237,21 @@ export default {
           })
           .then((responseData) => {
             this.dt = responseData.data;
+            // console.log(responseData);
 
-            const accessToken = this.dt.accessToken;
-            // Store accessToken into storage
-
-            if (accessToken) {
-              userStore.setAccessToken(accessToken);
-              router.push("/");
+            //
+            if (responseData.success == false) {
+              this.errors.push(responseData.message);
             } else {
-              window.alert("Login successfully but no token is store!");
+              const accessToken = this.dt.accessToken;
+              // Store accessToken into storage
+
+              if (accessToken) {
+                userStore.setAccessToken(accessToken);
+                router.push("/");
+              } else {
+                window.alert("Login successfully but no token is store!");
+              }
             }
           })
           .catch((error) => {

@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import { eventsMockData } from '@/mock/eventsMock.js'
+import { fetchEventsData, eventsMockData } from '@/mock/eventsMock.js'
 import { ticketsMockData } from '@/mock/ticketsMockData.js'
 
 const router = useRouter()
@@ -14,8 +14,27 @@ const statusFilter = ref('all')
 const sortBy = ref('date')
 const sortOrder = ref('desc')
 
-// 活动数据（深拷贝一份 mock 数据）
-const eventsData = ref([...eventsMockData])
+// 活动数据初始为空数组，待后端测试连接后赋值
+const eventsData = ref([])
+
+// 在 onMounted 中测试后端接口连接，连接成功则赋值真实数据，否则使用 mock 数据
+onMounted(async () => {
+  try {
+    const result = await fetchEventsData()
+    if (result && result.length > 0) {
+      console.log("Backend connection successful. Data received:", result)
+      eventsData.value = result
+    } else {
+      console.warn("Backend returned no data. Falling back to mock data.")
+      eventsData.value = [...eventsMockData]
+    }
+  } catch (error) {
+    console.error("Failed to connect to backend, using mock data:", error)
+    eventsData.value = [...eventsMockData]
+  } finally {
+    loading.value = false
+  }
+})
 
 // 计算过滤与排序后的活动列表
 const filteredEvents = computed(() => {
@@ -69,13 +88,6 @@ const formatDate = (dateString) => {
 const manageTickets = (eventId) => {
   router.push(`/admin/tickets/${eventId}`)
 }
-
-// 模拟页面加载延迟
-onMounted(() => {
-  setTimeout(() => {
-    loading.value = false
-  }, 500)
-})
 </script>
 
 <template>

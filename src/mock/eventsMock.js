@@ -191,3 +191,16 @@ export const eventsMockData = [
     ]
   }
 ];
+export const fetchEventsData = async () => {
+  try {
+    const response = await fetch("http://localhost:3000/api/events");
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const { data } = await response.json();
+    return data.events;
+  } catch (error) {
+    console.error("Failed to fetch events data:", error);
+    return [];
+  }
+};

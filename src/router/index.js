@@ -4,43 +4,31 @@ import {
 } from "vue-router";
 
 import Home from "@/views/home.vue";
-import Events from "@/views/events.vue";
-import SignIn from "@/views/signIn.vue";
-import SignUp from "@/views/SignUp.vue";
-import eventDetail from "@/views/eventDetail.vue";
+import UserManagementView from "@/views/user/userManagementView.vue";
+import userEventView from "@/views/user/userEventView.vue";
+import Events from "@/views/event/events.vue";
+import SignIn from "@/views/auth/signIn.vue";
+import SignUp from "@/views/auth/signUp.vue";
+import SelectCategory from '@/views/questionare/SelectCategory.vue';
+import Questionnaire from '@/views/questionare/Questionnaire.vue';
+import Review from '@/views/questionare/Review.vue';
+import Checkout from '@/views/questionare/Checkout.vue';
+import UserProfileView from "@/views/user/UserProfileView.vue";
 import RegisterEvent from "@/views/registerEvent.vue";
-import SelectCategory from '@/views/SelectCategory.vue';
-import PersonalInfo from '@/views/PersonalInfo.vue';
-import Questionnaire from '@/views/Questionnaire.vue';
-import Review from '@/views/Review.vue';
-import Checkout from '@/views/Checkout.vue';
 
-import HomeView from '../views/HomeView.vue'
-import LoginView from '../views/auth/LoginView.vue'
-
-const routes = [{
-    path: "/",
-    component: Home
-  },
+const routes = [
+  { path: "/", component: Home },
+  { path: "/events", component: Events },
+  { path: "/signIn", component: SignIn },
+  { path: "/signUp", component: SignUp },  
   {
-    path: "/events",
-    component: Events
-  },
-  {
-    path: "/signIn",
-    component: SignIn
-  },
-  {
-    path: "/signUp",
-    component: SignUp
-  },
-  {
-    path: "/eventDetail",
-    component: eventDetail
+    path: '/eventDetail/:id',
+    name: 'EventDetail',
+    component: () => import('@/views/event/eventDetail.vue'),
   },
   {
     path: "/registerEvent",
-    component: RegisterEvent
+    component: RegisterEvent,
   },
   {
     path: '/select-category',
@@ -48,10 +36,10 @@ const routes = [{
     component: SelectCategory,
   },
   {
-    path: '/complete-form/personal',
+    path: '/personalInfo',
     name: 'PersonalInfo',
-    component: PersonalInfo,
-  },
+    component: () => import('@/views/questionare/PersonalInfo.vue'),
+  },  
   {
     path: '/complete-form/questionnaire',
     name: 'Questionnaire',
@@ -160,7 +148,7 @@ const routes = [{
     path: "/admin/questionnaire/view/:eventId",
     name: "ViewQuestionnaire",
     component: () => import("@/views/admin/Questionnaire/ViewQuestionnaire.vue")
-  }
+  },
   /*
   {
     path: "/admin/reports",
@@ -173,6 +161,19 @@ const routes = [{
     component: () => import("@/views/admin/SettingsView.vue")
   }
   */
+  { path: "/user/profile", component: UserProfileView},
+
+  {
+    path: '/user/management',
+    name: "userManagement",
+    component: UserManagementView
+  },
+
+  {
+    path: '/user/events',
+    name: "userEvents",
+    component: userEventView
+  }
 ];
 
 const router = createRouter({

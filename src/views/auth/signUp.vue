@@ -237,9 +237,7 @@ export default {
           })
           .then((responseData) => {
             this.dt = responseData.data;
-            // console.log(responseData);
 
-            //
             if (responseData.success == false) {
               this.errors.push(responseData.message);
             } else {

@@ -29,6 +29,10 @@
                 v-model="firstName"
                 required
               />
+              <!-- Display first name error message below input -->
+              <div v-if="errors.firstName" class="text-danger small mt-1">
+                {{ errors.firstName }}
+              </div>
             </div>
             <div class="col-6">
               <label
@@ -45,6 +49,10 @@
                 v-model="lastName"
                 required
               />
+              <!-- Display last name error message below input -->
+              <div v-if="errors.lastName" class="text-danger small mt-1">
+                {{ errors.lastName }}
+              </div>
             </div>
           </div>
 
@@ -63,6 +71,10 @@
               v-model="phoneNo"
               required
             />
+            <!-- Display phone number error message below input -->
+            <div v-if="errors.phoneNo" class="text-danger small mt-1">
+              {{ errors.phoneNo }}
+            </div>
           </div>
 
           <div class="mb-3 text-start">
@@ -81,6 +93,10 @@
               v-model="email"
               required
             />
+            <!-- Display email error message below input -->
+            <div v-if="errors.email" class="text-danger small mt-1">
+              {{ errors.email }}
+            </div>
           </div>
           <div class="mb-3 text-start">
             <label
@@ -97,6 +113,10 @@
               v-model="pwd"
               required
             />
+            <!-- Display password error message below input -->
+            <div v-if="errors.pwd" class="text-danger small mt-1">
+              {{ errors.pwd }}
+            </div>
           </div>
           <div class="mb-3 text-start">
             <label
@@ -113,10 +133,12 @@
               v-model="confirmPwd"
               required
             />
+            <!-- Display confirm password error message below input -->
+            <div v-if="errors.confirmPwd" class="text-danger small mt-1">
+              {{ errors.confirmPwd }}
+            </div>
           </div>
-          <p v-if="errors.length" v-for="error in errors" class="text-danger">
-            {{ error }}
-          </p>
+          <!-- Removed the previous error list display -->
           <button type="submit" class="btn btn-primary" @click.prevent="signUp">
             Sign Up
           </button>
@@ -141,7 +163,8 @@ export default {
 
   data() {
     return {
-      errors: [],
+      // Changed errors from an array to an object for field-specific error messages
+      errors: {},
       firstName: "",
       lastName: "",
       phoneNo: "",
@@ -167,72 +190,81 @@ export default {
 
     async signUp() {
       const userStore = useUserStore();
-      this.errors = [];
-      // check if First Name and Last name contain special character
-      const special = /^[a-z,A-Z]+$/;
+      // Clear previous errors
+      this.errors = {};
 
+      // Validate First Name and Last Name (only allow alphabets)
+      const special = /^[A-Za-z]+$/;
       this.firstName = this.firstName.trim();
       this.lastName = this.lastName.trim();
 
-      var check = special.test(this.firstName);
-      if (!check) {
-        this.errors.push("Name can only contain alphabet!");
-      } else {
-        check = special.test(this.lastName);
-        if (!check) {
-          this.errors.push("Name can only contain alphabet!");
-        }
+      if (!special.test(this.firstName)) {
+        this.errors.firstName = "Name can only contain alphabet!";
+      }
+      if (!special.test(this.lastName)) {
+        this.errors.lastName = "Name can only contain alphabet!";
+      }
+
+      // Validate email format
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.email)) {
+        this.errors.email = "Invalid email address!";
       }
 
       // Check length of Password
       if (this.pwd.length < 10) {
-        this.errors.push("Password need to have at least 10 letters!");
+        this.errors.pwd = "Password need to have at least 10 letters!";
       }
 
-      // Check whether Password contains number, upcase letter and lowcase letter
+      // Check whether Password contains number, uppercase and lowercase letter
       const passwordCharacter = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
-      const isPasswordValid = passwordCharacter.test(this.pwd);
-      if (!isPasswordValid) {
-        this.errors.push(
-          "Password must contain at least one uppercase letter, one lowercase letter, and one number!"
-        );
+      if (!passwordCharacter.test(this.pwd)) {
+        this.errors.pwd =
+          "Password must contain at least one uppercase letter, one lowercase letter, and one number!";
       }
 
-      // Check if confirmed Password is different from Password
+      // Check if Confirmed Password matches Password
       if (this.confirmPwd != this.pwd) {
-        this.errors.push("Password and Confirmed password does not match!");
+        this.errors.confirmPwd =
+          "Password and Confirmed password does not match!";
       }
 
-      // Check if phoneNo contains only number
+      // Check if phone number contains only numbers
       const pattern = /^[0-9]+$/;
       this.phoneNo = this.phoneNo.trim();
-      const isValid = pattern.test(this.phoneNo);
-      if (!isValid) {
-        this.errors.push("Phone number can only contain number!");
+      if (!pattern.test(this.phoneNo)) {
+        this.errors.phoneNo = "Phone number can only contain number!";
       }
 
-      // Once there is no ERROR
-      if (this.errors.length == 0) {
-        const url = "http://localhost:3000/api/auth/register";
+      // If any error exists, do not proceed
+      if (Object.keys(this.errors).length > 0) {
+        return;
+      }
 
-        await fetch(url, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-            accept: "application/json",
-          },
-          body: JSON.stringify({
-            email: this.email,
-            password: this.pwd,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            phoneNo: this.phoneNo,
-          }),
+      const url = "http://localhost:3000/api/auth/register";
+
+      await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          accept: "application/json",
+        },
+        body: JSON.stringify({
+          email: this.email,
+          password: this.pwd,
+          firstName: this.firstName,
+          lastName: this.lastName,
+          phoneNo: this.phoneNo,
+        }),
+      })
+        .then((response) => {
+          return response.json();
         })
-          .then((response) => {
-            // console.log("POST request successful:", response.json());
+        .then((responseData) => {
+          this.dt = responseData.data;
 
+<<<<<<< HEAD
             return response.json();
           })
           .then((responseData) => {
@@ -240,22 +272,24 @@ export default {
 
             if (responseData.success == false) {
               this.errors.push(responseData.message);
+=======
+          if (responseData.success == false) {
+            this.errors.server = responseData.message;
+          } else {
+            const accessToken = this.dt.accessToken;
+            // Store accessToken into storage
+            if (accessToken) {
+              userStore.setAccessToken(accessToken);
+              router.push("/");
+>>>>>>> 95e24b24b8896cbed281dfc136290477838b0ba7
             } else {
-              const accessToken = this.dt.accessToken;
-              // Store accessToken into storage
-
-              if (accessToken) {
-                userStore.setAccessToken(accessToken);
-                router.push("/");
-              } else {
-                window.alert("Login successfully but no token is store!");
-              }
+              window.alert("Login successfully but no token is store!");
             }
-          })
-          .catch((error) => {
-            this.err = error;
-          });
-      }
+          }
+        })
+        .catch((error) => {
+          this.err = error;
+        });
     },
   },
   computed: {},

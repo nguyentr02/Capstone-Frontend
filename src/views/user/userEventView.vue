@@ -40,6 +40,7 @@ onUnmounted(() => {
 </script>
 
 <template>
+  
   <div class="main-layout">
     <div
       v-if="showSidebarOverlay"
@@ -60,7 +61,7 @@ onUnmounted(() => {
       class="main-content transition-all duration-300"
       :class="{ 'content-dimmed': showSidebarOverlay }"
     >
-      <userNavBar @toggle-sidebar="toggleSidebar"/>
+      
       <userEvent  class = "mt-4"/>
       <router-view />
     </main>

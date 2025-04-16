@@ -27,6 +27,10 @@
               style="font-family: 'Font'; background-color: #fcfcfa"
               required
             />
+            <!-- Display email error message below input -->
+            <div v-if="errors.email" class="text-danger small mt-1">
+              {{ errors.email }}
+            </div>
           </div>
           <div class="mb-3 text-start">
             <label
@@ -43,6 +47,10 @@
               v-model="pwd"
               required
             />
+            <!-- Display password error message below input -->
+            <div v-if="errors.pwd" class="text-danger small mt-1">
+              {{ errors.pwd }}
+            </div>
           </div>
           <button
             type="submit"
@@ -76,6 +84,8 @@ export default {
       pwd: "",
       data: "",
       response: null,
+      // Use an object for field-specific errors
+      errors: {}
     };
   },
 
@@ -94,11 +104,26 @@ export default {
     },
 
     async signIn(email, pwd) {
-      // Integration with BE
+      // Integration with backend
+
+      // Clear previous errors
+      this.errors = {};
+
+      // Validate email format
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.email)) {
+        this.errors.email = "Invalid email address!";
+        return;
+      }
+      // Validate password is not empty
+      if (!this.pwd) {
+        this.errors.pwd = "Password is required!";
+        return;
+      }
 
       const userStore = useUserStore();
       const url = "http://localhost:3000/api/auth/login";
-      // Send data to dtb
+      // Send data to backend
 
       await fetch(url, {
         method: "POST",
@@ -119,7 +144,7 @@ export default {
           this.dt = responseData.data;
           const accessToken = this.dt.accessToken;
 
-          // Store Toke retrieve from API
+          // Store token retrieved from API
           if (accessToken) {
             userStore.setAccessToken(accessToken);
             router.push("/");

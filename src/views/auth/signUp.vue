@@ -264,15 +264,6 @@ export default {
         .then((responseData) => {
           this.dt = responseData.data;
 
-<<<<<<< HEAD
-            return response.json();
-          })
-          .then((responseData) => {
-            this.dt = responseData.data;
-
-            if (responseData.success == false) {
-              this.errors.push(responseData.message);
-=======
           if (responseData.success == false) {
             this.errors.server = responseData.message;
           } else {
@@ -281,7 +272,6 @@ export default {
             if (accessToken) {
               userStore.setAccessToken(accessToken);
               router.push("/");
->>>>>>> 95e24b24b8896cbed281dfc136290477838b0ba7
             } else {
               window.alert("Login successfully but no token is store!");
             }

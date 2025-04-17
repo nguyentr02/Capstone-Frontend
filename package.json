@@ -25,10 +25,7 @@
     "ticketproj": "file:",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-
     "@primeuix/themes": "^1.0.0",
-    "axios": "^1.7.9",
-    "primeicons": "^7.0.0",
     "primevue": "^4.2.5"
   },
   "devDependencies": {

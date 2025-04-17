@@ -1,125 +1,131 @@
-<template>
-  <nav class="navbar --bs-warning-bg-subtle" style="background-color: white;">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/">
-        <!-- Removed the logo image -->
-        <!-- <img
-          src="@/assets/logo.png"
-          alt="Logo"
-          width="55"
-          height="55"
-          class="d-inline-block align-text-middle"
-          style="stroke: black"
-        /> -->
-        <span class="text-dark fw-bold" id="brandName">Teket</span>
-      </a>
-
-      <div class="d-flex align-items-center">
-        <button
-          class="navbar-toggler d-lg-none"
-          type="button"
-          @click="$emit('toggle-sidebar')"
-          aria-controls="navbarNav"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <ul v-if="navState == true" class="nav justify-content-end d-none d-lg-flex ms-auto">
-          <li class="nav-item">
-            <a href="/events" style="font-family: 'Font'" class="nav-link">
-              <img
-                src="@/assets/calendar.png"
-                alt="ICON"
-                class="d-inline-block align-text-middle"
-                width="20"
-                height="20"
-              />
-              <span class="text-warning ms-2 fw-semibold">Events</span>
-            </a>
-          </li>
-          <li class="nav-item ms-4">
-            <router-link to="/signIn">
-              <button class="btn btn-warning fw-semibold">Sign In</button>
-            </router-link>
-          </li>
-          <li class="nav-item ms-3">
-            <router-link to="/signUp">
-              <button class="btn btn-light fw-semibold">Sign Up</button>
-            </router-link>
-          </li>
-        </ul>
-
-        <ul v-else class="nav justify-content-end d-none d-lg-flex ms-auto">
-          <li class="nav-item">
-            <a href="/events" style="font-family: 'Font'" class="nav-link">
-              <img
-                src="../assets/calendar.png"
-                alt="ICON"
-                class="d-inline-block align-text-middle"
-                width="20"
-                height="20"
-              />
-              <span class="text-warning ms-2 fw-semibold">Events</span>
-            </a>
-          </li>
-          <li class="nav-item ms-3">
-            <router-link to="/user/profile">
-              <img
-                width="40"
-                height="40"
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/480px-User_icon_2.svg.png"
-                alt="UserLogo"
-              />
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-</template>
-
-<script setup>
-import "primeicons/primeicons.css";
-import { ref, onMounted } from 'vue';
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/store/user";
-
-const emit = defineEmits(['toggle-sidebar']);
-const navState = ref(true);
-
-const checkState = () => {
-  const userStore = useUserStore();
-  if (userStore.isAuthenticated) {
-    console.log("User state verified");
-    navState.value = false;
-  } else {
-    console.log("User state NOT verified");
-  }
+<script>
+export default {
+  // Receive Data from parent component/view
+  props: {
+    userProfileData: {
+      type: Object,
+    },
+  },
 };
-
-onMounted(() => {
-  checkState();
-});
 </script>
 
+<script setup>
+import { onMounted, ref } from "vue";
+
+const isUserMenuOpen = ref(false);
+
+const toggleUserMenu = () => {
+  isUserMenuOpen.value = !isUserMenuOpen.value;
+};
+
+defineEmits(["toggle-sidebar"]);
+</script>
+
+<template>
+  <div
+    class="bg-white shadow-sm d-flex align-items-center justify-content-between px-4"
+    style="height: 4rem"
+  >
+    <!-- Left section -->
+    <div class="d-flex align-items-center">
+      <button
+        @click="$emit('toggle-sidebar')"
+        class="me-3 p-2 rounded-circle border-0 no-border-btn"
+      >
+        <i class="pi pi-bars text-secondary"></i>
+      </button>
+
+      <div class="position-relative">
+        <input
+          type="text"
+          placeholder="Search..."
+          class="form-control"
+          style="padding-left: 2.5rem; width: 16rem"
+        />
+        <i
+          class="pi pi-search position-absolute text-muted"
+          style="left: 1rem; top: 0.75rem"
+        ></i>
+      </div>
+    </div>
+
+    <!-- Right section -->
+    <div class="d-flex align-items-center gap-3">
+      <!-- Notifications -->
+      <div class="position-relative">
+        <button class="p-2 rounded-circle border-0 no-border-btn">
+          <i class="pi pi-bell text-secondary"></i>
+        </button>
+        <span
+          class="position-absolute bg-danger text-white rounded-circle d-flex align-items-center justify-content-center"
+          style="
+            top: -0.25rem;
+            right: -0.25rem;
+            width: 1.25rem;
+            height: 1.25rem;
+          "
+        >
+          5
+        </span>
+      </div>
+
+      <!-- User profile -->
+      <div
+        class="d-flex align-items-center"
+        style="cursor: pointer"
+        @click="toggleUserMenu"
+      >
+        <img
+          src="https://i.pravatar.cc/36"
+          alt="User"
+          class="rounded-circle me-2"
+          style="width: 2rem; height: 2rem"
+        />
+        <span clx  ass="text-dark d-none d-md-inline">{{ userProfileData.firstName }} {{ userProfileData.lastName }}</span>
+        <i class="pi pi-angle-down ms-2 fs-6"></i>
+
+        <!-- User dropdown menu (shown when isUserMenuOpen is true) -->
+        <div
+          v-if="isUserMenuOpen"
+          class="position-absolute end-0 bg-dark shadow-lg rounded py-2"
+          style="top: 3rem; width: 12rem; z-index: 10"
+        >
+          <a
+            href="#"
+            class="d-flex align-items-center px-4 py-2 text-white text-decoration-none user-menu-item"
+          >
+            <i class="pi pi-user me-2"></i> Profile
+          </a>
+          <a
+            href="#"
+            class="d-flex align-items-center px-4 py-2 text-white text-decoration-none user-menu-item"
+          >
+            <i class="pi pi-cog me-2"></i> Settings
+          </a>
+          <div class="border-top border-secondary my-1"></div>
+          <a
+            href="#"
+            class="d-flex align-items-center px-4 py-2 text-white text-decoration-none user-menu-item"
+          >
+            <i class="pi pi-power-off me-2"></i> Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style scoped>
-#brandName {
-  font-family: "LogoFont";
+.no-border-btn {
+  background-color: white;
 }
 
-/* Hide the regular navigation on mobile */
-@media (max-width: 991.98px) {
-  .nav.justify-content-end {
-    display: none !important;
-  }
+.no-border-btn:hover {
+  background-color: #e9ecef;
 }
 
-/* Show the regular navigation on desktop */
-@media (min-width: 992px) {
-  .navbar-toggler {
-    display: none !important; /* Hide the hamburger menu on desktop */
-  }
+.user-menu-item:hover {
+  background-color: #343a40;
+  transition: background-color 0.3s;
 }
 </style>

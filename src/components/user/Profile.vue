@@ -3,25 +3,27 @@
     <div class="row">
       <div class="col-md-12 col-xl-3 profileText">
         <div class="userDetails rounded p-4 bg-secondary">
-          <div class="d-flex justify-content-center mt-4" v-if="userData">
-            <h3>{{ userData.firstName }} {{ userData.lastName }}</h3>
+          <div class="d-flex justify-content-center mt-4">
+            <h3>
+              {{ userProfileData.firstName }} {{ userProfileData.lastName }}
+            </h3>
           </div>
 
           <hr />
           <div class="d-flex justify-content-start m-2 mt-3 align-items-center">
             <i class="pi pi-envelope m-2"></i>
-            <span v-if="userData">{{ userData.email }}</span>
+            <span>{{ userProfileData.email }}</span>
           </div>
           <div class="d-flex justify-content-start m-2 mt-3 align-items-center">
             <i class="pi pi-phone m-2"></i>
-            <span v-if="userData">{{ userData.phoneNo }}</span>
+            <span>{{ userProfileData.phoneNo }}</span>
           </div>
 
           <hr />
-          <div v-if="userData" class="d-flex justify-content-start m-2 mt-3 align-items-center">
+          <div class="d-flex justify-content-start m-2 mt-3 align-items-center">
             <i class="pi pi-user m-2"></i>
             <span>ID Number:</span>
-            <span class="bold-text">&nbsp;{{ userData.id }}</span>
+            <span class="bold-text">&nbsp;{{ userProfileData.id }}</span>
           </div>
         </div>
       </div>
@@ -134,43 +136,17 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import UserTicketTable from "@/components/user/UserTicketTable.vue";
+</script>
 
-// User data object
-const userData = ref(null);
-const accessToken = localStorage.getItem("accessToken");
-// console.log(accessToken);
-
-onMounted(async () => {
-  await fetchData("http://localhost:3000/api/user/profile", accessToken);
-});
-
-async function fetchData(url, token) {
-  const aToken = token;
-
-  await fetch(url, {
-    method: "GET",
-    headers: aToken
-      ? {
-          Authorization: `Bearer ${token}`,
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        }
-      : {
-          "Content-Type": "application/json",
-        },
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .then((responseData) => {
-      // this.dt = responseData.data;
-      userData.value = responseData.data;
-      console.log(userData.value);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-}
+<script>
+export default {
+  // Receive Data from parent component/view
+  props: {
+    userProfileData: {
+      type: Object,
+    },
+  },
+};
 </script>
 
 <style scoped>

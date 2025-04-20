@@ -1,8 +1,9 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import { eventsMockData } from '@/mock/eventsMock.js'
+// Encapsulate API methods in /api/events.js
+import { fetchEventsData } from '@/api/events.js'
 
 const router = useRouter()
 const searchQuery = ref('')
@@ -10,8 +11,27 @@ const statusFilter = ref('all')
 const sortBy = ref('date')
 const sortOrder = ref('desc')
 
-// Mock data for events
-const eventsData = ref([...eventsMockData])
+// Initialize eventsData as empty array; will be populated after API response
+const eventsData = ref([])
+
+// Define loading state and error message
+const loading = ref(false)
+const error = ref(null)
+
+// Call API on component mount
+onMounted(async () => {
+  loading.value = true
+  try {
+    // Call the real API (ensure the endpoint matches the backend)
+    const data = await fetchEventsData()
+    eventsData.value = data
+  } catch (err) {
+    error.value = 'Failed to load events data. Please try again later.'
+    console.error("Failed to fetch events data:", err)
+  } finally {
+    loading.value = false
+  }
+})
 
 // Computed property for filtered and sorted events
 const filteredEvents = computed(() => {
@@ -33,7 +53,6 @@ const filteredEvents = computed(() => {
       return true
     })
     .sort((a, b) => {
-      // Apply sorting
       let comparison = 0
       if (sortBy.value === 'name') {
         comparison = a.name.localeCompare(b.name)
@@ -68,6 +87,7 @@ const editEvent = (eventId) => {
 
 const deleteEvent = (eventId) => {
   if (confirm('Are you sure you want to delete this event?')) {
+    // Send delete request to backend as needed, and update local data
     eventsData.value = eventsData.value.filter(event => event.id !== eventId)
   }
 }
@@ -80,7 +100,6 @@ const formatDate = (dateString) => {
   })
 }
 
-// Convert event status to Bootstrap classes
 const getStatusClass = (status) => {
   switch (status) {
     case 'Active':
@@ -106,12 +125,15 @@ const getStatusClass = (status) => {
         <p class="text-muted mt-1">Create, edit and manage your events</p>
       </div>
       
+      <!-- Loading & Error -->
+      <div v-if="loading" class="alert alert-info">Loading events...</div>
+      <div v-if="error" class="alert alert-danger">{{ error }}</div>
+      
       <!-- Action Bar -->
       <div class="bg-white rounded shadow-sm p-4 mb-4">
         <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-md-between gap-3">
           <!-- Filters and Search -->
           <div class="d-flex flex-column flex-sm-row gap-3">
-            <!-- Search Bar -->
             <div class="position-relative">
               <input 
                 v-model="searchQuery"
@@ -122,7 +144,6 @@ const getStatusClass = (status) => {
               />
               <i class="pi pi-search position-absolute text-muted" style="left: 1rem; top: 0.75rem;"></i>
             </div>
-            <!-- Status Filter -->
             <select v-model="statusFilter" class="form-select" style="max-width: 16rem;">
               <option value="all">All Statuses</option>
               <option value="Active">Active</option>
@@ -212,7 +233,7 @@ const getStatusClass = (status) => {
                 </td>
               </tr>
               <!-- Empty state -->
-              <tr v-if="filteredEvents.length === 0">
+              <tr v-if="filteredEvents.length === 0 && !loading">
                 <td colspan="7" class="px-3 py-4 text-center text-muted">
                   <div class="d-flex flex-column align-items-center">
                     <i class="pi pi-calendar-times fs-1 mb-2"></i>

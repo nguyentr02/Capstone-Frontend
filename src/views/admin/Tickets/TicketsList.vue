@@ -141,7 +141,7 @@ const manageTickets = (eventId) => {
             <thead>
               <tr class="bg-light border-bottom">
                 <th @click="sortBy='name'; toggleSortOrder()" class="px-3 py-2 text-start fs-6 text-muted" style="cursor: pointer;">
-                  Event Name <i :class="sortBy==='name' ? (sortOrder==='asc' ? 'pi pi-sort-up' : 'pi pi-sort-down') : ''" class="ms-1"></i>
+                  Ticket Name <i :class="sortBy==='name' ? (sortOrder==='asc' ? 'pi pi-sort-up' : 'pi pi-sort-down') : ''" class="ms-1"></i>
                 </th>
                 <th @click="sortBy='date'; toggleSortOrder()" class="px-3 py-2 text-start fs-6 text-muted" style="cursor: pointer;">
                   Date <i :class="sortBy==='date' ? (sortOrder==='asc' ? 'pi pi-sort-up' : 'pi pi-sort-down') : ''" class="ms-1"></i>

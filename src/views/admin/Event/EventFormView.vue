@@ -16,7 +16,7 @@ const saving = ref(false)
 const activeTab = ref('basic')
 const questions = ref([])
 
-// Form state，默认初始化为空或默认值
+
 const eventForm = ref({
   name: '',
   description: '',

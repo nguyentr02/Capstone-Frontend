@@ -1,11 +1,9 @@
-```vue
 <!-- src/views/admin/EventDetailsView.vue -->
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
-// Import data fetching functions from the API (make sure they are implemented in /src/api/events.js)
 import { fetchEventDetails, fetchTicketTypes, fetchAttendees } from '@/api/events.js'
 
 const route = useRoute()
@@ -17,44 +15,52 @@ const loading = ref(true)
 const activeTab = ref('overview')
 const questions = ref([])
 
-// Initialize ticketTypes and attendees as empty arrays; they will be updated after the API response
+// Initialise ticket types and participants as an empty array and update the data subsequently
 const ticketTypes = ref([])
 const attendees = ref([])
 
-// Fetch data: event details, ticket types, and attendees
 onMounted(async () => {
+  loading.value = true
   try {
-    loading.value = true
-    // Request event details data
+    // Get event details
     const fetchedEvent = await fetchEventDetails(eventId)
-    event.value = fetchedEvent || {
-      id: eventId,
-      name: 'Event not found',
-      description: '',
-      date: '',
-      time: '',
-      location: '',
-      address: '',
-      organizer: '',
-      organizerContact: '',
-      status: '',
-      capacity: 0,
-      ticketsSold: 0,
-      revenue: '',
-      imageUrl: '',
-      features: []
+    console.log("Fetched event:", fetchedEvent)
+    if (fetchedEvent) {
+      event.value = fetchedEvent
+    } else {
+      event.value = {
+        id: eventId,
+        name: 'Event not found',
+        description: 'No details available for this event.',
+        date: '',
+        time: '',
+        location: '',
+        address: '',
+        organizer: '',
+        organizerContact: '',
+        status: '',
+        capacity: 0,
+        ticketsSold: 0,
+        revenue: '',
+        imageUrl: '',
+        features: []
+      }
     }
-    // Request ticket type data
+    // Obtaining Ticket Type Data
     ticketTypes.value = await fetchTicketTypes(eventId)
-    // Request attendee data
-    attendees.value = await fetchAttendees(eventId)
+    // Fetch participant data, use separate try/catch to prevent errors in this section from affecting the overall data load.
+    try {
+      attendees.value = await fetchAttendees(eventId)
+    } catch (attendeeError) {
+      console.error("Error fetching attendees:", attendeeError)
+      attendees.value = []  // Error getting participant data, set to empty array
+    }
   } catch (error) {
     console.error("Error fetching event data:", error)
-    // On error, set default data or handle the error further
     event.value = {
       id: eventId,
       name: 'Event not found',
-      description: '',
+      description: 'Failed to load event details.',
       date: '',
       time: '',
       location: '',
@@ -129,7 +135,6 @@ const getStatusClass = (status) => {
               <span class="text-muted">{{ formatDate(event.date) }}</span>
             </div>
           </div>
-
           <div class="mt-4 mt-md-0">
             <button @click="editEvent" class="btn btn-primary" type="button">
               <i class="pi pi-pencil me-2"></i>
@@ -155,19 +160,16 @@ const getStatusClass = (status) => {
                     <p class="text-dark mb-0">{{ formatDate(event.date) }}</p>
                     <p class="text-dark">{{ event.time }}</p>
                   </div>
-
                   <div class="col-12 col-md-6">
                     <h3 class="fs-6 fw-semibold text-muted mb-1">Location</h3>
                     <p class="text-dark mb-0">{{ event.location }}</p>
                     <p class="text-muted">{{ event.address }}</p>
                   </div>
-
                   <div class="col-12 col-md-6">
                     <h3 class="fs-6 fw-semibold text-muted mb-1">Organizer</h3>
                     <p class="text-dark mb-0">{{ event.organizer }}</p>
                     <p class="text-muted">{{ event.organizerContact }}</p>
                   </div>
-
                   <div class="col-12 col-md-6">
                     <h3 class="fs-6 fw-semibold text-muted mb-1">Capacity</h3>
                     <p class="text-dark mb-1">{{ event.ticketsSold }} / {{ event.capacity }} tickets sold</p>
@@ -409,7 +411,7 @@ const getStatusClass = (status) => {
         </div>
       </div>
     </div>
-
+    
     <div style="background-color: #f0f0f0; padding: 20px; display: flex;">
       Test with direct styles
     </div>
@@ -421,4 +423,3 @@ const getStatusClass = (status) => {
   background-color: #e9ecef;
 }
 </style>
-```

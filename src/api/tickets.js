@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:3000/api' // TODO: replace with your real backend URL
+const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api'
+
 
 // ==========================
 // Ticket-related API methods

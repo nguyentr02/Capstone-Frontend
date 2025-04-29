@@ -4,7 +4,7 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
-import { fetchEventDetails, fetchTicketTypes, fetchAttendees } from '@/api/events.js'
+import { fetchEventDetails, fetchTicketTypes, fetchAttendees } from '@/api/events1.js'
 
 const route = useRoute()
 const router = useRouter()

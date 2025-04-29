@@ -1,3 +1,5 @@
+// this is atickets.js
+
 const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api'
 
 // ==========================

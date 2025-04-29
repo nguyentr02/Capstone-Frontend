@@ -6,29 +6,29 @@ import { useUserStore } from '@/store/user.js'
 export async function authFetch(input, init = {}) {
   const userStore = useUserStore()
 
-  // 给每个请求都加上最新的 accessToken
+  //Add the latest accessToken to each request
   init.headers = {
     'Content-Type': 'application/json',
     ...(init.headers || {}),
     'Authorization': `Bearer ${userStore.accessToken}`
   }
-  // 如果需要带上 Cookie，也加上：
+  // If you need to bring Cookie, also add:
   // init.credentials = 'include'
 
   let res = await fetch(input, init)
 
-  // 如果 accessToken 过期导致 401，则尝试刷新
+  // If the accessToken expires and results in a 401 error, try refreshing
   if (res.status === 401) {
     try {
       const newToken = await refreshAccessToken()
-      // 更新到 Store 和 localStorage
+      // Update to User.Store and localStorage
       userStore.setAccessToken(newToken)
 
-      // 重试原始请求，带上新的 token
+      // Retry the original request with a new token
       init.headers['Authorization'] = `Bearer ${newToken}`
       res = await fetch(input, init)
     } catch (err) {
-      // 刷新也失败，强制登出
+      // Refresh also failed, force logout
       userStore.clearAccessToken()
       window.location.href = '/signIn'
       throw err

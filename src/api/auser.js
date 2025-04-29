@@ -1,4 +1,5 @@
 // this is auser.js
+import { authFetch } from './authRefresh.js';
 
 const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api'
 
@@ -11,13 +12,7 @@ const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api'
  * @returns {Promise<Object>} User object without password
  */
 export const fetchUserProfile = async () => {
-  const token = localStorage.getItem('token') || ''
-  const response = await fetch(`${API_BASE_URL}/users/profile`, {
-    method: 'GET',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
+  const response = await authFetch(`${API_BASE_URL}/users/profile`)
   if (!response.ok) {
     throw new Error(`Fetch user profile failed with status: ${response.status}`)
   }
@@ -35,12 +30,10 @@ export const fetchUserProfile = async () => {
  * @returns {Promise<Object>} Updated user object without password
  */
 export const updateUserProfile = async (userData) => {
-  const token = localStorage.getItem('token') || ''
-  const response = await fetch(`${API_BASE_URL}/users/profile`, {
+  const response = await authFetch(`${API_BASE_URL}/users/profile`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify(userData)
   })
@@ -59,12 +52,10 @@ export const updateUserProfile = async (userData) => {
  * @returns {Promise<{ success: boolean }>} Operation result
  */
 export const changeUserPassword = async ({ currentPassword, newPassword }) => {
-  const token = localStorage.getItem('token') || ''
-  const response = await fetch(`${API_BASE_URL}/users/change-password`, {
+  const response = await authFetch(`${API_BASE_URL}/users/change-password`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify({ currentPassword, newPassword })
   })

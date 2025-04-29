@@ -8,7 +8,7 @@ const API_BASE = 'https://eventregistrationsystem-backend.onrender.com/api'
 export async function refreshAccessToken() {
   const res = await fetch(`${API_BASE}/auth/refresh-token`, {
     method: 'POST',
-    credentials: 'include'        // ← bring refreshToken cookie 
+//    credentials: 'include'        // ← bring refreshToken cookie 
                                   // This way the browser will automatically store/carry HTTP-only cookies
   })
   const json = await res.json()

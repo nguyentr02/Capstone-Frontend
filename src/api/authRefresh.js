@@ -13,7 +13,7 @@ export async function authFetch(input, init = {}) {
     'Authorization': `Bearer ${userStore.accessToken}`
   }
   // 如果需要带上 Cookie，也加上：
-  init.credentials = 'include'
+  // init.credentials = 'include'
 
   let res = await fetch(input, init)
 

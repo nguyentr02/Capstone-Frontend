@@ -1,4 +1,4 @@
-import { authFetch } from './authFetch.js';
+import { authFetch } from './authRefresh.js';
 
 const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api';
 

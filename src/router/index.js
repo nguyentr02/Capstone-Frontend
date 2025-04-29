@@ -50,7 +50,9 @@ const routes = [
     name: "Checkout",
     component: Checkout,
   },
-  { path: "/admin/home", name: "home", component: HomeView },
+  { path: "/admin/home", 
+    name: "home", 
+    component: HomeView },
   {
     path: "/login",
     name: "login",

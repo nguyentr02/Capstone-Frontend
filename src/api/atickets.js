@@ -1,89 +1,78 @@
-// this is atickets.js
+import { authFetch } from './authFetch.js';
 
-const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api'
+const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api';
+
+/**
+ * 统一解析响应并抛出错误
+ * @param {Response} res
+ * @returns {Promise<Object>} json
+ */
+const handleResponse = async (res) => {
+  const json = await res.json();
+  if (!res.ok) {
+    throw new Error(json.message || json.error || `Request failed with status ${res.status}`);
+  }
+  return json;
+};
 
 // ==========================
-// Ticket-related API methods
+// Ticket-related APIs
 // ==========================
 
 /**
- * Fetch all ticket types for a given event
+ * 获取指定活动的所有票种
  * @param {number} eventId
- * @returns {Promise<Array>} Array of ticket types
+ * @returns {Promise<Array>} Ticket[]
  */
 export const fetchTicketTypes = async (eventId) => {
-  const response = await fetch(`${API_BASE_URL}/events/${eventId}/tickets`)
-  if (!response.ok) {
-    throw new Error(`Request failed with status: ${response.status}`)
-  }
-  const result = await response.json()    // { success, data: Ticket[] }
-  return result.data                      // Ticket[]
-}
+  const res = await authFetch(`${API_BASE_URL}/events/${eventId}/tickets`);
+  const json = await handleResponse(res);
+  return json.data;
+};
 
 /**
- * Create a new ticket type for an event
+ * 创建新的票种
  * @param {number} eventId
  * @param {Object} ticketData
- * @returns {Promise<Object>} Newly created ticket type
+ * @returns {Promise<Object>} Ticket
  */
 export const createTicketType = async (eventId, ticketData) => {
-  const token = localStorage.getItem('token') || ''
-  const response = await fetch(`${API_BASE_URL}/events/${eventId}/tickets`, {
+  const res = await authFetch(`${API_BASE_URL}/events/${eventId}/tickets`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(ticketData)
-  })
-  if (!response.ok) {
-    throw new Error(`Create ticket type failed with status: ${response.status}`)
-  }
-  const result = await response.json()    // { success, data: Ticket }
-  return result.data                      // Ticket
-}
+  });
+  const json = await handleResponse(res);
+  return json.data;
+};
 
 /**
- * Update an existing ticket type
+ * 更新已有票种
  * @param {number} eventId
  * @param {number} ticketId
  * @param {Object} ticketData
- * @returns {Promise<Object>} Updated ticket type
+ * @returns {Promise<Object>} Ticket
  */
 export const updateTicketType = async (eventId, ticketId, ticketData) => {
-  const token = localStorage.getItem('token') || ''
-  const response = await fetch(`${API_BASE_URL}/events/${eventId}/tickets/${ticketId}`, {
+  const res = await authFetch(`${API_BASE_URL}/events/${eventId}/tickets/${ticketId}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(ticketData)
-  })
-  if (!response.ok) {
-    throw new Error(`Update ticket type failed with status: ${response.status}`)
-  }
-  const result = await response.json()    // { success, data: Ticket }
-  return result.data                      // Ticket
-}
+  });
+  const json = await handleResponse(res);
+  return json.data;
+};
 
 /**
- * Delete a ticket type
+ * 删除指定票种
  * @param {number} eventId
  * @param {number} ticketId
- * @returns {Promise<Object>} Result of delete operation
+ * @returns {Promise<string>} 删除成功消息
  */
 export const deleteTicketType = async (eventId, ticketId) => {
-  const token = localStorage.getItem('token') || ''
-  const response = await fetch(`${API_BASE_URL}/events/${eventId}/tickets/${ticketId}`, {
-    method: 'DELETE',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  })
-  if (!response.ok) {
-    throw new Error(`Delete ticket type failed with status: ${response.status}`)
-  }
-  const result = await response.json()    // { success, message }
-  return result                           // { success, message }
-}
+  const res = await authFetch(`${API_BASE_URL}/events/${eventId}/tickets/${ticketId}`, {
+    method: 'DELETE'
+  });
+  const json = await handleResponse(res);
+  return json.message || 'Ticket type deleted successfully';
+};

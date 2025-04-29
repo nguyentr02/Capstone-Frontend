@@ -1,4 +1,4 @@
-// aevents.js
+import { authFetch } from './authFetch.js';
 
 const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api';
 
@@ -10,19 +10,9 @@ const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api';
 const handleResponse = async (res) => {
   const json = await res.json();
   if (!res.ok) {
-    // The backend may return one of { error, message }
     throw new Error(json.message || json.error || `Request failed with status ${res.status}`);
   }
   return json;
-};
-
-/**
- * Helper: Get Bearer token
- * @returns {string}
- */
-const getAuthHeader = () => {
-  const token = localStorage.getItem('token') || '';
-  return { Authorization: `Bearer ${token}` };
 };
 
 // ==========================
@@ -40,9 +30,8 @@ export const fetchEvents = async (params = {}) => {
     if (val != null) url.searchParams.append(key, String(val));
   });
 
-  const res = await fetch(url.toString());
+  const res = await authFetch(url.toString());
   const json = await handleResponse(res);
-  // 假设后端返回 { success, data: { events, pagination } }
   return {
     events: json.data.events,
     pagination: json.data.pagination
@@ -55,9 +44,8 @@ export const fetchEvents = async (params = {}) => {
  * @returns {Promise<Object>} Event object
  */
 export const fetchEventDetails = async (eventId) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}`);
+  const res = await authFetch(`${API_BASE_URL}/events/${eventId}`);
   const json = await handleResponse(res);
-  // Assume the backend returns { success, data: { …event } }
   return json.data;
 };
 
@@ -67,13 +55,10 @@ export const fetchEventDetails = async (eventId) => {
  * @returns {Promise<Object>} Created event
  */
 export const createEvent = async (eventData) => {
-  const res = await fetch(`${API_BASE_URL}/events`, {
+  const res = await authFetch(`${API_BASE_URL}/events`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader()
-    },
-    body: JSON.stringify(eventData),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(eventData)
   });
   const json = await handleResponse(res);
   return json.data;
@@ -86,13 +71,10 @@ export const createEvent = async (eventData) => {
  * @returns {Promise<Object>} Updated event
  */
 export const updateEvent = async (eventId, updatedData) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
+  const res = await authFetch(`${API_BASE_URL}/events/${eventId}`, {
     method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader()
-    },
-    body: JSON.stringify(updatedData),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updatedData)
   });
   const json = await handleResponse(res);
   return json.data;
@@ -104,93 +86,11 @@ export const updateEvent = async (eventId, updatedData) => {
  * @returns {Promise<string>} Success message
  */
 export const deleteEvent = async (eventId) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}`, {
-    method: 'DELETE',
-    headers: getAuthHeader()
+  const res = await authFetch(`${API_BASE_URL}/events/${eventId}`, {
+    method: 'DELETE'
   });
   const json = await handleResponse(res);
   return json.message || 'Event deleted successfully';
 };
 
-// ==========================
-// Ticket-related APIs
-// ==========================
-
-/**
- * Fetch ticket types for an event
- * @param {number} eventId
- * @returns {Promise<Array>} Ticket array
- */
-export const fetchTicketTypes = async (eventId) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}/tickets`);
-  const json = await handleResponse(res);
-  // 假设后端返回 { success, data: ticketsArray }
-  return json.data;
-};
-
-/**
- * Create a ticket type
- * @param {number} eventId
- * @param {Object} ticketData
- * @returns {Promise<Object>} Created ticket
- */
-export const createTicketType = async (eventId, ticketData) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}/tickets`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader()
-    },
-    body: JSON.stringify(ticketData),
-  });
-  const json = await handleResponse(res);
-  return json.data;
-};
-
-/**
- * Update a ticket type
- * @param {number} eventId
- * @param {number} ticketId
- * @param {Object} ticketData
- * @returns {Promise<Object>} Updated ticket
- */
-export const updateTicketType = async (eventId, ticketId, ticketData) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}/tickets/${ticketId}`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeader()
-    },
-    body: JSON.stringify(ticketData),
-  });
-  const json = await handleResponse(res);
-  return json.data;
-};
-
-/**
- * Delete a ticket type
- * @param {number} eventId
- * @param {number} ticketId
- * @returns {Promise<string>} Success message
- */
-export const deleteTicketType = async (eventId, ticketId) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}/tickets/${ticketId}`, {
-    method: 'DELETE',
-    headers: getAuthHeader()
-  });
-  const json = await handleResponse(res);
-  return json.message || 'Ticket type deleted successfully';
-};
-
-/**
- * Fetch attendees for an event
- * @param {number} eventId
- * @returns {Promise<Array>} Attendee list
- */
-export const fetchAttendees = async (eventId) => {
-  const res = await fetch(`${API_BASE_URL}/events/${eventId}/attendees`);
-  const json = await handleResponse(res);
-  // Assume the backend returns { success, data: attendeesArray }
-  return json.data;
-};
 

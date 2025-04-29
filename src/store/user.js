@@ -1,29 +1,27 @@
-import { defineStore } from "pinia";
+// src/store/user.js
 
-export const useUserStore = defineStore("user", {
+import { defineStore } from 'pinia'
+
+export const useUserStore = defineStore('user', {
   state: () => ({
-    accessToken: null,
+    accessToken: localStorage.getItem('accessToken') || null
   }),
 
   getters: {
-    isAuthenticated: () => {
-      if (localStorage.getItem('accessToken') == null) {
-        return false;
-      } else {
-        return true;
-      }
-    },
+    isAuthenticated: (state) => {
+      return !!state.accessToken
+    }
   },
 
   actions: {
     setAccessToken(token) {
-      this.accessToken = token;
-      localStorage.setItem('accessToken',token);
+      this.accessToken = token
+      localStorage.setItem('accessToken', token)
     },
     clearAccessToken() {
-      this.accessToken = null;
-      localStorage.clear();
-    },
-  },
+      this.accessToken = null
+      localStorage.removeItem('accessToken')
+    }
+  }
+})
 
-});

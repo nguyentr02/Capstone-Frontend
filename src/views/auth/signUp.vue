@@ -268,9 +268,12 @@ export default {
             this.errors.server = responseData.message;
           } else {
             const accessToken = this.dt.accessToken;
+            const role = this.dt.user.role;
+
             // Store accessToken into storage
             if (accessToken) {
               userStore.setAccessToken(accessToken);
+              userStore.setRole(role);
               router.push("/");
             } else {
               window.alert("Login successfully but no token is store!");

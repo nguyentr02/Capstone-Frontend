@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 export const useUserStore = defineStore("user", {
   state: () => ({
     accessToken: null,
+    role: null,
   }),
 
   getters: {
@@ -20,8 +21,13 @@ export const useUserStore = defineStore("user", {
       this.accessToken = token;
       localStorage.setItem('accessToken',token);
     },
-    clearAccessToken() {
+    setRole(role) {
+      this.role = role;
+      localStorage.setItem('role',role);
+    },
+    clearInfo() {
       this.accessToken = null;
+      this.role = null;
       localStorage.clear();
     },
   },

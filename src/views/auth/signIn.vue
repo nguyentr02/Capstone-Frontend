@@ -143,10 +143,12 @@ export default {
         .then((responseData) => {
           this.dt = responseData.data;
           const accessToken = this.dt.accessToken;
+          const role = this.dt.user.role;
 
           // Store token retrieved from API
           if (accessToken) {
             userStore.setAccessToken(accessToken);
+            userStore.setRole(role);
             router.push("/");
           } else {
             window.alert("Login successfully but no token is store!");

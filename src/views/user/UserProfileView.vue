@@ -39,6 +39,7 @@ onMounted(async () => {
   await fetchData("http://localhost:3000/api/user/profile", accessToken);
 });
 
+
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
 });

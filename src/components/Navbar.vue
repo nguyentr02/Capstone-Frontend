@@ -13,10 +13,9 @@
         <span class="text-dark fw-bold" id="brandName">Teket</span>
       </a>
 
-      <!-- User has not sign in -->
-      <ul v-if="navState == true" class="nav justify-content-end">
+      <ul v-if="!isAuthenticated" class="nav justify-content-end">
         <li class="nav-item">
-          <a href="/events" style="font-family: 'Font'" class="nav-link">
+          <router-link to="/events" class="nav-link" style="font-family: 'Font'">
             <img
               src="../assets/calendar.png"
               alt="ICON"
@@ -25,7 +24,7 @@
               height="20"
             />
             <span class="text-warning ms-2 fw-semibold">Events</span>
-          </a>
+          </router-link>
         </li>
         <li class="nav-item ms-4">
           <router-link to="/signIn">
@@ -33,18 +32,20 @@
           </router-link>
         </li>
         <li class="nav-item ms-3">
-          <router-link to="/signUp"
-            ><button class="btn btn-light fw-semibold">
-              Sign Up
-            </button></router-link
-          >
+          <router-link to="/signUp">
+            <button class="btn btn-light fw-semibold">Sign Up</button>
+          </router-link>
         </li>
       </ul>
 
+<<<<<<< HEAD
       <!-- If already logged in -->
       <ul v-if ="navState == false" class="nav justify-content-end">
+=======
+      <ul v-else class="nav justify-content-end">
+>>>>>>> d85d80a519d2b25a03243185c40434a471a68cd8
         <li class="nav-item">
-          <a href="/events" style="font-family: 'Font'" class="nav-link">
+          <router-link to="/events" class="nav-link" style="font-family: 'Font'">
             <img
               src="../assets/calendar.png"
               alt="ICON"
@@ -53,7 +54,7 @@
               height="20"
             />
             <span class="text-warning ms-2 fw-semibold">Events</span>
-          </a>
+          </router-link>
         </li>
         <li
           class="d-flex align-items-center"
@@ -100,12 +101,18 @@
             
           </div>
         </li>
+        <li class="nav-item ms-3">
+          <button class="btn btn-outline-secondary" @click="logout">
+            Sign Out
+          </button>
+        </li>
       </ul>
     </div>
   </nav>
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref } from "vue";
 import { onMounted } from "vue";
 
@@ -159,14 +166,17 @@ import { useUserStore } from "@/store/user";
 import router from "@/router";
 
 
+=======
+import { computed } from 'vue'
+import { useRouter } from 'vue-router'
+import { useUserStore } from '@/store/user'
+>>>>>>> d85d80a519d2b25a03243185c40434a471a68cd8
 
-export default {
-  data() {
-    return {
-      navState: true,
-    };
-  },
+const router = useRouter()
+const userStore = useUserStore()
+const isAuthenticated = computed(() => userStore.isAuthenticated)
 
+<<<<<<< HEAD
   mounted() {
     this.checkState();
   },
@@ -211,6 +221,12 @@ export default {
 };
 
 
+=======
+function logout() {
+  userStore.clearAccessToken()
+  router.push('/signIn')
+}
+>>>>>>> d85d80a519d2b25a03243185c40434a471a68cd8
 </script>
 
 <style scoped>
@@ -218,3 +234,4 @@ export default {
   font-family: "LogoFont";
 }
 </style>
+

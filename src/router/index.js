@@ -50,7 +50,9 @@ const routes = [
     name: "Checkout",
     component: Checkout,
   },
-  { path: "/admin/home", name: "home", component: HomeView },
+  { path: "/admin/home", 
+    name: "home", 
+    component: HomeView },
   {
     path: "/login",
     name: "login",
@@ -110,6 +112,13 @@ const routes = [
     path: "/admin/tickets/:eventId",
     name: "TicketsManagement",
     component: () => import("@/views/admin/Tickets/TicketsManagement.vue"),
+    props: true
+  },
+  {
+    path: "/admin/tickets/:eventId/edit/:ticketId",
+    name: "TicketEdit",
+    component: () => import("@/views/admin/Tickets/TicketTypeEdit.vue"),
+    props: true
   },
   {
     path: "/admin/tickets/users/:id",
@@ -123,14 +132,10 @@ const routes = [
       import("@/views/admin/Tickets/TicketsParticipantsDetail.vue"),
   },
   {
-    path: "/admin/tickets/create",
+    path: "/admin/tickets/:eventId/create",
     name: "TicketTypeCreate",
     component: () => import("@/views/admin/Tickets/TicketTypeCreate.vue"),
-  },
-  {
-    path: "/admin/tickets/edit/:id",
-    name: "Ticketedit",
-    component: () => import("@/views/admin/Tickets/TicketTypeEdit.vue"),
+    props: true
   },
   {
     path: "/admin/Questionnaire",
@@ -144,18 +149,6 @@ const routes = [
     component: () =>
       import("@/views/admin/Questionnaire/ViewQuestionnaire.vue"),
   },
-  /*
-  {
-    path: "/admin/reports",
-    name: "reports",
-    component: () => import("@/views/admin/ReportsView.vue")
-  },
-  {
-    path: "/admin/settings",
-    name: "settings",
-    component: () => import("@/views/admin/SettingsView.vue")
-  }
-  */
   { path: "/user/profile", component: UserProfileView },
 
   {

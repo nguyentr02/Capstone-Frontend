@@ -4,39 +4,34 @@ import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
 
-// 使用新的 ticketsMockData
-import { ticketsMockData } from '@/mock/ticketsMockData'
-// 保持 attendees 的 mock 数据（确保路径与数据文件正确）
-import { mockAttendees } from '@/mock/attendeesMock'
-// 导入事件 mock 数据
-import { eventsMockData } from '@/mock/eventsMock.js'
+import { fetchEventDetails, fetchTicketTypes, fetchAttendees } from '@/api/events1.js'
 
 const route = useRoute()
 const router = useRouter()
 const eventId = parseInt(route.params.id)
+
 const event = ref(null)
 const loading = ref(true)
 const activeTab = ref('overview')
 const questions = ref([])
 
-// 将新的 mock tickets 数据赋值给票种响应式变量
-const ticketTypes = ref([...ticketsMockData])
-// Mock attendees for the event
-const attendees = ref([...mockAttendees])
+// Initialise ticket types and participants as an empty array and update the data subsequently
+const ticketTypes = ref([])
+const attendees = ref([])
 
-onMounted(() => {
-  // 模拟 API 请求获取活动详情
-  setTimeout(() => {
-    // 根据 eventId 在 eventsMockData 中查找对应的事件
-    const foundEvent = eventsMockData.find(e => e.id === eventId)
-    if (foundEvent) {
-      event.value = foundEvent
+onMounted(async () => {
+  loading.value = true
+  try {
+    // Get event details
+    const fetchedEvent = await fetchEventDetails(eventId)
+    console.log("Fetched event:", fetchedEvent)
+    if (fetchedEvent) {
+      event.value = fetchedEvent
     } else {
-      // 如果找不到对应事件，可以显示一个默认对象或提示错误
       event.value = {
         id: eventId,
         name: 'Event not found',
-        description: '',
+        description: 'No details available for this event.',
         date: '',
         time: '',
         location: '',
@@ -51,8 +46,37 @@ onMounted(() => {
         features: []
       }
     }
+    // Obtaining Ticket Type Data
+    ticketTypes.value = await fetchTicketTypes(eventId)
+    // Fetch participant data, use separate try/catch to prevent errors in this section from affecting the overall data load.
+    try {
+      attendees.value = await fetchAttendees(eventId)
+    } catch (attendeeError) {
+      console.error("Error fetching attendees:", attendeeError)
+      attendees.value = []  // Error getting participant data, set to empty array
+    }
+  } catch (error) {
+    console.error("Error fetching event data:", error)
+    event.value = {
+      id: eventId,
+      name: 'Event not found',
+      description: 'Failed to load event details.',
+      date: '',
+      time: '',
+      location: '',
+      address: '',
+      organizer: '',
+      organizerContact: '',
+      status: '',
+      capacity: 0,
+      ticketsSold: 0,
+      revenue: '',
+      imageUrl: '',
+      features: []
+    }
+  } finally {
     loading.value = false
-  }, 500)
+  }
 })
 
 const editEvent = () => {
@@ -111,7 +135,6 @@ const getStatusClass = (status) => {
               <span class="text-muted">{{ formatDate(event.date) }}</span>
             </div>
           </div>
-
           <div class="mt-4 mt-md-0">
             <button @click="editEvent" class="btn btn-primary" type="button">
               <i class="pi pi-pencil me-2"></i>
@@ -137,26 +160,23 @@ const getStatusClass = (status) => {
                     <p class="text-dark mb-0">{{ formatDate(event.date) }}</p>
                     <p class="text-dark">{{ event.time }}</p>
                   </div>
-
                   <div class="col-12 col-md-6">
                     <h3 class="fs-6 fw-semibold text-muted mb-1">Location</h3>
                     <p class="text-dark mb-0">{{ event.location }}</p>
                     <p class="text-muted">{{ event.address }}</p>
                   </div>
-
                   <div class="col-12 col-md-6">
                     <h3 class="fs-6 fw-semibold text-muted mb-1">Organizer</h3>
                     <p class="text-dark mb-0">{{ event.organizer }}</p>
                     <p class="text-muted">{{ event.organizerContact }}</p>
                   </div>
-
                   <div class="col-12 col-md-6">
                     <h3 class="fs-6 fw-semibold text-muted mb-1">Capacity</h3>
                     <p class="text-dark mb-1">{{ event.ticketsSold }} / {{ event.capacity }} tickets sold</p>
                     <div class="progress" style="height: 0.5rem;">
                       <div class="progress-bar bg-primary" role="progressbar"
-                        :style="{ width: (event.ticketsSold / event.capacity) * 100 + '%' }" aria-valuemin="0"
-                        aria-valuemax="100"></div>
+                           :style="{ width: (event.ticketsSold / event.capacity) * 100 + '%' }"
+                           aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                   </div>
                 </div>
@@ -177,18 +197,18 @@ const getStatusClass = (status) => {
             <div class="bg-white rounded shadow-sm overflow-hidden">
               <div class="d-flex border-bottom">
                 <button @click="activeTab = 'overview'" type="button"
-                  class="px-3 py-2 fs-6 fw-semibold bg-light border-0 no-border-btn"
-                  :class="activeTab === 'overview' ? 'text-primary' : 'text-muted'">
+                        class="px-3 py-2 fs-6 fw-semibold bg-light border-0 no-border-btn"
+                        :class="activeTab === 'overview' ? 'text-primary' : 'text-muted'">
                   Overview
                 </button>
                 <button @click="activeTab = 'tickets'" type="button"
-                  class="px-3 py-2 fs-6 fw-semibold bg-light border-0 no-border-btn"
-                  :class="activeTab === 'tickets' ? 'text-primary' : 'text-muted'">
+                        class="px-3 py-2 fs-6 fw-semibold bg-light border-0 no-border-btn"
+                        :class="activeTab === 'tickets' ? 'text-primary' : 'text-muted'">
                   Tickets
                 </button>
                 <button @click="activeTab = 'attendees'" type="button"
-                  class="px-3 py-2 fs-6 fw-semibold bg-light border-0 no-border-btn"
-                  :class="activeTab === 'attendees' ? 'text-primary' : 'text-muted'">
+                        class="px-3 py-2 fs-6 fw-semibold bg-light border-0 no-border-btn"
+                        :class="activeTab === 'attendees' ? 'text-primary' : 'text-muted'">
                   Attendees
                 </button>
               </div>
@@ -302,8 +322,8 @@ const getStatusClass = (status) => {
                 </div>
                 <div class="progress" style="height: 0.5rem;">
                   <div class="progress-bar bg-primary" role="progressbar"
-                    :style="{ width: (event.ticketsSold / event.capacity) * 100 + '%' }" aria-valuemin="0"
-                    aria-valuemax="100"></div>
+                       :style="{ width: (event.ticketsSold / event.capacity) * 100 + '%' }"
+                       aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
 
@@ -314,7 +334,7 @@ const getStatusClass = (status) => {
                 </div>
                 <div class="progress" style="height: 0.5rem;">
                   <div class="progress-bar bg-success" role="progressbar" style="width: 45%;" aria-valuenow="45"
-                    aria-valuemin="0" aria-valuemax="100"></div>
+                       aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
               </div>
             </div>
@@ -339,13 +359,13 @@ const getStatusClass = (status) => {
                 </button>
 
                 <button v-if="event.status !== 'Cancelled'" class="btn btn-outline-danger w-100 d-flex align-items-center"
-                  type="button">
+                        type="button">
                   <i class="pi pi-times-circle me-2"></i>
                   Cancel Event
                 </button>
 
                 <button v-if="event.status === 'Cancelled'" class="btn btn-outline-success w-100 d-flex align-items-center"
-                  type="button">
+                        type="button">
                   <i class="pi pi-check-circle me-2"></i>
                   Reactivate Event
                 </button>
@@ -359,28 +379,28 @@ const getStatusClass = (status) => {
                 <!-- Timeline items -->
                 <div class="mb-3 position-relative">
                   <div class="position-absolute"
-                    style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #0d6efd;">
+                       style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #0d6efd;">
                   </div>
                   <div class="fs-6 fw-semibold text-dark">Event Created</div>
                   <div class="small text-muted">November 5, 2024</div>
                 </div>
                 <div class="mb-3 position-relative">
                   <div class="position-absolute"
-                    style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #198754;">
+                       style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #198754;">
                   </div>
                   <div class="fs-6 fw-semibold text-dark">First Ticket Sold</div>
                   <div class="small text-muted">November 10, 2024</div>
                 </div>
                 <div class="mb-3 position-relative">
                   <div class="position-absolute"
-                    style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #ffc107;">
+                       style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #ffc107;">
                   </div>
                   <div class="fs-6 fw-semibold text-dark">Early Bird Tickets Sold Out</div>
                   <div class="small text-muted">December 1, 2024</div>
                 </div>
                 <div class="position-relative">
                   <div class="position-absolute"
-                    style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #6c757d;">
+                       style="left: -2.5rem; top: 0.375rem; width: 1rem; height: 1rem; border-radius: 50%; background-color: #6c757d;">
                   </div>
                   <div class="fs-6 fw-semibold text-dark">Event Date</div>
                   <div class="small text-muted">{{ formatDate(event.date) }}</div>
@@ -391,7 +411,7 @@ const getStatusClass = (status) => {
         </div>
       </div>
     </div>
-
+    
     <div style="background-color: #f0f0f0; padding: 20px; display: flex;">
       Test with direct styles
     </div>
@@ -403,4 +423,3 @@ const getStatusClass = (status) => {
   background-color: #e9ecef;
 }
 </style>
-

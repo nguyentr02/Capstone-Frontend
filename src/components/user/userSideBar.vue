@@ -1,6 +1,7 @@
+<!-- src/components/Sidebar.vue -->
 <script setup>
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const props = defineProps({
   collapsed: {
@@ -8,110 +9,92 @@ const props = defineProps({
     default: false
   }
 })
-
 const emit = defineEmits(['toggle-sidebar'])
-
 const router = useRouter()
-const activeItem = ref('dashboard')
+const route = useRoute()
 
-// Menu structure
+const activeItem = computed(() => {
+  const currentPath = route.path;
+  if (currentPath.startsWith('/user/events')) return 'events';
+  else if (currentPath.startsWith('/user/tickets')) return 'tickets';
+  else if (currentPath.startsWith('/user/management')) return 'management';
+  return 'dashboard';
+})
+
+// 菜单项列表，新增“Questionnaire”选项
 const menuItems = [
   { id: 'dashboard', label: 'Dashboard', icon: 'pi pi-home', route: '/user/profile' },
   { id: 'events', label: 'Events', icon: 'pi pi-calendar', route: '/user/events' },
-  { id: 'users', label: 'Information', icon: 'pi pi-users', route: '/user/management' },
-  // { id: 'tickets', label: 'Tickets', icon: 'pi pi-ticket', route: '/admin/tickets' },
-  // { id: 'reports', label: 'Reports', icon: 'pi pi-chart-bar', route: '/admin/reports' },
-  // { id: 'settings', label: 'Settings', icon: 'pi pi-cog', route: '/admin/settings' }
+  { id: 'tickets', label: 'Tickets', icon: 'pi pi-ticket', route: '/user/tickets' },
+  { id: 'management', label: 'Change profile', icon: 'pi pi-cog', route: '/user/management' },
 ]
 
-const sidebarClass = computed(() => {
-  return props.collapsed ? 'sidebar-collapsed' : 'sidebar-expanded'
+
+// 根据是否折叠设置宽度样式
+const sidebarStyle = computed(() => {
+  return {
+    width: props.collapsed ? '4rem' : '15rem'
+  }
 })
 
+// 跳转至指定路由
 const navigateTo = (item) => {
-  activeItem.value = item.id
   router.push(item.route)
 }
 
+// 切换侧边栏折叠状态
 const toggleSidebar = () => {
   emit('toggle-sidebar')
 }
 </script>
 
 <template>
-  <link rel="stylesheet" href="src/assets/font-awesome-4.7.0/css/font-awesome.css">
-  <div
-      class="sidebar bg-dark text-white position-fixed start-0 top-0 h-100 z-3"
-      :class="sidebarClass"
-  >
-    <!-- Logo Area -->
-    <div class="logo p-4 d-flex align-items-center justify-content-between border-bottom border-secondary">
-      <img
-          v-if="collapsed"
-          src="@/assets/logo.png"
-          class="img-fluid"
-      />
-      <a v-else class="navbar-brand text-xl font-bold" href="/">
-        <h2 style="font-family: 'LogoFont';" class="text-light pt-3">Teket</h2>
-      </a>
-      <!-- Toggle button inside sidebar - shows only when sidebar is collapsed -->
-      <!-- <button 
-        @click="$emit('toggle-sidebar')" 
-        class="btn btn-link text-dark me-2">
-          <i class="pi pi-bars"></i>
-      </button> -->
+  <div class="bg-dark text-white position-fixed top-0 start-0 vh-100 d-flex flex-column"
+       :class="[props.collapsed ? 'sidebar-collapsed' : 'sidebar-expanded']"
+       :style="sidebarStyle"
+       style="transition: width 0.3s; z-index: 10;">
+    <div class="d-flex align-items-center border-bottom border-secondary p-3">
+      <img v-if="props.collapsed" src="../../assets/cat.jpeg" alt="RegiMaster" style="height: 2rem;" />
+      <div v-else class="fs-4 fw-bold">
+        <a href="/">RegiMaster</a>
+      </div>
+      <button v-if="props.collapsed" @click="toggleSidebar" class="text-white rounded-circle p-1 ms-auto"
+              style="background: none; border: none;">
+        <i class="pi pi-chevron-right"></i>
+      </button>
     </div>
-
-    <!-- Navigation Menu -->
-    <nav class="mt-4">
-      <ul class="nav flex-column" style="font-family: 'Font'">
-        <li v-for="item in menuItems" :key="item.id" class="nav-item">
-          <a
-              @click="navigateTo(item)"
-              class="nav-link d-flex align-items-center py-3 px-4 text-white text-decoration-none"
-              :class="{ 'bg-secondary': activeItem === item.id }"
-          >
-            <i :class="item.icon"></i>
-            <span v-if="!collapsed"  class="ms-3 ">{{ item.label }}</span>
+    <nav class="mt-3 flex-grow-1">
+      <ul class="list-unstyled">
+        <li v-for="item in menuItems" :key="item.id" style="cursor: pointer;">
+          <a @click="navigateTo(item)" class="d-flex align-items-center py-2 px-3 text-white text-decoration-none user-menu-item"
+             :class="{ 'bg-secondary': activeItem === item.id }">
+            <i :class="item.icon" class="fs-5"></i>
+            <span v-if="!props.collapsed" class="ms-3">{{ item.label }}</span>
           </a>
         </li>
       </ul>
     </nav>
-
-    <div class="position-absolute bottom-0 p-3">
-      <button
-          @click="toggleSidebar"
-          class="btn btn-secondary rounded-circle p-2"
-      >
-        <i class="pi pi-chevron-left"></i>
+    <div v-if="!props.collapsed" class="position-absolute bottom-0 end-0 m-3">
+      <button @click="toggleSidebar" class="btn btn-secondary rounded-circle p-2">
+        <i :class="[props.collapsed ? 'pi pi-chevron-right' : 'pi pi-chevron-left']"></i>
       </button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.sidebar {
-  transition: all 0.3s ease;
+.sidebar-collapsed {
+  width: 60px;
 }
 
 .sidebar-expanded {
   width: 240px;
 }
 
-.sidebar-collapsed {
-  width: 64px;
-}
-
-.nav-link {
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.logo {
-  height: 60px;
+.user-menu-item:hover {
+  background-color: #343a40;
+  transition: background-color 0.3s;
 }
 </style>
+
+

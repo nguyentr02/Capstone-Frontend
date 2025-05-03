@@ -1,163 +1,105 @@
 <template>
-  <navbar />
+  <Navbar />
   <div class="h-90" style="background-color: #edece8">
-    <div class="container text-center w-100" style="width: 100%">
+    <div class="container text-center w-100">
       <div class="row align-items-center" style="height: 100vh">
         <div class="col-3"></div>
-        <form
-          action=""
-          style="width: 50%; border-radius: 20px"
-          class="bg-white col-6 pb-3"
-        >
-          <img src="../../assets/logo.png" alt="logo" height="80" width="80" />
+        <div class="col-6 bg-white pb-3" style="border-radius: 20px">
+          <img src="@/assets/logo.png" alt="logo" height="80" width="80" />
           <h1 style="font-family: 'Font'" class="text-warning">Log In</h1>
-          <div class="mb-3 text-start">
-            <label
-              for="exampleInputEmail1"
-              class="form-label"
-              style="font-family: 'Font'"
-              >Email address</label
-            >
-            <input
-              type="email"
-              class="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-              v-model="email"
-              style="font-family: 'Font'; background-color: #fcfcfa"
-              required
-            />
-            <!-- Display email error message below input -->
-            <div v-if="errors.email" class="text-danger small mt-1">
-              {{ errors.email }}
+          <form @submit.prevent="signIn">
+            <div class="mb-3 text-start">
+              <label for="email" class="form-label" style="font-family: 'Font'">Email address</label>
+              <input
+                id="email"
+                type="email"
+                class="form-control"
+                v-model="email"
+                style="font-family: 'Font'; background-color: #fcfcfa"
+                required
+              />
+              <div v-if="errors.email" class="text-danger small mt-1">
+                {{ errors.email }}
+              </div>
             </div>
-          </div>
-          <div class="mb-3 text-start">
-            <label
-              for="exampleInputPassword1"
-              class="form-label"
-              style="font-family: 'Font'"
-              >Password</label
-            >
-            <input
-              type="password"
-              class="form-control"
-              id="exampleInputPassword1"
-              style="background-color: #edece8"
-              v-model="pwd"
-              required
-            />
-            <!-- Display password error message below input -->
-            <div v-if="errors.pwd" class="text-danger small mt-1">
-              {{ errors.pwd }}
+            <div class="mb-3 text-start">
+              <label for="password" class="form-label" style="font-family: 'Font'">Password</label>
+              <input
+                id="password"
+                type="password"
+                class="form-control"
+                v-model="pwd"
+                style="background-color: #edece8"
+                required
+              />
+              <div v-if="errors.pwd" class="text-danger small mt-1">
+                {{ errors.pwd }}
+              </div>
             </div>
-          </div>
-          <button
-            type="submit"
-            class="btn btn-primary"
-            @click.prevent="signIn(email, pwd)"
-          >
-            Submit
-          </button>
-        </form>
-        <div class="col-4"></div>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+            <div v-if="errors.general" class="text-danger small mt-2">
+              {{ errors.general }}
+            </div>
+          </form>
+        </div>
+        <div class="col-3"></div>
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
-<script>
-import navbar from "@/components/navbar.vue";
-import Footer from "@/components/footer.vue";
-import router from "@/router";
-import { useUserStore } from "@/store/user";
+<script setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import Navbar from '@/components/navbar.vue'
+import Footer from '@/components/footer.vue'
+import { useUserStore } from '@/store/user'
 
-export default {
-  components: {
-    navbar,
-    Footer,
-  },
+const API_BASE_URL = 'https://eventregistrationsystem-backend.onrender.com/api';
+const email = ref('')
+const pwd = ref('')
+const errors = ref({})
 
-  data() {
-    return {
-      email: "",
-      pwd: "",
-      data: "",
-      response: null,
-      // Use an object for field-specific errors
-      errors: {}
-    };
-  },
+const userStore = useUserStore()
+const router = useRouter()
 
-  mounted() {
-    this.checkState();
-  },
+// 挂载时检查登录状态，已登录则跳转首页
+onMounted(() => {
+  if (userStore.isAuthenticated) {
+    router.push('/')
+  }
+})
 
-  methods: {
-    // Prevent going to SignIn after login already
-    checkState() {
-      const userStore = useUserStore();
-      if (userStore.isAuthenticated) {
-        console.log("User state verified");
-        router.push("/");
-      }
-    },
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    async signIn(email, pwd) {
-      // Integration with backend
-
-      // Clear previous errors
-      this.errors = {};
-
-      // Validate email format
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(this.email)) {
-        this.errors.email = "Invalid email address!";
-        return;
-      }
-      // Validate password is not empty
-      if (!this.pwd) {
-        this.errors.pwd = "Password is required!";
-        return;
-      }
-
-      const userStore = useUserStore();
-      const url = "http://localhost:3000/api/auth/login";
-      // Send data to backend
-
-      await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-          accept: "application/json",
-        },
-        body: JSON.stringify({
-          email: email,
-          password: pwd,
-        }),
-      })
-        .then((response) => {
-          return response.json();
-        })
-        .then((responseData) => {
-          this.dt = responseData.data;
-          const accessToken = this.dt.accessToken;
-
-          // Store token retrieved from API
-          if (accessToken) {
-            userStore.setAccessToken(accessToken);
-            router.push("/");
-          } else {
-            window.alert("Login successfully but no token is store!");
-          }
-        })
-        .catch((error) => {
-          this.err = error;
-        });
-    },
-  },
-};
+// 登录逻辑，调用后端 /auth/login 接口，带上 refreshToken Cookie
+const signIn = async () => {
+  errors.value = {}
+  // 基本校验
+  if (!emailPattern.test(email.value)) {
+    errors.value.email = 'Invalid email address'
+    return
+  }
+  if (!pwd.value) {
+    errors.value.pwd = 'Password is required'
+    return
+  }
+  try {
+    const res = await fetch(`/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ email: email.value, password: pwd.value })
+    })
+    const json = await res.json()
+    if (!res.ok) throw new Error(json.message || 'Login failed')
+    // 从返回数据中获取 accessToken
+    const { accessToken } = json.data
+    userStore.setAccessToken(accessToken)
+    router.push('/')
+  } catch (err) {
+    errors.value.general = err.message
+  }
+}
 </script>
-
-<style scoped></style>

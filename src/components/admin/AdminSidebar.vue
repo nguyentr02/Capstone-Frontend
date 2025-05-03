@@ -75,7 +75,7 @@ const toggleSidebar = () => {
     <!-- 导航菜单 -->
     <nav class="mt-3 flex-grow-1">
       <ul class="list-unstyled">
-        <li v-for="item in menuItems" :key="item.id">
+        <li v-for="item in menuItems" :key="item.id" style="cursor: pointer;">
           <a @click="navigateTo(item)" class="d-flex align-items-center py-2 px-3 text-white text-decoration-none user-menu-item"
              :class="{ 'bg-secondary': activeItem === item.id }">
             <i :class="item.icon" class="fs-5"></i>
